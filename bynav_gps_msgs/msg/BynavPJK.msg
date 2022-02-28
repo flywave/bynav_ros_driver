@@ -9,24 +9,10 @@ string position_type
 # Position Data
 float64 x
 float64 y
-float64 z
 
 float32 x_sigma
 float32 y_sigma
 float32 z_sigma
-
-string velocity_solution_status
-string velocity_type
-
-float64 x_vel
-float64 y_vel
-float64 z_vel
-
-float32 x_vel_sigma
-float32 y_vel_sigma
-float32 z_vel_sigma
-
-float32 velocity_latency
 
 string base_station_id
 float32 diff_age
