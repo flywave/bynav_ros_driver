@@ -1,0 +1,23 @@
+# Message from PTNLPJK String
+Header header
+
+string message_id
+
+# UTC seconds from midnight
+float64 utc_seconds
+uint32 utc_year
+uint8 utc_month
+uint8 utc_day
+
+float64 x
+string x_dir
+float64 y
+string y_dir
+
+string solution_status
+uint8 num_satellites_used_in_solution
+
+float64 hdop
+string datum_id
+float64 height_offset
+string height_unit

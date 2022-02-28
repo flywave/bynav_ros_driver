@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<launch>
+  <node name="bynav"
+        pkg="nodelet" type="nodelet"
+        args="standalone bynav_gps_driver/bynav_gps_nodelet">
+    <rosparam>
+      verbose: true
+      connection_type: tcp
+      device: 192.168.74.10:2000
+      imu_sample_rate: -1
+      use_binary_messages: true
+      publish_bynav_positions: true
+      publish_imu_messages: true
+      publish_imu: true
+      publish_bynav_velocity: true
+      imu_frame_id: /imu
+      publish_nmea_messages: true
+      frame_id: /gps
+    </rosparam>
+  </node>
+</launch>

@@ -1,0 +1,7 @@
+<library path="lib/libbynav_gps_driver_nodelets">
+  <class name="bynav_gps_driver/bynav_gps_nodelet" type="bynav_gps_driver::BynavGpsNodelet" base_class_type="nodelet::Nodelet">
+    <description>
+      Nodelet for reading data from Bynav GPS devices.
+    </description>
+  </class>
+</library>

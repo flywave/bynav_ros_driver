@@ -1,0 +1,39 @@
+<?xml version="1.0" ?>
+<package format="2">
+  <name>bynav_gps_driver</name>
+  <version>3.9.0</version>
+  <description>
+  Driver for Bynav receivers
+  </description>
+
+  <maintainer email="preed@swri.org">P. J. Reed</maintainer>
+
+  <license>BSD</license>
+
+  <url type="repository">https://github.com/swri-robotics/bynav_gps_driver</url>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <depend>boost</depend>
+  <depend>diagnostic_msgs</depend>
+  <depend>diagnostic_updater</depend>
+  <depend>gps_common</depend>
+  <depend>libpcap</depend>
+  <depend>nav_msgs</depend>
+  <depend>nodelet</depend>
+  <depend>bynav_gps_msgs</depend>
+  <depend>roscpp</depend>
+  <depend>sensor_msgs</depend>
+  <depend>std_msgs</depend>
+  <depend>swri_math_util</depend>
+  <depend>swri_nodelet</depend>
+  <depend>swri_roscpp</depend>
+  <depend>swri_serial_util</depend>
+  <depend>swri_string_util</depend>
+  <depend>tf</depend>
+  <test_depend>rostest</test_depend>
+  <test_depend>rosunit</test_depend>
+  <export>
+    <nodelet plugin="${prefix}/nodelet_plugins.xml"/>
+  </export>
+</package>
+

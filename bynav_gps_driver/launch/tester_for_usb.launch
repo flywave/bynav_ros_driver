@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<launch>
+  <node name="bynav"
+        pkg="nodelet" type="nodelet"
+        args="standalone bynav_gps_driver/bynav_gps_nodelet">
+    <rosparam>
+      verbose: false
+      connection_type: serial
+      device: /dev/ttyUSB0
+      use_binary_messages: false
+      publish_bynav_positions: true
+      publish_bynav_velocity: true
+      publish_bynav_gpdop: true
+      frame_id: /gps
+    </rosparam>
+  </node>
+</launch>
