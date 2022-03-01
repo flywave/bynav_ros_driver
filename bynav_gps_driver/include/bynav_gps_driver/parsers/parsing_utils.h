@@ -10,9 +10,11 @@
 #include <cstdint>
 
 namespace bynav_gps_driver {
+
 const size_t BYNAV_MESSAGE_HEADER_LENGTH = 10;
 
 const size_t MAX_SOLUTION_STATUS = 22;
+
 const std::string SOLUTION_STATUSES[] = {
     "SOL_COMPUTED", "INSUFFICIENT_OBS",  "NO_CONVERGENCE", "SINGULARITY",
     "COV_TRACE",    "TEST_DIST",         "COLD_START",     "V_H_LIMIT",
@@ -20,7 +22,9 @@ const std::string SOLUTION_STATUSES[] = {
     "RESERVED",     "INTEGRITY_WARNING", "RESERVED",       "RESERVED",
     "RESERVED",     "RESERVED",          "PENDING",        "INVALID_FIX",
     "UNAUTHORIZED", "RESERVED",          "INVALID_RATE"};
+
 const size_t MAX_POSITION_TYPE = 80;
+
 const std::string POSITION_TYPES[] = {"NONE",
                                       "FIXEDPOS",
                                       "FIXEDHEIGHT",
@@ -103,7 +107,9 @@ const std::string POSITION_TYPES[] = {"NONE",
                                       "PPP_BASIC",
                                       "INS_PPP_BASIC",
                                       "INS_PPP_BASIC_CONVERGING"};
+
 const size_t MAX_DATUM = 86;
+
 const std::string DATUMS[] = {
     "BLANK",  "ADIND",  "ARC50", "ARC60",  "AGD66", "AGD84",  "BUKIT",  "ASTRO",
     "CHATM",  "CARTH",  "CAPE",  "DJAKA",  "EGYPT", "ED50",   "ED79",   "GUNSG",
@@ -116,6 +122,7 @@ const std::string DATUMS[] = {
     "CSRS",   "ADIM",   "ARSM",  "ENW",    "HTN",   "INDB",   "INDI",   "IRL",
     "LUZA",   "LUZB",   "NAHC",  "NASP",   "OGBM",  "OHAA",   "OHAB",   "OHAC",
     "OHAD",   "OHIA",   "OHIB",  "OHIC",   "OHID",  "TIL",    "TOYM"};
+
 const std::string PORT_IDENTIFIERS[] = {
     "NO_PORTS",    "COM1_ALL",     "COM2_ALL",    "COM3_ALL",    "UNUSED",
     "UNUSED",      "THISPORT_ALL", "FILE_ALL",    "ALL_PORTS",   "XCOM1_ALL",

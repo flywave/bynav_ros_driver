@@ -48,6 +48,7 @@ private:
   static const std::string NMEA_SENTENCE_FLAG;
   static const std::string BYNAV_SENTENCE_FLAG;
   static const std::string BYNAV_ASCII_FLAGS;
+  static const std::string BYNAV_MM_FLAG;
   static const std::string BYNAV_BINARY_SYNC_BYTES;
   static const std::string BYNAV_ENDLINE;
 

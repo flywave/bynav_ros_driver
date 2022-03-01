@@ -20,7 +20,8 @@ const std::string BynavMessageExtractor::FIELD_SEPARATOR = ",";
 const std::string BynavMessageExtractor::HEADER_SEPARATOR = ";";
 const std::string BynavMessageExtractor::NMEA_SENTENCE_FLAG = "$";
 const std::string BynavMessageExtractor::BYNAV_SENTENCE_FLAG = "#";
-const std::string BynavMessageExtractor::BYNAV_ASCII_FLAGS = "$#";
+const std::string BynavMessageExtractor::BYNAV_MM_FLAG = "%";
+const std::string BynavMessageExtractor::BYNAV_ASCII_FLAGS = "$#%";
 const std::string BynavMessageExtractor::BYNAV_BINARY_SYNC_BYTES =
     "\xAA\x44\x12";
 const std::string BynavMessageExtractor::BYNAV_ENDLINE = "\r\n";
@@ -359,6 +360,8 @@ bool BynavMessageExtractor::ExtractCompleteMessages(
                      input.substr(ascii_start_idx, ascii_len).c_str());
             parse_error = true;
           }
+        } else if (input[ascii_start_idx] == BYNAV_MM_FLAG[0]) {
+          //TODO
         }
       } else {
         ROS_DEBUG("Incomplete ASCII sentence, waiting for more.");

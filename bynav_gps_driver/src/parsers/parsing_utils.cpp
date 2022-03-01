@@ -5,6 +5,7 @@
 #include <bynav_gps_msgs/BynavSignalMask.h>
 
 namespace bynav_gps_driver {
+
 void GetBynavReceiverStatusMessage(
     uint32_t status, bynav_gps_msgs::BynavReceiverStatus &receiver_status_msg) {
   receiver_status_msg.original_status_code = status;
