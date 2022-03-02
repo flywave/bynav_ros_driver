@@ -13,13 +13,13 @@
 #include <bynav_gps_driver/bynav_nmea.h>
 #include <bynav_gps_msgs/BynavCorrectedImuData.h>
 #include <bynav_gps_msgs/BynavFRESET.h>
-#include <bynav_gps_msgs/Heading.h>
 #include <bynav_gps_msgs/BynavMessageHeader.h>
 #include <bynav_gps_msgs/BynavPosition.h>
-#include <bynav_gps_msgs/Gpdop.h>
 #include <bynav_gps_msgs/BynavVelocity.h>
+#include <bynav_gps_msgs/Gpdop.h>
 #include <bynav_gps_msgs/Gpgga.h>
 #include <bynav_gps_msgs/Gprmc.h>
+#include <bynav_gps_msgs/Heading.h>
 #include <bynav_gps_msgs/Inspva.h>
 #include <bynav_gps_msgs/Inspvax.h>
 #include <bynav_gps_msgs/Range.h>
@@ -49,12 +49,10 @@ public:
         publish_gphdt_(false), imu_rate_(100.0), imu_sample_rate_(-1),
         span_frame_to_ros_frame_(false), publish_clock_steering_(false),
         publish_imu_messages_(false), publish_bynav_positions_(false),
-        publish_bynav_pjk_positions_(false),
-        publish_bynav_utm_positions_(false), publish_bynav_velocity_(false),
-        publish_bynav_heading_(false),
-        publish_bynav_gpdop_(false), publish_nmea_messages_(false),
-        publish_range_messages_(false), publish_time_messages_(false),
-        publish_trackstat_(false), publish_diagnostics_(true),
+        publish_bynav_pjk_positions_(false), publish_bynav_velocity_(false),
+        publish_bynav_heading_(false), publish_bynav_gpdop_(false),
+        publish_nmea_messages_(false), publish_range_messages_(false),
+        publish_time_messages_(false), publish_diagnostics_(true),
         publish_sync_diagnostic_(true), publish_invalid_gpsfix_(false),
         reconnect_delay_s_(0.5), use_binary_messages_(false),
         connection_(BynavNmea::SERIAL), last_sync_(ros::TIME_MIN),
@@ -81,10 +79,8 @@ public:
                 publish_imu_messages_);
     swri::param(priv, "publish_bynav_positions", publish_bynav_positions_,
                 publish_bynav_positions_);
-    swri::param(priv, "publish_bynav_xyz_positions",
+    swri::param(priv, "publish_bynav_pjk_positions",
                 publish_bynav_pjk_positions_, publish_bynav_pjk_positions_);
-    swri::param(priv, "publish_bynav_utm_positions",
-                publish_bynav_utm_positions_, publish_bynav_utm_positions_);
     swri::param(priv, "publish_bynav_velocity", publish_bynav_velocity_,
                 publish_bynav_velocity_);
     swri::param(priv, "publish_bynav_heading2", publish_bynav_heading_,
@@ -97,8 +93,6 @@ public:
                 publish_range_messages_);
     swri::param(priv, "publish_time_messages", publish_time_messages_,
                 publish_time_messages_);
-    swri::param(priv, "publish_trackstat", publish_trackstat_,
-                publish_trackstat_);
     swri::param(priv, "publish_diagnostics", publish_diagnostics_,
                 publish_diagnostics_);
     swri::param(priv, "publish_sync_diagnostic", publish_sync_diagnostic_,
@@ -188,8 +182,8 @@ public:
     }
 
     if (publish_bynav_gpdop_) {
-      bynav_gpdop_pub_ = swri::advertise<bynav_gps_msgs::Gpdop>(
-          node, "gpdop", 100, true);
+      bynav_gpdop_pub_ =
+          swri::advertise<bynav_gps_msgs::Gpdop>(node, "gpdop", 100, true);
     }
 
     if (publish_range_messages_) {
@@ -209,7 +203,6 @@ public:
                               &BynavGpsNodelet::GpsDiagnostic);
       diagnostic_updater_.add("Data", this, &BynavGpsNodelet::DataDiagnostic);
       diagnostic_updater_.add("Rate", this, &BynavGpsNodelet::RateDiagnostic);
-      diagnostic_updater_.add("GPS Fix", this, &BynavGpsNodelet::FixDiagnostic);
       if (publish_sync_diagnostic_) {
         diagnostic_updater_.add("Sync", this, &BynavGpsNodelet::SyncDiagnostic);
       }
@@ -314,7 +307,6 @@ public:
 
       ros::spinOnce();
       rate.sleep();
- 
     }
 
     gps_.Disconnect();
@@ -336,14 +328,12 @@ private:
   bool publish_imu_messages_;
   bool publish_bynav_positions_;
   bool publish_bynav_pjk_positions_;
-  bool publish_bynav_utm_positions_;
   bool publish_bynav_velocity_;
   bool publish_bynav_heading_;
   bool publish_bynav_gpdop_;
   bool publish_nmea_messages_;
   bool publish_range_messages_;
   bool publish_time_messages_;
-  bool publish_trackstat_;
   bool publish_diagnostics_;
   bool publish_sync_diagnostic_;
   bool publish_invalid_gpsfix_;
@@ -746,88 +736,6 @@ private:
 
     for (int j = 0; j <= synced_j && !msg_times_.empty(); j++) {
       msg_times_.pop_front();
-    }
-  }
-
-  void FixDiagnostic(diagnostic_updater::DiagnosticStatusWrapper &status) {
-    status.clear();
-    status.summary(diagnostic_msgs::DiagnosticStatus::OK, "Nominal");
-
-    if (!last_bynav_position_) {
-      status.summary(diagnostic_msgs::DiagnosticStatus::WARN, "No Status");
-      NODELET_WARN("No GPS status data.");
-      return;
-    }
-
-    status.add("Solution Status", last_bynav_position_->solution_status);
-    status.add("Position Type", last_bynav_position_->position_type);
-    status.add("Solution Age", last_bynav_position_->solution_age);
-    status.add("Satellites Tracked",
-               static_cast<int>(last_bynav_position_->num_satellites_tracked));
-    status.add("Satellites Used",
-               static_cast<int>(
-                   last_bynav_position_->num_satellites_used_in_solution));
-    status.add(
-        "Software Version",
-        last_bynav_position_->bynav_msg_header.receiver_software_version);
-
-    const bynav_gps_msgs::BynavReceiverStatus &rcvr_status =
-        last_bynav_position_->bynav_msg_header.receiver_status;
-    status.add("Status Code", rcvr_status.original_status_code);
-
-    if (last_bynav_position_->bynav_msg_header.receiver_status
-            .original_status_code != 0) {
-      uint8_t level = diagnostic_msgs::DiagnosticStatus::WARN;
-      std::string msg = "Status Warning";
-      if (rcvr_status.antenna_is_open || rcvr_status.antenna_is_shorted ||
-          !rcvr_status.antenna_powered) {
-        msg += " Antenna Problem";
-        level = diagnostic_msgs::DiagnosticStatus::ERROR;
-      }
-      status.add("Error Flag", rcvr_status.error_flag ? "true" : "false");
-      status.add("Temperature Flag",
-                 rcvr_status.temperature_flag ? "true" : "false");
-      status.add("Voltage Flag",
-                 rcvr_status.voltage_supply_flag ? "true" : "false");
-      status.add("Antenna Not Powered",
-                 rcvr_status.antenna_powered ? "false" : "true");
-      status.add("Antenna Open",
-                 rcvr_status.antenna_is_open ? "true" : "false");
-      status.add("Antenna Shorted",
-                 rcvr_status.antenna_is_shorted ? "true" : "false");
-      status.add("CPU Overloaded",
-                 rcvr_status.cpu_overload_flag ? "true" : "false");
-      status.add("COM1 Buffer Overrun",
-                 rcvr_status.com1_buffer_overrun ? "true" : "false");
-      status.add("COM2 Buffer Overrun",
-                 rcvr_status.com2_buffer_overrun ? "true" : "false");
-      status.add("COM3 Buffer Overrun",
-                 rcvr_status.com3_buffer_overrun ? "true" : "false");
-      status.add("USB Buffer Overrun",
-                 rcvr_status.usb_buffer_overrun ? "true" : "false");
-      status.add("RF1 AGC Flag", rcvr_status.rf1_agc_flag ? "true" : "false");
-      status.add("RF2 AGC Flag", rcvr_status.rf2_agc_flag ? "true" : "false");
-      status.add("Almanac Flag", rcvr_status.almanac_flag ? "true" : "false");
-      status.add("Position Solution Flag",
-                 rcvr_status.position_solution_flag ? "true" : "false");
-      status.add("Position Fixed Flag",
-                 rcvr_status.position_fixed_flag ? "true" : "false");
-      status.add("Clock Steering Status",
-                 rcvr_status.clock_steering_status_enabled ? "true" : "false");
-      status.add("Clock Model Flag",
-                 rcvr_status.clock_model_flag ? "true" : "false");
-      status.add("OEMV External Oscillator Flag",
-                 rcvr_status.oemv_external_oscillator_flag ? "true" : "false");
-      status.add("Software Resource Flag",
-                 rcvr_status.software_resource_flag ? "true" : "false");
-      status.add("Auxiliary1 Flag",
-                 rcvr_status.aux1_status_event_flag ? "true" : "false");
-      status.add("Auxiliary2 Flag",
-                 rcvr_status.aux2_status_event_flag ? "true" : "false");
-      status.add("Auxiliary3 Flag",
-                 rcvr_status.aux3_status_event_flag ? "true" : "false");
-      NODELET_WARN("Bynav status code: %d", rcvr_status.original_status_code);
-      status.summary(level, msg);
     }
   }
 

@@ -7,17 +7,17 @@
 
 namespace bynav_gps_driver {
 
-class RTCM {
+class Rtcm {
 public:
   const static uint32_t CRC24_TABLE[];
   static constexpr int BUFFER_SIZE = 1024;
 
-  union RTCM_message_t {
+  union Rtcm_message_t {
     uint8_t buf[BUFFER_SIZE];
   } in_buffer_;
   uint32_t canary_ = 0xCAFEBABE;
 
-  RTCM();
+  Rtcm();
 
   bool ReadCB(uint8_t byte);
   bool ParsingMessage();

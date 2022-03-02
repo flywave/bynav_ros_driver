@@ -26,9 +26,25 @@ bynav_gps_msgs::RefStationPtr bynav_gps_driver::RefStationParser::ParseAscii(
       boost::make_shared<bynav_gps_msgs::RefStation>();
   msg->message_id = sentence.body[0];
 
-  double heading;
-  if (swri_string_util::ToDouble(sentence.body[1], heading)) {
-    msg->heading = heading;
+  double b_x;
+  if (swri_string_util::ToDouble(sentence.body[1], b_x)) {
+    msg->ecef_x = b_x;
+  } else {
+    throw ParseException("Error parsing heading as double in REFSTATIONA");
+  }
+
+
+  double l_y;
+  if (swri_string_util::ToDouble(sentence.body[2], l_y)) {
+    msg->ecef_y = l_y;
+  } else {
+    throw ParseException("Error parsing heading as double in REFSTATIONA");
+  }
+
+
+  double h_z;
+  if (swri_string_util::ToDouble(sentence.body[3], h_z)) {
+    msg->ecef_z = h_z;
   } else {
     throw ParseException("Error parsing heading as double in REFSTATIONA");
   }

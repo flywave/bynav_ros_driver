@@ -14,7 +14,7 @@ namespace bynav_gps_driver {
 
 BynavConnection::BynavConnection()
     : connection_(SERIAL), is_connected_(false), serial_baud_(115200),
-      tcp_socket_(io_service_)  {}
+      tcp_socket_(io_service_) {}
 
 BynavConnection::~BynavConnection() { Disconnect(); }
 
@@ -29,7 +29,7 @@ bool BynavConnection::Connect(const std::string &device,
     return CreateSerialConnection(device, opts);
   } else if (connection_ == TCP || connection_ == UDP) {
     return CreateIpConnection(device, opts);
-  }  
+  }
 
   error_msg_ = "Invalid connection type.";
 
@@ -44,7 +44,7 @@ BynavConnection::ParseConnection(const std::string &connection) {
     return UDP;
   } else if (connection == "tcp") {
     return TCP;
-  }  
+  }
 
   return INVALID;
 }
@@ -62,7 +62,7 @@ void BynavConnection::Disconnect() {
     if (udp_endpoint_) {
       udp_endpoint_.reset();
     }
-  }  
+  }
   is_connected_ = false;
 }
 
@@ -101,11 +101,10 @@ bool BynavConnection::Write(const std::string &command) {
       Disconnect();
       ROS_ERROR("Exception writing TCP data: %s", e.what());
     }
-  } 
+  }
 
   return false;
 }
- 
 
 bool BynavConnection::CreateSerialConnection(const std::string &device,
                                              BynavMessageOpts const &opts) {
@@ -287,7 +286,7 @@ BynavConnection::ReadResult BynavConnection::ReadData() {
     } catch (std::exception &e) {
       ROS_WARN("TCP connection error: %s", e.what());
     }
-  } 
+  }
 
   error_msg_ = "Unsupported connection type.";
 

@@ -6,9 +6,9 @@
 #include <string>
 #include <vector>
 
+#include <boost/array.hpp>
 #include <boost/asio.hpp>
 #include <boost/circular_buffer.hpp>
-#include <boost/array.hpp>
 
 #include <swri_serial_util/serial_port.h>
 
@@ -18,7 +18,7 @@ typedef std::map<std::string, double> BynavMessageOpts;
 
 class BynavConnection {
 public:
-  enum ConnectionType { SERIAL, TCP, UDP,  INVALID };
+  enum ConnectionType { SERIAL, TCP, UDP, INVALID };
 
   enum ReadResult {
     READ_SUCCESS = 0,
@@ -56,14 +56,13 @@ public:
   virtual bool Configure(BynavMessageOpts const &opts);
 
   virtual ReadResult ReadData();
-protected:
 
+protected:
   bool CreateIpConnection(const std::string &endpoint,
                           BynavMessageOpts const &opts);
 
   bool CreateSerialConnection(const std::string &device,
                               BynavMessageOpts const &opts);
- 
 
   ConnectionType connection_;
 
@@ -81,7 +80,6 @@ protected:
 
   std::vector<uint8_t> data_buffer_;
   boost::array<uint8_t, 10000> socket_buffer_;
-  
 };
 
 } // namespace bynav_gps_driver

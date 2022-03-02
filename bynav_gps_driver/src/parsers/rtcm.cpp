@@ -5,7 +5,7 @@
 
 namespace bynav_gps_driver {
 
-const uint32_t RTCM::CRC24_TABLE[] = {
+const uint32_t Rtcm::CRC24_TABLE[] = {
     0x000000, 0x864CFB, 0x8AD50D, 0x0C99F6, 0x93E6E1, 0x15AA1A, 0x1933EC,
     0x9F7F17, 0xA18139, 0x27CDC2, 0x2B5434, 0xAD18CF, 0x3267D8, 0xB42B23,
     0xB8B2D5, 0x3EFE2E, 0xC54E89, 0x430272, 0x4F9B84, 0xC9D77F, 0x56A868,
@@ -44,7 +44,7 @@ const uint32_t RTCM::CRC24_TABLE[] = {
     0xF6D10C, 0xFA48FA, 0x7C0401, 0x42FA2F, 0xC4B6D4, 0xC82F22, 0x4E63D9,
     0xD11CCE, 0x575035, 0x5BC9C3, 0xDD8538};
 
-RTCM::RTCM() {
+Rtcm::Rtcm() {
   buffer_head_ = 0;
   parse_state_ = START;
   prev_byte_ = 0;
@@ -54,17 +54,17 @@ RTCM::RTCM() {
   end_message_ = false;
 }
 
-bool RTCM::ParsingMessage() {
+bool Rtcm::ParsingMessage() {
   return (start_message_ == true && end_message_ == false);
 }
 
-bool RTCM::NewData() {
+bool Rtcm::NewData() {
   bool tmp = new_data_;
   new_data_ = false;
   return tmp;
 }
 
-bool RTCM::ReadCB(uint8_t byte) {
+bool Rtcm::ReadCB(uint8_t byte) {
   switch (parse_state_) {
   case START:
     buffer_head_ = 0;
@@ -158,7 +158,7 @@ bool RTCM::ReadCB(uint8_t byte) {
   return false;
 }
 
-void RTCM::Decode() {
+void Rtcm::Decode() {
   new_data_ = true;
   if (CheckCRC()) {
     message_len_ = buffer_head_;
@@ -173,11 +173,11 @@ void RTCM::Decode() {
   }
 }
 
-void RTCM::RegisterBufferCallback(buffer_cb cb) {
+void Rtcm::RegisterBufferCallback(buffer_cb cb) {
   buffer_callbacks_.push_back(cb);
 }
 
-bool RTCM::CheckCRC() {
+bool Rtcm::CheckCRC() {
   uint32_t crc = 0;
   for (int i = 0; i < buffer_head_ - 3; i++) {
     crc =

@@ -29,7 +29,7 @@ bool BynavRtcm::Connect(const std::string &device, ConnectionType connection) {
 }
 
 void BynavRtcm::GetRtcmMessages(
-    std::vector<bynav_gps_msgs::RTCMPtr> &raw_messages) {
+    std::vector<bynav_gps_msgs::RtcmPtr> &raw_messages) {
   raw_messages.clear();
   raw_messages.insert(raw_messages.end(), rtcm_msgs_.begin(), rtcm_msgs_.end());
   rtcm_msgs_.clear();
@@ -68,7 +68,7 @@ BynavRtcm::ReadResult BynavRtcm::ProcessData() {
   }
 
   for (auto &msg : rtcm_messages) {
-    bynav_gps_msgs::RTCMPtr ros_msg =
+    bynav_gps_msgs::RtcmPtr ros_msg =
         boost::make_shared<bynav_gps_msgs::Rtcm>();
     ros_msg->header.stamp = stamp;
     ros_msg->data.insert(ros_msg->data.end(), msg.data.begin(), msg.data.end());
@@ -79,7 +79,7 @@ BynavRtcm::ReadResult BynavRtcm::ProcessData() {
 void BynavRtcm::ExtractRtcmMessages(const std::string &input,
                                     std::vector<RtcmSentence> &rtcm_sentences,
                                     std::string &remaining) {
-  RTCM rtcm_;
+  Rtcm rtcm_;
   size_t remaining_count = 0;
 
   rtcm_.RegisterBufferCallback(

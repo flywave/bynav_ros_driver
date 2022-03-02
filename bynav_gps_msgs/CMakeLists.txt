@@ -34,7 +34,7 @@ add_message_files(DIRECTORY msg FILES
   Insstdev.msg
   Insvel.msg
   Raw.msg
-  RTCM.msg
+  Rtcm.msg
   InterfaceMode.msg
   Ksxt.msg
   MarkTime.msg
@@ -60,7 +60,6 @@ add_message_files(DIRECTORY msg FILES
   SerialConfig.msg
   Time.msg
   FrequencyOut.msg
-  RTCM.msg
   ShiftDatum.msg
 )
 generate_messages(DEPENDENCIES ${MSG_DEPS})

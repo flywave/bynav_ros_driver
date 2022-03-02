@@ -338,7 +338,8 @@ bool BynavMessageExtractor::ExtractCompleteMessages(
             sentence_start += 1;
             parse_error = true;
           }
-        } else if (input[ascii_start_idx] == BYNAV_SENTENCE_FLAG[0]) {
+        } else if (input[ascii_start_idx] == BYNAV_SENTENCE_FLAG[0] ||
+                   input[ascii_start_idx] == BYNAV_MM_FLAG[0]) {
           std::string cur_sentence;
           int32_t result =
               GetBynavSentence(input, ascii_start_idx, cur_sentence);
@@ -360,8 +361,6 @@ bool BynavMessageExtractor::ExtractCompleteMessages(
                      input.substr(ascii_start_idx, ascii_len).c_str());
             parse_error = true;
           }
-        } else if (input[ascii_start_idx] == BYNAV_MM_FLAG[0]) {
-          //TODO
         }
       } else {
         ROS_DEBUG("Incomplete ASCII sentence, waiting for more.");
