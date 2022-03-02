@@ -6,11 +6,11 @@
   Messages for proprietary (non-NMEA) sentences from Bynav GPS receivers.
   </description>
 
-  <maintainer email="preed@swri.org">P. J. Reed</maintainer>
+  <maintainer email="support@flywave.net">aninggo</maintainer>
 
   <license>BSD</license>
 
-  <url type="repository">https://github.com/swri-robotics/bynav_gps_driver</url>
+  <url type="repository">https://github.com/flywave/bynav_gps_driver</url>
   
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>message_generation</build_depend>

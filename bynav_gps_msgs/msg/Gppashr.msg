@@ -22,3 +22,7 @@ float32 pitch_std
 float32 heading_std
 
 string solution_status
+
+uint32 SOLUTION_STATUS_INVALID=0
+uint32 SOLUTION_STATUS_SINGLE_POINT=1
+uint32 SOLUTION_STATUS_RTK=2
