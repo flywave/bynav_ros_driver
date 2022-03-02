@@ -56,6 +56,7 @@ string tran_input_frame
 bool set_ins_calibrate_flag
 string offset
 string trigger
+float64 sd_threshold
 
 # DNSCONFIG 1 192.168.1.5
 bool set_dns_config_flag
@@ -111,7 +112,11 @@ float64 z_offset
 bool set_obs_freq_flag
 int32 obs_freq
 
-# OUTPUTSOURCE [RAW/KF/INS]
+# SET FPGARAWFREQ 2
+bool set_fpga_raw_freq_flag
+int32 fpga_raw_freq
+
+# OUTPUTSOURCE [RAW/KF/INS/ARTK]
 bool set_output_source_flag
 string output_source
 
@@ -124,3 +129,17 @@ float64 fix_pos_alt
 # RTKTIMEOUT [DIFFAGE]
 bool set_rtktimeout_flag
 uint32 rtktimeout
+
+# QUALITYCHECK [POS/ORI] [Switch]
+bool set_quality_check
+string quality_check_pos
+bool quality_switch
+
+# HEADINGOFFSET
+bool set_heading_offset
+float64 heading_offsetin_deg
+float64 pitch_offsetin_deg
+
+# VELSMOOTH [PERIOD]
+bool set_vel_period
+float64 vel_period
