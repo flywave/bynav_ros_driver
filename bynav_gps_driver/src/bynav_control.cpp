@@ -617,11 +617,6 @@ bool BynavControl::LogRecord(BYNAV_PORT port, int interval) {
   }
   UnlogAll(port);
 
-  sprintf(tempStr, "LOG %s RANGEB ONTIME %d", portStr, interval);
-  str.assign(tempStr);
-  if (!Write(str))
-    return false;
-
   sprintf(tempStr, "LOG %s RANGECMPB ONTIME %d", portStr, interval);
   str.assign(tempStr);
   if (!Write(str))

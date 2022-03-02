@@ -12,9 +12,9 @@ uint32_t PtnlPJKParser::GetMessageId() const { return MESSAGE_ID; }
 
 const std::string PtnlPJKParser::GetMessageName() const { return MESSAGE_NAME; }
 
-bynav_gps_msgs::BynavPJKPtr
+bynav_gps_msgs::PtnlPJKPtr
 PtnlPJKParser::ParseAscii(const BynavSentence &sentence) noexcept(false) {
-  bynav_gps_msgs::BynavPJKPtr msg =
+  bynav_gps_msgs::PtnlPJKPtr msg =
       boost::make_shared<bynav_gps_msgs::BynavPJK>();
   HeaderParser h_parser;
   msg->bynav_msg_header = h_parser.ParseAscii(sentence);

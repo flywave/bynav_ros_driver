@@ -14,7 +14,6 @@
 #include <gps_common/GPSFix.h>
 
 #include <bynav_gps_msgs/BynavCorrectedImuData.h>
-#include <bynav_gps_msgs/BynavPJK.h>
 #include <bynav_gps_msgs/BynavPosition.h>
 #include <bynav_gps_msgs/BynavVelocity.h>
 #include <bynav_gps_msgs/Gpgga.h>
@@ -24,7 +23,6 @@
 #include <bynav_gps_msgs/Inspva.h>
 #include <bynav_gps_msgs/Inspvax.h>
 #include <bynav_gps_msgs/Insstdev.h>
-#include <bynav_gps_msgs/Range.h>
 #include <bynav_gps_msgs/Time.h>
 
 #include <bynav_gps_driver/bynav_control.h>
@@ -44,7 +42,6 @@
 #include <bynav_gps_driver/parsers/inspvax.h>
 #include <bynav_gps_driver/parsers/insstdev.h>
 #include <bynav_gps_driver/parsers/ptnlpjk.h>
-#include <bynav_gps_driver/parsers/range.h>
 #include <bynav_gps_driver/parsers/time.h> 
  
 #include <sensor_msgs/Imu.h>
@@ -95,12 +92,10 @@ public:
   GetBynavPositions(std::vector<bynav_gps_msgs::BynavPositionPtr> &positions);
 
   void
-  GetBynavPJKPositions(std::vector<bynav_gps_msgs::BynavPJKPtr> &positions);
+  GetBynavPJKPositions(std::vector<bynav_gps_msgs::PtnlPJKPtr> &positions);
 
   void
   GetBynavVelocities(std::vector<bynav_gps_msgs::BynavVelocityPtr> &velocities);
-
-  void GetRangeMessages(std::vector<bynav_gps_msgs::RangePtr> &range_messages);
 
   void GetTimeMessages(std::vector<bynav_gps_msgs::TimePtr> &time_messages);
 
@@ -153,7 +148,6 @@ private:
   InspvaxParser inspvax_parser_;
   InsstdevParser insstdev_parser_;
   GpdopParser gpdop_parser_;
-  RangeParser range_parser_;
   TimeParser time_parser_;
 
   boost::circular_buffer<bynav_gps_msgs::BynavCorrectedImuDataPtr>
@@ -174,7 +168,6 @@ private:
   boost::circular_buffer<bynav_gps_msgs::BynavVelocityPtr> bestvel_sync_buffer_;
   boost::circular_buffer<bynav_gps_msgs::HeadingPtr> heading_msgs_;
   boost::circular_buffer<bynav_gps_msgs::GpdopPtr> gpdop_msgs_;
-  boost::circular_buffer<bynav_gps_msgs::RangePtr> range_msgs_;
   boost::circular_buffer<bynav_gps_msgs::TimePtr> time_msgs_;
 
   bynav_gps_msgs::GpdopPtr latest_gpdop_;

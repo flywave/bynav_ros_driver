@@ -36,7 +36,7 @@ add_message_files(DIRECTORY msg FILES
   Raw.msg
   Rtcm.msg
   InterfaceMode.msg
-  Ksxt.msg
+  BynavKsxt.msg
   MarkTime.msg
   NtripPort.msg
   Pashr.msg
@@ -54,8 +54,6 @@ add_message_files(DIRECTORY msg FILES
   BynavSignalMask.msg
   BynavVelocity.msg
   PtnlPJK.msg
-  Range.msg
-  RangeInformation.msg
   Satellite.msg
   SerialConfig.msg
   Time.msg

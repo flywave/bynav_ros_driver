@@ -8,7 +8,6 @@
 
 #include <boost/asio.hpp>
 #include <boost/circular_buffer.hpp>
- 
 
 #include <swri_serial_util/serial_port.h>
 

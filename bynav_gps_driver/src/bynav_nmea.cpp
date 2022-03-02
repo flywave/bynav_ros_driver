@@ -130,7 +130,7 @@ void BynavNmea::GetBynavPositions(
 }
 
 void BynavNmea::GetBynavPJKPositions(
-    std::vector<bynav_gps_msgs::BynavPJKPtr> &positions) {
+    std::vector<bynav_gps_msgs::PtnlPJKPtr> &positions) {
   positions.clear();
   positions.insert(positions.end(), bynav_pjk_positions_.begin(),
                    bynav_pjk_positions_.end());
@@ -315,13 +315,6 @@ void BynavNmea::GetInsstdevMessages(
   insstdev_msgs_.clear();
 }
 
-void BynavNmea::GetRangeMessages(
-    std::vector<bynav_gps_msgs::RangePtr> &range_messages) {
-  range_messages.resize(range_msgs_.size());
-  std::copy(range_msgs_.begin(), range_msgs_.end(), range_messages.begin());
-  range_msgs_.clear();
-}
-
 void BynavNmea::GetTimeMessages(
     std::vector<bynav_gps_msgs::TimePtr> &time_messages) {
   time_messages.resize(time_msgs_.size());
@@ -437,7 +430,7 @@ BynavNmea::ParseBinaryMessage(const BinaryMessage &msg,
     break;
   }
   case PtnlPJKParser::MESSAGE_ID: {
-    bynav_gps_msgs::BynavPJKPtr xyz_position = ptnlpjk_parser_.ParseBinary(msg);
+    bynav_gps_msgs::PtnlPJKPtr xyz_position = ptnlpjk_parser_.ParseBinary(msg);
     xyz_position->header.stamp = stamp;
     bynav_pjk_positions_.push_back(xyz_position);
     break;
@@ -499,12 +492,6 @@ BynavNmea::ParseBinaryMessage(const BinaryMessage &msg,
     gpdop->header.stamp = stamp;
     gpdop_msgs_.push_back(gpdop);
     latest_gpdop_ = gpdop;
-    break;
-  }
-  case RangeParser::MESSAGE_ID: {
-    bynav_gps_msgs::RangePtr range = range_parser_.ParseBinary(msg);
-    range->header.stamp = stamp;
-    range_msgs_.push_back(range);
     break;
   }
   case TimeParser::MESSAGE_ID: {
@@ -580,7 +567,7 @@ BynavNmea::ParseBynavSentence(const BynavSentence &sentence,
     bynav_positions_.push_back(position);
     bestpos_sync_buffer_.push_back(position);
   } else if (sentence.id == "PTNLPJK") {
-    bynav_gps_msgs::BynavPJKPtr position = ptnlpjk_parser_.ParseAscii(sentence);
+    bynav_gps_msgs::PtnlPJKPtr position = ptnlpjk_parser_.ParseAscii(sentence);
     position->header.stamp = stamp;
     bynav_pjk_positions_.push_back(position);
   } else if (sentence.id == "BESTVELA") {
@@ -636,11 +623,7 @@ BynavNmea::ParseBynavSentence(const BynavSentence &sentence,
               time->utc_offset, utc_offset_);
     time->header.stamp = stamp;
     time_msgs_.push_back(time);
-  } else if (sentence.id == "RANGEA") {
-    bynav_gps_msgs::RangePtr range = range_parser_.ParseAscii(sentence);
-    range->header.stamp = stamp;
-    range_msgs_.push_back(range);
-  }
+  } 
   return READ_SUCCESS;
 }
 

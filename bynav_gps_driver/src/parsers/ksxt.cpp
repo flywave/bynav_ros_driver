@@ -10,7 +10,7 @@ const std::string bynav_gps_driver::KsxtParser::GetMessageName() const {
   return MESSAGE_NAME;
 }
 
-bynav_gps_msgs::KsxtPtr bynav_gps_driver::KsxtParser::ParseAscii(
+bynav_gps_msgs::BynavKsxtPtr bynav_gps_driver::KsxtParser::ParseAscii(
     const bynav_gps_driver::NmeaSentence &sentence) noexcept(false) {
   const size_t EXPECTED_LEN = 3;
 
@@ -21,7 +21,7 @@ bynav_gps_msgs::KsxtPtr bynav_gps_driver::KsxtParser::ParseAscii(
     throw ParseException(error.str());
   }
 
-  bynav_gps_msgs::KsxtPtr msg = boost::make_shared<bynav_gps_msgs::Ksxt>();
+  bynav_gps_msgs::BynavKsxtPtr msg = boost::make_shared<bynav_gps_msgs::BynavKsxt>();
   msg->message_id = sentence.body[0];
 
   double heading;

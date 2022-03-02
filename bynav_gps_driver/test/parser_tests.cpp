@@ -362,7 +362,7 @@ TEST(ParserTestSuite, testBestxyzAsciiParsing) {
 
   ASSERT_EQ(parser.GetMessageName() + "A", sentence.id);
 
-  bynav_gps_msgs::BynavPJKPtr msg = parser.ParseAscii(sentence);
+  bynav_gps_msgs::PtnlPJKPtr msg = parser.ParseAscii(sentence);
 
   ASSERT_NE(msg.get(), nullptr);
 

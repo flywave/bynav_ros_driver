@@ -4,13 +4,7 @@ std_msgs/Header header
 
 BynavMessageHeader bynav_msg_header
 
-# Table 29 in the SPAN on OEM6 manual:
-# See: http://www.bynav.com/assets/Documents/Manuals/OM-20000144UM.pdf#page=121
 string ins_status
-
-
-# Table 30 in the SPAN on OEM6 manual:
-# See: http://www.bynav.com/assets/Documents/Manuals/OM-20000144UM.pdf#page=124
 string position_type
 
 

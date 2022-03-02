@@ -53,6 +53,7 @@ add_library(${PROJECT_NAME}
   src/parsers/bestvel.cpp
   src/parsers/corrimudata.cpp
   src/parsers/enuavr.cpp
+  src/parsers/gpatr.cpp
   src/parsers/gpdop.cpp
   src/parsers/gpgga.cpp
   src/parsers/gpgsa.cpp

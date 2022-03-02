@@ -22,7 +22,6 @@
 #include <bynav_gps_msgs/Heading.h>
 #include <bynav_gps_msgs/Inspva.h>
 #include <bynav_gps_msgs/Inspvax.h>
-#include <bynav_gps_msgs/Range.h>
 #include <bynav_gps_msgs/Time.h>
 #include <diagnostic_msgs/DiagnosticStatus.h>
 #include <diagnostic_updater/diagnostic_updater.h>
@@ -51,11 +50,11 @@ public:
         publish_imu_messages_(false), publish_bynav_positions_(false),
         publish_bynav_pjk_positions_(false), publish_bynav_velocity_(false),
         publish_bynav_heading_(false), publish_bynav_gpdop_(false),
-        publish_nmea_messages_(false), publish_range_messages_(false),
-        publish_time_messages_(false), publish_diagnostics_(true),
-        publish_sync_diagnostic_(true), publish_invalid_gpsfix_(false),
-        reconnect_delay_s_(0.5), use_binary_messages_(false),
-        connection_(BynavNmea::SERIAL), last_sync_(ros::TIME_MIN),
+        publish_nmea_messages_(false), publish_time_messages_(false),
+        publish_diagnostics_(true), publish_sync_diagnostic_(true),
+        publish_invalid_gpsfix_(false), reconnect_delay_s_(0.5),
+        use_binary_messages_(false), connection_(BynavNmea::SERIAL),
+        last_sync_(ros::TIME_MIN),
         rolling_offset_(stats::tag::rolling_window::window_size = 10),
         expected_rate_(20), device_timeouts_(0), device_interrupts_(0),
         device_errors_(0), gps_parse_failures_(0),
@@ -89,8 +88,6 @@ public:
                 publish_bynav_gpdop_);
     swri::param(priv, "publish_nmea_messages", publish_nmea_messages_,
                 publish_nmea_messages_);
-    swri::param(priv, "publish_range_messages", publish_range_messages_,
-                publish_range_messages_);
     swri::param(priv, "publish_time_messages", publish_time_messages_,
                 publish_time_messages_);
     swri::param(priv, "publish_diagnostics", publish_diagnostics_,
@@ -186,10 +183,6 @@ public:
           swri::advertise<bynav_gps_msgs::Gpdop>(node, "gpdop", 100, true);
     }
 
-    if (publish_range_messages_) {
-      range_pub_ = swri::advertise<bynav_gps_msgs::Range>(node, "range", 100);
-    }
-
     if (publish_time_messages_) {
       time_pub_ = swri::advertise<bynav_gps_msgs::Time>(node, "time", 100);
     }
@@ -269,9 +262,6 @@ public:
         gps_.SetImuRate(imu_sample_rate_, true);
       }
     }
-    if (publish_range_messages_) {
-      opts["range" + format_suffix] = 1.0; // Range. 1 msg/sec is max rate
-    }
     if (connection_ == BynavNmea::SERIAL) {
       gps_.SetSerialBaud(serial_baud_);
     }
@@ -332,7 +322,6 @@ private:
   bool publish_bynav_heading_;
   bool publish_bynav_gpdop_;
   bool publish_nmea_messages_;
-  bool publish_range_messages_;
   bool publish_time_messages_;
   bool publish_diagnostics_;
   bool publish_sync_diagnostic_;
@@ -360,7 +349,6 @@ private:
   ros::Publisher gprmc_pub_;
   ros::Publisher range_pub_;
   ros::Publisher time_pub_;
-  ros::Publisher trackstat_pub_;
 
   ros::ServiceServer reset_service_;
 
@@ -531,7 +519,7 @@ private:
     }
 
     if (publish_bynav_pjk_positions_) {
-      std::vector<bynav_gps_msgs::BynavPJKPtr> xyz_position_msgs;
+      std::vector<bynav_gps_msgs::PtnlPJKPtr> xyz_position_msgs;
       gps_.GetBynavPJKPositions(xyz_position_msgs);
       for (const auto &msg : xyz_position_msgs) {
         msg->header.stamp += sync_offset;
@@ -576,15 +564,6 @@ private:
         msg->header.stamp += sync_offset;
         msg->header.frame_id = frame_id_;
         time_pub_.publish(msg);
-      }
-    }
-    if (publish_range_messages_) {
-      std::vector<bynav_gps_msgs::RangePtr> range_msgs;
-      gps_.GetRangeMessages(range_msgs);
-      for (const auto &msg : range_msgs) {
-        msg->header.stamp += sync_offset;
-        msg->header.frame_id = frame_id_;
-        range_pub_.publish(msg);
       }
     }
     if (publish_imu_messages_) {

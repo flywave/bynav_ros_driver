@@ -15,7 +15,6 @@
 #include <bynav_gps_msgs/Gpgsa.h>
 #include <bynav_gps_msgs/Gpgsv.h>
 #include <bynav_gps_msgs/Gprmc.h>
-#include <bynav_gps_msgs/Range.h>
 #include <bynav_gps_msgs/Time.h>
 #include <gps_common/GPSFix.h>
 

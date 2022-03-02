@@ -23,6 +23,18 @@ const std::string SOLUTION_STATUSES[] = {
     "RESERVED",     "RESERVED",          "PENDING",        "INVALID_FIX",
     "UNAUTHORIZED", "RESERVED",          "INVALID_RATE"};
 
+const std::string INS_STATUSES[] = {"INS_INACTIVE",
+                                    "INS_ALIGNING",
+                                    "INS_HIGH_VARIANCE",
+                                    "INS_SOLUTION_GOOD",
+                                    "INS_SOLUTION_FREE",
+                                    "INS_ALIGNMENT_COMPLETE",
+                                    "DETERMINING_ORIENTATION",
+                                    "WAITING_INITIALPOS",
+                                    "WAITING_AZIMUTH",
+                                    "INITIALIZING_BIASES",
+                                    "MOTION_DETECT"};
+
 const size_t MAX_POSITION_TYPE = 80;
 
 const std::string POSITION_TYPES[] = {"NONE",
