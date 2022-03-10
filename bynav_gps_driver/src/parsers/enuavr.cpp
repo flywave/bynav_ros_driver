@@ -11,7 +11,7 @@ const std::string bynav_gps_driver::EnuavrParser::GetMessageName() const {
 }
 
 bynav_gps_msgs::BynavEnuAvrPtr bynav_gps_driver::EnuavrParser::ParseAscii(
-    const bynav_gps_driver::NmeaSentence &sentence) noexcept(false) {
+    const bynav_gps_driver::BynavSentence &sentence) noexcept(false) {
   const size_t EXPECTED_LEN = 3;
 
   if (sentence.body.size() != EXPECTED_LEN) {
@@ -23,12 +23,24 @@ bynav_gps_msgs::BynavEnuAvrPtr bynav_gps_driver::EnuavrParser::ParseAscii(
 
   bynav_gps_msgs::BynavEnuAvrPtr msg =
       boost::make_shared<bynav_gps_msgs::BynavEnuAvr>();
-  msg->message_id = sentence.body[0];
+  HeaderParser h_parser;
+  msg->bynav_msg_header = h_parser.ParseBinary(bin_msg);
+  msg->bynav_msg_header.message_name = "ENUAVR";
 
-  double heading;
-  if (swri_string_util::ToDouble(sentence.body[1], heading)) {
-    msg->heading = heading;
-  } else {
+  bool valid = true;
+
+  valid = valid && ParseDouble(sentence.body[1], msg->ant1_north);
+  valid = valid && ParseDouble(sentence.body[2], msg->ant1_up);
+  valid = valid && ParseDouble(sentence.body[3], msg->ant2_east);
+  valid = valid && ParseDouble(sentence.body[4], msg->ant2_north);
+  valid = valid && ParseDouble(sentence.body[5], msg->ant2_up);
+
+  valid = valid && ParseDouble(sentence.body[6], msg->roll);
+  valid = valid && ParseDouble(sentence.body[7], msg->pitch);
+
+  valid = valid && ParseUInt32(sentence.body[8], msg->count);
+
+  if (!valid) {
     throw ParseException("Error parsing heading as double in ENUAVR");
   }
 

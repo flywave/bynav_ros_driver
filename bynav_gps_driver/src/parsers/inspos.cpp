@@ -1,5 +1,6 @@
 #include <boost/make_shared.hpp>
 #include <bynav_gps_driver/parsers/inspos.h>
+#include <bynav_gps_driver/parsers/header.h>
 #include <swri_string_util/string_util.h>
 
 const std::string bynav_gps_driver::InsposParser::MESSAGE_NAME = "INSPOS";
@@ -11,8 +12,8 @@ const std::string bynav_gps_driver::InsposParser::GetMessageName() const {
 }
 
 bynav_gps_msgs::InsposPtr bynav_gps_driver::InsposParser::ParseAscii(
-    const bynav_gps_driver::NmeaSentence &sentence) noexcept(false) {
-  const size_t EXPECTED_LEN = 3;
+    const bynav_gps_driver::BynavSentence &sentence) noexcept(false) {
+  const size_t EXPECTED_LEN = 7;
 
   if (sentence.body.size() != EXPECTED_LEN) {
     std::stringstream error;
@@ -22,12 +23,21 @@ bynav_gps_msgs::InsposPtr bynav_gps_driver::InsposParser::ParseAscii(
   }
 
   bynav_gps_msgs::InsposPtr msg = boost::make_shared<bynav_gps_msgs::Inspos>();
-  msg->message_id = sentence.body[0];
+  HeaderParser h_parser;
+  msg->bynav_msg_header = h_parser.ParseAscii(sentence);
+  msg->bynav_msg_header.message_name = GetMessageName();
 
-  double heading;
-  if (swri_string_util::ToDouble(sentence.body[1], heading)) {
-    msg->heading = heading;
-  } else {
+  bool valid = true;
+
+  valid = valid && ParseUInt32(sentence.body[1], msg->week);
+  valid = valid && ParseDouble(sentence.body[2], msg->seconds);
+  valid = valid && ParseDouble(sentence.body[3], msg->latitude);
+  valid = valid && ParseDouble(sentence.body[4], msg->longitude);
+  valid = valid && ParseDouble(sentence.body[5], msg->height);
+
+  msg->status = sentence.body[6];
+
+  if (!valid) {
     throw ParseException("Error parsing heading as double in INSPOS");
   }
 

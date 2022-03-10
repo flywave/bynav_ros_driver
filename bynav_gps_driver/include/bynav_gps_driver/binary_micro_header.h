@@ -8,7 +8,7 @@
 namespace bynav_gps_driver {
 
 struct BinaryMicroHeader {
-  BinaryHeader()
+  BinaryMicroHeader()
       : sync0_(0xAA), sync1_(0x44), proto_(0x13), header_length_(0),
         message_id_(0), week_(0), gps_ms_(0) {}
 

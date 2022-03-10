@@ -1,7 +1,7 @@
 #ifndef BYNAV_GPS_DRIVER_PSRATR_2_H
 #define BYNAV_GPS_DRIVER_PSRATR_2_H
 
-#include <bynav_gps_msgs/Gpdop.h>
+#include <bynav_gps_msgs/Gpatr.h>
 
 #include "message_parser.h"
 

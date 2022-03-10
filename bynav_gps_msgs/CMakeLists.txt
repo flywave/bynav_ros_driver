@@ -41,7 +41,7 @@ add_message_files(DIRECTORY msg FILES
   NtripPort.msg
   Pashr.msg
   BynavConfig.msg
-  BynavPJK.msg
+  PtnlPJK.msg
   BynavConfigQuery.msg
   BynavCorrectedImuData.msg
   BynavEnuAvr.msg

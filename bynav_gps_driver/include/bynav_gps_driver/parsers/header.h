@@ -18,6 +18,9 @@ public:
   ParseBinary(const BinaryMessage &bin_msg) noexcept(false) override;
 
   bynav_gps_msgs::BynavMessageHeader
+  ParseBinary(const BinaryMicroMessage &bin_msg) noexcept(false) override;
+
+  bynav_gps_msgs::BynavMessageHeader
   ParseAscii(const BynavSentence &sentence) noexcept(false) override;
 
   static constexpr uint32_t BINARY_HEADER_LENGTH = 28;

@@ -1,5 +1,5 @@
 #include <boost/make_shared.hpp>
-#include <bynav_gps_driver/parsers/inspos.h>
+#include <bynav_gps_driver/parsers/insspd.h>
 #include <swri_string_util/string_util.h>
 
 const std::string bynav_gps_driver::InsspdParser::MESSAGE_NAME = "INSSPD";
@@ -11,7 +11,7 @@ const std::string bynav_gps_driver::InsspdParser::GetMessageName() const {
 }
 
 bynav_gps_msgs::InsspdPtr bynav_gps_driver::InsspdParser::ParseAscii(
-    const bynav_gps_driver::NmeaSentence &sentence) noexcept(false) {
+    const bynav_gps_driver::BynavSentence &sentence) noexcept(false) {
   const size_t EXPECTED_LEN = 3;
 
   if (sentence.body.size() != EXPECTED_LEN) {

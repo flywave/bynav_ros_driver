@@ -49,9 +49,11 @@ add_library(${PROJECT_NAME}
   src/bynav_raw.cpp
   src/bynav_rtcm.cpp
   src/bynav_message_extractor.cpp
+  src/parsers/bestgnsspos.cpp
   src/parsers/bestpos.cpp
   src/parsers/bestvel.cpp
   src/parsers/corrimudata.cpp
+  src/parsers/corrimudatas.cpp
   src/parsers/enuavr.cpp
   src/parsers/gpatr.cpp
   src/parsers/gpdop.cpp
@@ -77,7 +79,6 @@ add_library(${PROJECT_NAME}
   src/parsers/parsing_utils.cpp
   src/parsers/pashr.cpp
   src/parsers/ptnlpjk.cpp
-  src/parsers/range.cpp
   src/parsers/refstation.cpp
   src/parsers/rtcm.cpp
   src/parsers/shiftdatum.cpp

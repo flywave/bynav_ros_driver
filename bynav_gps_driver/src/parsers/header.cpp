@@ -63,6 +63,11 @@ bynav_gps_msgs::BynavMessageHeader bynav_gps_driver::HeaderParser::ParseBinary(
   return msg;
 }
 
+bynav_gps_msgs::BinaryMicroHeader bynav_gps_driver::HeaderParser::ParseBinary(
+    const BinaryMicroMessage &bin_msg) noexcept(false) {
+      
+    }
+
 bynav_gps_msgs::BynavMessageHeader bynav_gps_driver::HeaderParser::ParseAscii(
     const bynav_gps_driver::BynavSentence &sentence) noexcept(false) {
   if (sentence.header.size() != BYNAV_MESSAGE_HEADER_LENGTH) {

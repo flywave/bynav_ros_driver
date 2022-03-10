@@ -14,7 +14,7 @@ float32 north_distance
 float32 east_distance
 float32 up_distance
 
-uint32 orientation_type
+string orientation_type
 
 float32 yaw
 float32 pitch

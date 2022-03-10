@@ -11,7 +11,7 @@ const std::string bynav_gps_driver::GpvtgParser::GetMessageName() const {
 }
 
 bynav_gps_msgs::GpvtgPtr bynav_gps_driver::GpvtgParser::ParseAscii(
-    const bynav_gps_driver::NmeaSentence &sentence) noexcept(false) {
+    const bynav_gps_driver::BynavSentence &sentence) noexcept(false) {
   const size_t EXPECTED_LEN = 3;
 
   if (sentence.body.size() != EXPECTED_LEN) {
@@ -21,13 +21,22 @@ bynav_gps_msgs::GpvtgPtr bynav_gps_driver::GpvtgParser::ParseAscii(
     throw ParseException(error.str());
   }
 
-  bynav_gps_msgs::GpvtgPtr msg = boost::make_shared<bynav_gps_msgs::Gpori>();
+  bynav_gps_msgs::GpvtgPtr msg = boost::make_shared<bynav_gps_msgs::Gpvtg>();
   msg->message_id = sentence.body[0];
 
-  double heading;
-  if (swri_string_util::ToDouble(sentence.body[1], heading)) {
-    msg->heading = heading;
-  } else {
+  bool valid = true;
+
+  valid = valid && ParseDouble(sentence.body[1], msg->track);
+  msg->t = sentence.body[2];
+  valid = valid && ParseDouble(sentence.body[3], msg->mtrack);
+  msg->mt = sentence.body[4];
+  valid = valid && ParseDouble(sentence.body[5], msg->horizontal_speedn);
+  msg->spnNtUnit = sentence.body[6];
+  valid = valid && ParseDouble(sentence.body[6], msg->horizontal_speedk);
+  msg->spkKtUnit = sentence.body[7];
+  msg->status = sentence.body[8];
+
+  if (!valid) {
     throw ParseException("Error parsing heading as double in GPVTG");
   }
 

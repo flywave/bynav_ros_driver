@@ -11,7 +11,7 @@ const std::string bynav_gps_driver::MarkTimeParser::GetMessageName() const {
 }
 
 bynav_gps_msgs::MarkTimePtr bynav_gps_driver::MarkTimeParser::ParseAscii(
-    const bynav_gps_driver::NmeaSentence &sentence) noexcept(false) {
+    const bynav_gps_driver::BynavSentence &sentence) noexcept(false) {
   const size_t EXPECTED_LEN = 3;
 
   if (sentence.body.size() != EXPECTED_LEN) {
@@ -25,10 +25,9 @@ bynav_gps_msgs::MarkTimePtr bynav_gps_driver::MarkTimeParser::ParseAscii(
       boost::make_shared<bynav_gps_msgs::MarkTime>();
   msg->message_id = sentence.body[0];
 
-  double heading;
-  if (swri_string_util::ToDouble(sentence.body[1], heading)) {
-    msg->heading = heading;
-  } else {
+  bool valid = true;
+
+  if (!valid) {
     throw ParseException("Error parsing heading as double in MARKTIME");
   }
 
