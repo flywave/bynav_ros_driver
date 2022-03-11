@@ -15,13 +15,13 @@
 
 #include <bynav_gps_msgs/BynavCorrectedImuData.h>
 #include <bynav_gps_msgs/BynavPosition.h>
-#include <bynav_gps_msgs/Psrvel.h>
 #include <bynav_gps_msgs/Gpgga.h>
 #include <bynav_gps_msgs/Gphdt.h>
 #include <bynav_gps_msgs/Gprmc.h>
 #include <bynav_gps_msgs/Inspva.h>
 #include <bynav_gps_msgs/Inspvax.h>
 #include <bynav_gps_msgs/Insstdev.h>
+#include <bynav_gps_msgs/Psrvel.h>
 #include <bynav_gps_msgs/Time.h>
 
 #include <bynav_gps_driver/bynav_control.h>
