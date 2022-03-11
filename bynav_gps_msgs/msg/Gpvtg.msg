@@ -8,7 +8,7 @@ string  t
 float64 mtrack
 string  mt
 float64 horizontal_speedn
-string  spnNtUnit
+string  spn_nt_unit
 float64 horizontal_speedk
-string  spkKtUnit
+string spn_kt_unit
 string status

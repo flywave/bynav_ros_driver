@@ -18,7 +18,6 @@ add_message_files(DIRECTORY msg FILES
   Gpatr.msg
   Gpdop.msg
   Gpgga.msg
-  Gpgsa.msg
   Gpgst.msg
   Gpgsv.msg
   Gphdt.msg
@@ -52,7 +51,7 @@ add_message_files(DIRECTORY msg FILES
   Gpdop.msg
   BynavReceiverStatus.msg
   BynavSignalMask.msg
-  BynavVelocity.msg
+  Psrvel.msg
   PtnlPJK.msg
   Satellite.msg
   SerialConfig.msg
@@ -60,6 +59,7 @@ add_message_files(DIRECTORY msg FILES
   Pashr.msg
   FrequencyOut.msg
   RefStation.msg
+  BynavVelocity.msg
 )
 generate_messages(DEPENDENCIES ${MSG_DEPS})
 catkin_package(

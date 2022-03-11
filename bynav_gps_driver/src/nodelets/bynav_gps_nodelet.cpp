@@ -15,7 +15,7 @@
 #include <bynav_gps_msgs/BynavFRESET.h>
 #include <bynav_gps_msgs/BynavMessageHeader.h>
 #include <bynav_gps_msgs/BynavPosition.h>
-#include <bynav_gps_msgs/BynavVelocity.h>
+#include <bynav_gps_msgs/Psrvel.h>
 #include <bynav_gps_msgs/Gpdop.h>
 #include <bynav_gps_msgs/Gpgga.h>
 #include <bynav_gps_msgs/Gprmc.h>
@@ -44,7 +44,7 @@ class BynavGpsNodelet : public nodelet::Nodelet {
 public:
   BynavGpsNodelet()
       : device_(""), connection_type_("serial"), serial_baud_(115200),
-        polling_period_(0.05), publish_gpgsa_(false), publish_gpgsv_(false),
+        polling_period_(0.05),  publish_gpgsv_(false),
         publish_gphdt_(false), imu_rate_(100.0), imu_sample_rate_(-1),
         span_frame_to_ros_frame_(false), publish_clock_steering_(false),
         publish_imu_messages_(false), publish_bynav_positions_(false),
@@ -71,7 +71,6 @@ public:
     swri::param(priv, "device", device_, device_);
     swri::param(priv, "imu_rate", imu_rate_, imu_rate_);
     swri::param(priv, "imu_sample_rate", imu_sample_rate_, imu_sample_rate_);
-    swri::param(priv, "publish_gpgsa", publish_gpgsa_, publish_gpgsa_);
     swri::param(priv, "publish_gpgsv", publish_gpgsv_, publish_gpgsv_);
     swri::param(priv, "publish_gphdt", publish_gphdt_, publish_gphdt_);
     swri::param(priv, "publish_imu_messages", publish_imu_messages_,
@@ -132,10 +131,6 @@ public:
       gprmc_pub_ = swri::advertise<bynav_gps_msgs::Gprmc>(node, "gprmc", 100);
     }
 
-    if (publish_gpgsa_) {
-      gpgsa_pub_ = swri::advertise<bynav_gps_msgs::Gpgsa>(node, "gpgsa", 100);
-    }
-
     if (publish_imu_messages_) {
       imu_pub_ = swri::advertise<sensor_msgs::Imu>(node, "imu", 100);
       bynav_imu_pub_ = swri::advertise<bynav_gps_msgs::BynavCorrectedImuData>(
@@ -168,7 +163,7 @@ public:
 
     if (publish_bynav_velocity_) {
       bynav_velocity_pub_ =
-          swri::advertise<bynav_gps_msgs::BynavVelocity>(node, "bestvel", 100);
+          swri::advertise<bynav_gps_msgs::Psrvel>(node, "bestvel", 100);
     } else {
       gps_.wait_for_sync_ = false;
     }
@@ -234,9 +229,6 @@ public:
     }
     if (publish_bynav_gpdop_) {
       opts["gpdop" + format_suffix] = -1.0;
-    }
-    if (publish_gpgsa_) {
-      opts["gpgsa"] = polling_period_;
     }
     if (publish_gpgsv_) {
       opts["gpgsv"] = 1.0;
@@ -308,7 +300,6 @@ private:
   std::string connection_type_;
   int32_t serial_baud_;
   double polling_period_;
-  bool publish_gpgsa_;
   bool publish_gpgsv_;
   bool publish_gphdt_;
   double imu_rate_;
@@ -477,16 +468,6 @@ private:
         msg->header.stamp += sync_offset;
         msg->header.frame_id = frame_id_;
         gprmc_pub_.publish(msg);
-      }
-    }
-
-    if (publish_gpgsa_) {
-      std::vector<bynav_gps_msgs::GpgsaPtr> gpgsa_msgs;
-      gps_.GetGpgsaMessages(gpgsa_msgs);
-      for (const auto &msg : gpgsa_msgs) {
-        msg->header.stamp = ros::Time::now();
-        msg->header.frame_id = frame_id_;
-        gpgsa_pub_.publish(msg);
       }
     }
 

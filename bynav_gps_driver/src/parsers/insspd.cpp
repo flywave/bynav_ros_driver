@@ -30,7 +30,7 @@ bynav_gps_msgs::InsspdPtr bynav_gps_driver::InsspdParser::ParseAscii(
   bool valid = true;
   valid &= ParseUInt32(sentence.body[0], msg->week);
   valid &= ParseDouble(sentence.body[2], msg->seconds);
-  valid &= ParseDouble(sentence.body[3], msg->track_ground);
+  valid &= ParseDouble(sentence.body[3], msg->track_gnd);
   valid &= ParseDouble(sentence.body[4], msg->horizontal_speed);
   valid &= ParseDouble(sentence.body[5], msg->vertical_speed);
 

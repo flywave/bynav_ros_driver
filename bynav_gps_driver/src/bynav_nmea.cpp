@@ -16,7 +16,7 @@ namespace bynav_gps_driver {
 BynavNmea::BynavNmea()
     : gpsfix_sync_tol_(0.01), wait_for_sync_(true), imu_rate_forced_(false),
       utc_offset_(0), corrimudata_msgs_(MAX_BUFFER_SIZE),
-      gpgga_msgs_(MAX_BUFFER_SIZE), gpgsa_msgs_(MAX_BUFFER_SIZE),
+      gpgga_msgs_(MAX_BUFFER_SIZE), 
       gpgsv_msgs_(MAX_BUFFER_SIZE), gphdt_msgs_(MAX_BUFFER_SIZE),
       gprmc_msgs_(MAX_BUFFER_SIZE), imu_msgs_(MAX_BUFFER_SIZE),
       inspva_msgs_(MAX_BUFFER_SIZE), inspvax_msgs_(MAX_BUFFER_SIZE),
@@ -163,7 +163,7 @@ void BynavNmea::GetFixMessages(
       double time_diff = std::fabs(bestvel->bynav_msg_header.gps_seconds -
                                    bestpos->bynav_msg_header.gps_seconds);
       if (time_diff < gpsfix_sync_tol_) {
-        gpsFix->track = bestvel->track_ground;
+        gpsFix->track = bestvel->track_gnd;
         gpsFix->speed = std::sqrt(std::pow(bestvel->horizontal_speed, 2) +
                                   std::pow(bestvel->vertical_speed, 2));
         synced = true;
@@ -258,13 +258,6 @@ void BynavNmea::GetGpggaMessages(
   gpgga_messages.insert(gpgga_messages.end(), gpgga_msgs_.begin(),
                         gpgga_msgs_.end());
   gpgga_msgs_.clear();
-}
-
-void BynavNmea::GetGpgsaMessages(
-    std::vector<bynav_gps_msgs::GpgsaPtr> &gpgsa_messages) {
-  gpgsa_messages.resize(gpgsa_msgs_.size());
-  std::copy(gpgsa_msgs_.begin(), gpgsa_msgs_.end(), gpgsa_messages.begin());
-  gpgsa_msgs_.clear();
 }
 
 void BynavNmea::GetGpgsvMessages(
@@ -420,7 +413,7 @@ BynavNmea::ParseBinaryMessage(const BinaryMessage &msg,
     bestpos_sync_buffer_.push_back(position);
     break;
   }
-  case BestvelParser::MESSAGE_ID: {
+  case BynavVelocityParser::MESSAGE_ID: {
     bynav_gps_msgs::BynavVelocityPtr velocity =
         bestvel_parser_.ParseBinary(msg);
     velocity->header.stamp = stamp;
@@ -519,9 +512,6 @@ BynavNmea::ParseNmeaSentence(const NmeaSentence &sentence,
         stamp - ros::Duration(most_recent_utc_time - gprmc_time);
 
     gprmc_msgs_.push_back(std::move(gprmc));
-  } else if (sentence.id == GpgsaParser::MESSAGE_NAME) {
-    bynav_gps_msgs::GpgsaPtr gpgsa = gpgsa_parser_.ParseAscii(sentence);
-    gpgsa_msgs_.push_back(gpgsa);
   } else if (sentence.id == GpgsvParser::MESSAGE_NAME) {
     bynav_gps_msgs::GpgsvPtr gpgsv = gpgsv_parser_.ParseAscii(sentence);
     gpgsv_msgs_.push_back(gpgsv);

@@ -12,15 +12,15 @@ const std::string bynav_gps_driver::PsrvelParser::GetMessageName() const {
   return MESSAGE_NAME;
 }
 
-bynav_gps_msgs::BynavVelocityPtr bynav_gps_driver::PsrvelParser::ParseBinary(
+bynav_gps_msgs::PsrvelPtr bynav_gps_driver::PsrvelParser::ParseBinary(
     const BinaryMessage &bin_msg) noexcept(false) {
   if (bin_msg.data_.size() != BINARY_LENGTH) {
     std::stringstream error;
     error << "Unexpected velocity message size: " << bin_msg.data_.size();
     throw ParseException(error.str());
   }
-  bynav_gps_msgs::BynavVelocityPtr ros_msg =
-      boost::make_shared<bynav_gps_msgs::BynavVelocity>();
+  bynav_gps_msgs::PsrvelPtr ros_msg =
+      boost::make_shared<bynav_gps_msgs::Psrvel>();
   HeaderParser h_parser;
   ros_msg->bynav_msg_header = h_parser.ParseBinary(bin_msg);
   ros_msg->bynav_msg_header.message_name = MESSAGE_NAME;
@@ -42,16 +42,16 @@ bynav_gps_msgs::BynavVelocityPtr bynav_gps_driver::PsrvelParser::ParseBinary(
   ros_msg->latency = ParseFloat(&bin_msg.data_[8]);
   ros_msg->age = ParseFloat(&bin_msg.data_[12]);
   ros_msg->horizontal_speed = ParseDouble(&bin_msg.data_[16]);
-  ros_msg->track_ground = ParseDouble(&bin_msg.data_[24]);
+  ros_msg->track_gnd = ParseDouble(&bin_msg.data_[24]);
   ros_msg->vertical_speed = ParseDouble(&bin_msg.data_[32]);
 
   return ros_msg;
 }
 
-bynav_gps_msgs::BynavVelocityPtr bynav_gps_driver::PsrvelParser::ParseAscii(
+bynav_gps_msgs::PsrvelPtr bynav_gps_driver::PsrvelParser::ParseAscii(
     const BynavSentence &sentence) noexcept(false) {
-  bynav_gps_msgs::BynavVelocityPtr msg =
-      boost::make_shared<bynav_gps_msgs::BynavVelocity>();
+  bynav_gps_msgs::PsrvelPtr msg =
+      boost::make_shared<bynav_gps_msgs::Psrvel>();
   HeaderParser h_parser;
   msg->bynav_msg_header = h_parser.ParseAscii(sentence);
 
@@ -67,7 +67,7 @@ bynav_gps_msgs::BynavVelocityPtr bynav_gps_driver::PsrvelParser::ParseAscii(
   valid = valid && ParseFloat(sentence.body[2], msg->latency);
   valid = valid && ParseFloat(sentence.body[3], msg->age);
   valid = valid && ParseDouble(sentence.body[4], msg->horizontal_speed);
-  valid = valid && ParseDouble(sentence.body[5], msg->track_ground);
+  valid = valid && ParseDouble(sentence.body[5], msg->track_gnd);
   valid = valid && ParseDouble(sentence.body[6], msg->vertical_speed);
 
   if (!valid) {

@@ -3,20 +3,20 @@
 
 #include <bynav_gps_driver/parsers/message_parser.h>
 
-#include <bynav_gps_msgs/BynavVelocity.h>
+#include <bynav_gps_msgs/Psrvel.h>
 
 namespace bynav_gps_driver {
 
-class PsrvelParser : public MessageParser<bynav_gps_msgs::BynavVelocityPtr> {
+class PsrvelParser : public MessageParser<bynav_gps_msgs::PsrvelPtr> {
 public:
   uint32_t GetMessageId() const override;
 
   const std::string GetMessageName() const override;
 
-  bynav_gps_msgs::BynavVelocityPtr
+  bynav_gps_msgs::PsrvelPtr
   ParseBinary(const BinaryMessage &bin_msg) noexcept(false) override;
 
-  bynav_gps_msgs::BynavVelocityPtr
+  bynav_gps_msgs::PsrvelPtr
   ParseAscii(const BynavSentence &sentence) noexcept(false) override;
 
   static constexpr uint16_t MESSAGE_ID = 100;

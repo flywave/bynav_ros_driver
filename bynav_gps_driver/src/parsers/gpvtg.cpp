@@ -31,9 +31,9 @@ bynav_gps_msgs::GpvtgPtr bynav_gps_driver::GpvtgParser::ParseAscii(
   valid = valid && ParseDouble(sentence.body[3], msg->mtrack);
   msg->mt = sentence.body[4];
   valid = valid && ParseDouble(sentence.body[5], msg->horizontal_speedn);
-  msg->spnNtUnit = sentence.body[6];
+  msg->spn_nt_unit = sentence.body[6];
   valid = valid && ParseDouble(sentence.body[6], msg->horizontal_speedk);
-  msg->spkKtUnit = sentence.body[7];
+  msg->spn_kt_unit = sentence.body[7];
   msg->status = sentence.body[8];
 
   if (!valid) {

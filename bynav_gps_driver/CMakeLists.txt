@@ -57,7 +57,6 @@ add_library(${PROJECT_NAME}
   src/parsers/gpatr.cpp
   src/parsers/gpdop.cpp
   src/parsers/gpgga.cpp
-  src/parsers/gpgsa.cpp
   src/parsers/gpgst.cpp
   src/parsers/gpgsv.cpp
   src/parsers/gphdt.cpp

@@ -15,9 +15,8 @@
 
 #include <bynav_gps_msgs/BynavCorrectedImuData.h>
 #include <bynav_gps_msgs/BynavPosition.h>
-#include <bynav_gps_msgs/BynavVelocity.h>
+#include <bynav_gps_msgs/Psrvel.h>
 #include <bynav_gps_msgs/Gpgga.h>
-#include <bynav_gps_msgs/Gpgsa.h>
 #include <bynav_gps_msgs/Gphdt.h>
 #include <bynav_gps_msgs/Gprmc.h>
 #include <bynav_gps_msgs/Inspva.h>
@@ -33,7 +32,6 @@
 #include <bynav_gps_driver/parsers/corrimudata.h>
 #include <bynav_gps_driver/parsers/gpdop.h>
 #include <bynav_gps_driver/parsers/gpgga.h>
-#include <bynav_gps_driver/parsers/gpgsa.h>
 #include <bynav_gps_driver/parsers/gpgsv.h>
 #include <bynav_gps_driver/parsers/gphdt.h>
 #include <bynav_gps_driver/parsers/gprmc.h>
@@ -62,8 +60,6 @@ public:
   void GetFixMessages(std::vector<gps_common::GPSFixPtr> &fix_messages);
 
   void GetGpggaMessages(std::vector<bynav_gps_msgs::GpggaPtr> &gpgga_messages);
-
-  void GetGpgsaMessages(std::vector<bynav_gps_msgs::GpgsaPtr> &gpgsa_messages);
 
   void GetGpgsvMessages(std::vector<bynav_gps_msgs::GpgsvPtr> &gpgsv_messages);
 
@@ -136,11 +132,10 @@ private:
 
   BestposParser bestpos_parser_;
   PtnlPJKParser ptnlpjk_parser_;
-  BestvelParser bestvel_parser_;
+  BynavVelocityParser bestvel_parser_;
   HeadingParser heading_parser_;
   CorrImuDataParser corrimudata_parser_;
   GpggaParser gpgga_parser_;
-  GpgsaParser gpgsa_parser_;
   GpgsvParser gpgsv_parser_;
   GphdtParser gphdt_parser_;
   GprmcParser gprmc_parser_;
@@ -153,7 +148,6 @@ private:
   boost::circular_buffer<bynav_gps_msgs::BynavCorrectedImuDataPtr>
       corrimudata_msgs_;
   boost::circular_buffer<bynav_gps_msgs::GpggaPtr> gpgga_msgs_;
-  boost::circular_buffer<bynav_gps_msgs::GpgsaPtr> gpgsa_msgs_;
   boost::circular_buffer<bynav_gps_msgs::GpgsvPtr> gpgsv_msgs_;
   boost::circular_buffer<bynav_gps_msgs::GphdtPtr> gphdt_msgs_;
   boost::circular_buffer<bynav_gps_msgs::GprmcPtr> gprmc_msgs_;

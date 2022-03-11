@@ -7,7 +7,8 @@
 
 namespace bynav_gps_driver {
 
-class BestvelParser : public MessageParser<bynav_gps_msgs::BynavVelocityPtr> {
+class BynavVelocityParser
+    : public MessageParser<bynav_gps_msgs::BynavVelocityPtr> {
 public:
   uint32_t GetMessageId() const override;
 

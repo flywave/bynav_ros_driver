@@ -10,9 +10,8 @@
 #include <bynav_gps_msgs/BynavMessageHeader.h>
 #include <bynav_gps_msgs/BynavPosition.h>
 #include <bynav_gps_msgs/BynavReceiverStatus.h>
-#include <bynav_gps_msgs/BynavVelocity.h>
+#include <bynav_gps_msgs/Psrvel.h>
 #include <bynav_gps_msgs/Gpgga.h>
-#include <bynav_gps_msgs/Gpgsa.h>
 #include <bynav_gps_msgs/Gpgsv.h>
 #include <bynav_gps_msgs/Gprmc.h>
 #include <bynav_gps_msgs/Time.h>
