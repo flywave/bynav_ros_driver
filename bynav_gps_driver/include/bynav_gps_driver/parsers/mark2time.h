@@ -1,27 +1,28 @@
-#ifndef BYNAV_INSPOS_H
-#define BYNAV_INSPOS_H
+#ifndef BYNAV_MARK2_TIME_H
+#define BYNAV_MARK2_TIME_H
 
-#include <bynav_gps_msgs/Inspos.h>
+#include <bynav_gps_msgs/MarkTime.h>
 
 #include "message_parser.h"
 
 namespace bynav_gps_driver {
 
-class InsposParser : public MessageParser<bynav_gps_msgs::InsposPtr> {
+class Mark2TimeParser : public MessageParser<bynav_gps_msgs::MarkTimePtr> {
 public:
   uint32_t GetMessageId() const override;
 
   const std::string GetMessageName() const override;
 
-  bynav_gps_msgs::InsposPtr
+  bynav_gps_msgs::MarkTimePtr
   ParseBinary(const BinaryMessage &bin_msg) noexcept(false) override;
 
-  bynav_gps_msgs::InsposPtr ParseAscii(const BynavSentence &sentence) override;
+  bynav_gps_msgs::MarkTimePtr
+  ParseAscii(const BynavSentence &sentence) override;
 
-  static constexpr uint32_t MESSAGE_ID = 265;
+  static constexpr uint32_t MESSAGE_ID = 616;
   static const std::string MESSAGE_NAME;
   static constexpr size_t BINARY_LENGTH = 52;
 };
 } // namespace bynav_gps_driver
 
-#endif // BYNAV_INSPOS_H
+#endif // BYNAV_MARK2_TIME_H

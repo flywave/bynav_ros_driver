@@ -13,9 +13,14 @@ public:
 
   const std::string GetMessageName() const override;
 
+  bynav_gps_msgs::InsattPtr
+  ParseBinary(const BinaryMessage &bin_msg) noexcept(false) override;
+
   bynav_gps_msgs::InsattPtr ParseAscii(const BynavSentence &sentence) override;
 
+  static constexpr uint32_t MESSAGE_ID = 263;
   static const std::string MESSAGE_NAME;
+  static constexpr size_t BINARY_LENGTH = 52;
 };
 } // namespace bynav_gps_driver
 

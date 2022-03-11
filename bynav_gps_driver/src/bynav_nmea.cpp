@@ -33,8 +33,8 @@ bool BynavNmea::Connect(const std::string &device, ConnectionType connection,
   opts["gpgga"] = 0.05;
   opts["gprmc"] = 0.05;
   opts["bestposa"] = 0.05;
-  opts["timea"] = 1.0;
-  opts["rangea"] = 1;
+  opts["gpzda"] = 1.0;
+  opts["gpgsv"] = 1;
   return BynavControl::Connect(device, connection, opts);
 }
 
@@ -465,15 +465,6 @@ BynavNmea::ParseBinaryMessage(const BinaryMessage &msg,
     latest_insstdev_ = insstdev;
     break;
   }
-  case TimeParser::MESSAGE_ID: {
-    bynav_gps_msgs::TimePtr time = time_parser_.ParseBinary(msg);
-    utc_offset_ = time->utc_offset;
-    ROS_DEBUG("Got a new TIME with offset %f. UTC offset is %f",
-              time->utc_offset, utc_offset_);
-    time->header.stamp = stamp;
-    time_msgs_.push_back(time);
-    break;
-  }
   default:
     ROS_WARN("Unexpected binary message id: %u", msg.header_.message_id_);
     break;
@@ -582,13 +573,6 @@ BynavNmea::ParseBynavSentence(const BynavSentence &sentence,
     insstdev->header.stamp = stamp;
     insstdev_msgs_.push_back(insstdev);
     latest_insstdev_ = insstdev;
-  } else if (sentence.id == "TIMEA") {
-    bynav_gps_msgs::TimePtr time = time_parser_.ParseAscii(sentence);
-    utc_offset_ = time->utc_offset;
-    ROS_DEBUG("Got a new TIME with offset %f. UTC offset is %f",
-              time->utc_offset, utc_offset_);
-    time->header.stamp = stamp;
-    time_msgs_.push_back(time);
   }
   return READ_SUCCESS;
 }

@@ -24,6 +24,7 @@ add_message_files(DIRECTORY msg FILES
   Gpori.msg
   Gprmc.msg
   Gpvtg.msg
+  Gpzda.msg
   ICOMConfig.msg
   Insatt.msg
   Inspos.msg

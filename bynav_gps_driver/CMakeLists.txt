@@ -62,6 +62,7 @@ add_library(${PROJECT_NAME}
   src/parsers/gpori.cpp
   src/parsers/gprmc.cpp
   src/parsers/gpvtg.cpp
+  src/parsers/gpzda.cpp
   src/parsers/header.cpp
   src/parsers/heading.cpp
   src/parsers/insatt.cpp
@@ -77,8 +78,8 @@ add_library(${PROJECT_NAME}
   src/parsers/ptnlpjk.cpp
   src/parsers/refstation.cpp
   src/parsers/rtcm.cpp
-  src/parsers/time.cpp
   src/parsers/rawimu.cpp
+  src/parsers/rawimus.cpp
 )
 
 add_dependencies(${PROJECT_NAME} ${catkin_EXPORTED_TARGETS})

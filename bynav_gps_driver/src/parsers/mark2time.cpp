@@ -1,19 +1,17 @@
 #include <boost/make_shared.hpp>
 #include <bynav_gps_driver/parsers/header.h>
-#include <bynav_gps_driver/parsers/marktime.h>
+#include <bynav_gps_driver/parsers/mark2time.h>
 #include <swri_string_util/string_util.h>
 
-const std::string bynav_gps_driver::MarkTimeParser::MESSAGE_NAME = "MARKTIME";
+const std::string bynav_gps_driver::Mark2TimeParser::MESSAGE_NAME = "MARK2TIME";
 
-uint32_t bynav_gps_driver::MarkTimeParser::GetMessageId() const {
-  return MESSAGE_ID;
-}
+uint32_t bynav_gps_driver::Mark2TimeParser::GetMessageId() const { return MESSAGE_ID; }
 
-const std::string bynav_gps_driver::MarkTimeParser::GetMessageName() const {
+const std::string bynav_gps_driver::Mark2TimeParser::GetMessageName() const {
   return MESSAGE_NAME;
 }
 
-bynav_gps_msgs::MarkTimePtr bynav_gps_driver::MarkTimeParser::ParseBinary(
+bynav_gps_msgs::MarkTimePtr bynav_gps_driver::Mark2TimeParser::ParseBinary(
     const bynav_gps_driver::BinaryMessage &bin_msg) noexcept(false) {
   if (bin_msg.data_.size() != BINARY_LENGTH) {
     std::stringstream error;
@@ -35,13 +33,13 @@ bynav_gps_msgs::MarkTimePtr bynav_gps_driver::MarkTimeParser::ParseBinary(
   return ros_msg;
 }
 
-bynav_gps_msgs::MarkTimePtr bynav_gps_driver::MarkTimeParser::ParseAscii(
+bynav_gps_msgs::MarkTimePtr bynav_gps_driver::Mark2TimeParser::ParseAscii(
     const bynav_gps_driver::BynavSentence &sentence) noexcept(false) {
   const size_t EXPECTED_LEN = 3;
 
   if (sentence.body.size() != EXPECTED_LEN) {
     std::stringstream error;
-    error << "Expected MARKTIME length = " << EXPECTED_LEN << ", "
+    error << "Expected MARK2TIME length = " << EXPECTED_LEN << ", "
           << "actual length = " << sentence.body.size();
     throw ParseException(error.str());
   }
@@ -62,7 +60,7 @@ bynav_gps_msgs::MarkTimePtr bynav_gps_driver::MarkTimeParser::ParseAscii(
   msg->status = sentence.body[6];
 
   if (!valid) {
-    throw ParseException("Error parsing heading as double in MARKTIME");
+    throw ParseException("Error parsing heading as double in MARK2TIME");
   }
 
   return msg;

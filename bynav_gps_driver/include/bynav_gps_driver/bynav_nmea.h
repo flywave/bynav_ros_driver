@@ -143,7 +143,6 @@ private:
   InspvaxParser inspvax_parser_;
   InsstdevParser insstdev_parser_;
   GpdopParser gpdop_parser_;
-  TimeParser time_parser_;
 
   boost::circular_buffer<bynav_gps_msgs::BynavCorrectedImuDataPtr>
       corrimudata_msgs_;
