@@ -1,5 +1,6 @@
 #include <boost/make_shared.hpp>
 #include <bynav_gps_driver/parsers/insspd.h>
+#include <bynav_gps_driver/parsers/header.h>
 #include <swri_string_util/string_util.h>
 
 const std::string bynav_gps_driver::InsspdParser::MESSAGE_NAME = "INSSPD";
@@ -22,12 +23,20 @@ bynav_gps_msgs::InsspdPtr bynav_gps_driver::InsspdParser::ParseAscii(
   }
 
   bynav_gps_msgs::InsspdPtr msg = boost::make_shared<bynav_gps_msgs::Insspd>();
-  msg->message_id = sentence.body[0];
+  HeaderParser h_parser;
+  msg->bynav_msg_header = h_parser.ParseAscii(sentence);
+  msg->bynav_msg_header.message_name = GetMessageName();
 
-  double heading;
-  if (swri_string_util::ToDouble(sentence.body[1], heading)) {
-    msg->heading = heading;
-  } else {
+  bool valid = true;
+  valid &= ParseUInt32(sentence.body[0], msg->week);
+  valid &= ParseDouble(sentence.body[2], msg->seconds);
+  valid &= ParseDouble(sentence.body[3], msg->track_ground);
+  valid &= ParseDouble(sentence.body[4], msg->horizontal_speed);
+  valid &= ParseDouble(sentence.body[5], msg->vertical_speed);
+
+  msg->status = sentence.body[6];
+
+  if (!valid) {
     throw ParseException("Error parsing heading as double in INSSPD");
   }
 

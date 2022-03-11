@@ -163,7 +163,7 @@ public:
 
     if (publish_bynav_pjk_positions_) {
       bynav_pjk_position_pub_ =
-          swri::advertise<bynav_gps_msgs::BynavPJK>(node, "ptnlpjk", 100);
+          swri::advertise<bynav_gps_msgs::PtnlPJK>(node, "ptnlpjk", 100);
     }
 
     if (publish_bynav_velocity_) {

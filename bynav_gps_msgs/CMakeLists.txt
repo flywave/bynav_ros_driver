@@ -39,9 +39,9 @@ add_message_files(DIRECTORY msg FILES
   BynavKsxt.msg
   MarkTime.msg
   NtripPort.msg
-  Pashr.msg
   BynavConfig.msg
   PtnlPJK.msg
+  PtnlAvr.msg
   BynavConfigQuery.msg
   BynavCorrectedImuData.msg
   BynavEnuAvr.msg
@@ -57,8 +57,9 @@ add_message_files(DIRECTORY msg FILES
   Satellite.msg
   SerialConfig.msg
   Time.msg
+  Pashr.msg
   FrequencyOut.msg
-  ShiftDatum.msg
+  RefStation.msg
 )
 generate_messages(DEPENDENCIES ${MSG_DEPS})
 catkin_package(

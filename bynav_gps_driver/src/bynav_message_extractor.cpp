@@ -419,9 +419,6 @@ void BynavMessageExtractor::GetGpsFixMessage(
   case bynav_gps_msgs::Gpgga::GPS_QUAL_INVALID:
     gps_fix->status.status = gps_common::GPSStatus::STATUS_NO_FIX;
     break;
-  case bynav_gps_msgs::Gpgga::GPS_QUAL_WASS:
-    gps_fix->status.status = gps_common::GPSStatus::STATUS_WAAS_FIX;
-    break;
   default:
     gps_fix->status.status = gps_common::GPSStatus::STATUS_FIX;
     break;

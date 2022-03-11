@@ -13,7 +13,7 @@ public:
 
   const std::string GetMessageName() const override;
 
-  bynav_gps_msgs::GpfpdPtr ParseAscii(const BynavSentence &sentence) override;
+  bynav_gps_msgs::GpfpdPtr ParseAscii(const NmeaSentence &sentence) override;
 
   static constexpr size_t ASCII_BODY_FIELDS = 16;
   static const std::string MESSAGE_NAME;

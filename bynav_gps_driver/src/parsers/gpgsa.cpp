@@ -35,8 +35,15 @@ bynav_gps_msgs::GpgsaPtr bynav_gps_driver::GpgsaParser::ParseAscii(
   }
   msg->sv_ids.resize(n_svs);
 
-  ParseFloat(sentence.body[15], msg->pdop);
-  ParseFloat(sentence.body[16], msg->hdop);
-  ParseFloat(sentence.body[17], msg->vdop);
+  bool valid = true;
+
+  valid = valid && ParseFloat(sentence.body[15], msg->pdop);
+  valid = valid && ParseFloat(sentence.body[16], msg->hdop);
+  valid = valid && ParseFloat(sentence.body[17], msg->vdop);
+
+  if (!valid) {
+    throw ParseException("Error parsing heading as double in GPGSA");
+  }
+
   return msg;
 }

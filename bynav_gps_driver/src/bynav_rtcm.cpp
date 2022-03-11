@@ -46,24 +46,21 @@ BynavRtcm::ReadResult BynavRtcm::ProcessData() {
   std::vector<RtcmSentence> rtcm_messages;
 
   if (!data_buffer_.empty()) {
-    raw_buffer_.insert(raw_buffer_.end(), data_buffer_.begin(),
-                       data_buffer_.end());
+    rtcm_buffer_.insert(rtcm_buffer_.end(), data_buffer_.begin(),
+                        data_buffer_.end());
     data_buffer_.clear();
 
     std::string remaining_buffer;
 
-    if (!ExtractRtcmMessages(raw_buffer_, rtcm_messages, remaining_buffer)) {
+    if (!ExtractRtcmMessages(rtcm_buffer_, rtcm_messages, remaining_buffer)) {
       read_result = READ_PARSE_FAILED;
       error_msg_ = "Parse failure extracting sentences.";
     }
 
-    nmea_buffer_ = remaining_buffer;
+    rtcm_buffer_ = remaining_buffer;
 
-    ROS_DEBUG("Parsed: %lu NMEA / %lu Bynav / %lu Binary messages",
-              nmea_sentences.size(), bynav_sentences.size(),
-              binary_messages.size());
-    if (!nmea_buffer_.empty()) {
-      ROS_DEBUG("%lu unparsed bytes left over.", nmea_buffer_.size());
+    if (!rtcm_buffer_.empty()) {
+      ROS_DEBUG("%lu unparsed bytes left over.", rtcm_buffer_.size());
     }
   }
 
@@ -76,7 +73,7 @@ BynavRtcm::ReadResult BynavRtcm::ProcessData() {
   }
 }
 
-void BynavRtcm::ExtractRtcmMessages(const std::string &input,
+bool BynavRtcm::ExtractRtcmMessages(const std::string &input,
                                     std::vector<RtcmSentence> &rtcm_sentences,
                                     std::string &remaining) {
   Rtcm rtcm_;
@@ -87,17 +84,18 @@ void BynavRtcm::ExtractRtcmMessages(const std::string &input,
                                                 uint16_t id, uint32_t crc) {
         RtcmSentence sent;
         sent.id = id;
-        sent.data = std::vector(buf, buf + size);
+        sent.data = std::vector<uint8_t>(buf, buf + size);
         sent.crc = crc;
         rtcm_sentences.push_back(sent);
         remaining_count += size;
       });
   for (int i = 0; i < input.size(); i++) {
-    rtcm_.ReadCB(reinterpret_cast<uint8_t>(input[i]));
+    rtcm_.ReadCB(uint8_t(input[i]));
   }
   if (rtcm_.ParsingMessage() && remaining_count < input.size()) {
     remaining = input.substr(remaining_count);
   }
+  return true;
 }
 
 } // namespace bynav_gps_driver

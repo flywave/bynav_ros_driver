@@ -1,5 +1,6 @@
 #include <boost/make_shared.hpp>
 #include <bynav_gps_driver/parsers/insvel.h>
+#include <bynav_gps_driver/parsers/header.h>
 #include <swri_string_util/string_util.h>
 
 const std::string bynav_gps_driver::InsvelParser::MESSAGE_NAME = "INSVEL";
@@ -27,8 +28,13 @@ bynav_gps_msgs::InsvelPtr bynav_gps_driver::InsvelParser::ParseAscii(
   msg->bynav_msg_header.message_name = GetMessageName();
 
   bool valid = true;
+  valid &= ParseUInt32(sentence.body[0], msg->week);
+  valid &= ParseDouble(sentence.body[2], msg->seconds);
+  valid &= ParseDouble(sentence.body[3], msg->north_velocity);
+  valid &= ParseDouble(sentence.body[4], msg->east_velocity);
+  valid &= ParseDouble(sentence.body[5], msg->up_velocity);
 
-  double heading;
+  msg->status = sentence.body[6];
   if (!valid) {
     throw ParseException("Error parsing heading as double in INSVEL");
   }

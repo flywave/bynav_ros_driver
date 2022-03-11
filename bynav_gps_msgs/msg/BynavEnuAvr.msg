@@ -13,4 +13,4 @@ float64 ant2_up
 float64 roll
 float64 pitch
 
-int32 count
+uint32 count

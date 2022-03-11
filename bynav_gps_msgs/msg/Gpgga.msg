@@ -1,4 +1,5 @@
 # Message from GPGGA NMEA String
+
 Header header
 
 string message_id

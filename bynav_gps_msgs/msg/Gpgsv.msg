@@ -1,7 +1,4 @@
-# Total number of satellites in view and data about satellites
-# Because the NMEA sentence is limited to 4 satellites per message, several
-# of these messages may need to be synthesized to get data about all visible
-# satellites.
+# Message from GPGSV NMEA String
 
 Header header
 

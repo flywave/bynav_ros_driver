@@ -1,4 +1,4 @@
-# Message from PASHR NMEA String
+# Message from GPPASHR NMEA String
 Header header
 
 string message_id
@@ -6,15 +6,23 @@ string message_id
 # UTC seconds from midnight
 float64 utc_seconds
 
-float32 heading
+# Heading in degrees (clockwise)
+float64 heading
+
+# T: Indicates heading relative to True North
 string t
 
-float32 roll
-float32 pitch
-float32 heave
+float64 yaw
+float64 pitch
 
-float32 roll_accuracy
-float32 pitch_accuracy
-float32 heading_accuracy
+float32 undulation
 
-string position_type
+float32 yaw_std
+float32 pitch_std
+float32 heading_std
+
+string solution_status
+
+uint32 SOLUTION_STATUS_INVALID=0
+uint32 SOLUTION_STATUS_SINGLE_POINT=1
+uint32 SOLUTION_STATUS_RTK=2

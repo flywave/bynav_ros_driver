@@ -1,4 +1,4 @@
-# Message from GPHDT NMEA String
+# Message from GPHPD NMEA String
 Header header
 
 string message_id

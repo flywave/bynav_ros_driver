@@ -1,5 +1,5 @@
-#ifndef BYNAV_GPS_DRIVER_PASHR_H
-#define BYNAV_GPS_DRIVER_PASHR_H
+#ifndef BYNAV_GPS_DRIVER_GPPASHR_H
+#define BYNAV_GPS_DRIVER_GPPASHR_H
 
 #include <bynav_gps_msgs/Pashr.h>
 
@@ -13,10 +13,10 @@ public:
 
   const std::string GetMessageName() const override;
 
-  bynav_gps_msgs::PashrPtr ParseAscii(const BynavSentence &sentence) override;
+  bynav_gps_msgs::PashrPtr ParseAscii(const NmeaSentence &sentence) override;
 
   static const std::string MESSAGE_NAME;
 };
 } // namespace bynav_gps_driver
 
-#endif // BYNAV_GPS_DRIVER_PASHR_H
+#endif // BYNAV_GPS_DRIVER_GPPASHR_H

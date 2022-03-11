@@ -1,5 +1,6 @@
 #include <boost/make_shared.hpp>
 #include <bynav_gps_driver/parsers/refstation.h>
+#include <bynav_gps_driver/parsers/header.h>
 #include <swri_string_util/string_util.h>
 
 const std::string bynav_gps_driver::RefStationParser::MESSAGE_NAME =
@@ -12,7 +13,7 @@ const std::string bynav_gps_driver::RefStationParser::GetMessageName() const {
 }
 
 bynav_gps_msgs::RefStationPtr bynav_gps_driver::RefStationParser::ParseAscii(
-    const bynav_gps_driver::NmeaSentence &sentence) noexcept(false) {
+    const bynav_gps_driver::BynavSentence &sentence) noexcept(false) {
   const size_t EXPECTED_LEN = 3;
 
   if (sentence.body.size() != EXPECTED_LEN) {
@@ -24,7 +25,9 @@ bynav_gps_msgs::RefStationPtr bynav_gps_driver::RefStationParser::ParseAscii(
 
   bynav_gps_msgs::RefStationPtr msg =
       boost::make_shared<bynav_gps_msgs::RefStation>();
-  msg->message_id = sentence.body[0];
+  HeaderParser h_parser;
+  msg->bynav_msg_header = h_parser.ParseAscii(sentence);
+  msg->bynav_msg_header.message_name = "REFSTATIONA";
 
   double b_x;
   if (swri_string_util::ToDouble(sentence.body[1], b_x)) {

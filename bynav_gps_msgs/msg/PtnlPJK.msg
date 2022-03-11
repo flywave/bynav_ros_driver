@@ -1,4 +1,4 @@
-# Message from PTNLPJK String
+# Message from PTNL,PJK String
 Header header
 
 string message_id

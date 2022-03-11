@@ -24,17 +24,18 @@ BynavNmea::BynavNmea()
       bynav_pjk_positions_(MAX_BUFFER_SIZE), bynav_velocities_(MAX_BUFFER_SIZE),
       bestpos_sync_buffer_(SYNC_BUFFER_SIZE),
       bestvel_sync_buffer_(SYNC_BUFFER_SIZE), heading_msgs_(MAX_BUFFER_SIZE),
-      gpdop_msgs_(MAX_BUFFER_SIZE), range_msgs_(MAX_BUFFER_SIZE),
-      time_msgs_(MAX_BUFFER_SIZE), imu_rate_(-1.0), enable_imu_(false) {}
+      gpdop_msgs_(MAX_BUFFER_SIZE), time_msgs_(MAX_BUFFER_SIZE),
+      imu_rate_(-1.0), enable_imu_(false) {}
 
-bool BynavNmea::Connect(const std::string &device, ConnectionType connection) {
-  BynavMessageOpts opts;
+bool BynavNmea::Connect(const std::string &device, ConnectionType connection,
+                        BynavMessageOpts const &oopts) {
+  BynavMessageOpts opts = oopts;
   opts["gpgga"] = 0.05;
   opts["gprmc"] = 0.05;
   opts["bestposa"] = 0.05;
   opts["timea"] = 1.0;
   opts["rangea"] = 1;
-  return Connect(device, connection, opts);
+  return BynavControl::Connect(device, connection, opts);
 }
 
 BynavNmea::ReadResult BynavNmea::ProcessData() {
@@ -221,9 +222,6 @@ void BynavNmea::GetFixMessages(
       gpsFix->pdop = latest_gpdop_->pdop;
       gpsFix->hdop = latest_gpdop_->hdop;
       gpsFix->vdop = latest_gpdop_->vdop;
-      if (!latest_gpdop_->systems.empty()) {
-        gpsFix->tdop = latest_gpdop_->systems.front().tdop;
-      }
     }
 
     fix_messages.push_back(gpsFix);
@@ -335,11 +333,6 @@ void BynavNmea::GenerateImuMessages() {
     return;
   }
 
-  if (!latest_insstdev_ && !latest_inscov_) {
-    ROS_WARN_THROTTLE(1.0, "No INSSTDEV or INSCOV data yet; orientation "
-                           "covariance will be unavailable.");
-  }
-
   size_t previous_size = imu_msgs_.size();
   while (!corrimudata_queue_.empty() && !inspva_queue_.empty()) {
     bynav_gps_msgs::BynavCorrectedImuDataPtr corrimudata =
@@ -375,9 +368,7 @@ void BynavNmea::GenerateImuMessages() {
         -(inspva->pitch) * DEGREES_TO_RADIANS,
         -(inspva->azimuth) * DEGREES_TO_RADIANS);
 
-    if (latest_inscov_) {
-      imu->orientation_covariance = latest_inscov_->attitude_covariance;
-    } else if (latest_insstdev_) {
+    if (latest_insstdev_) {
       imu->orientation_covariance[0] = std::pow(2, latest_insstdev_->pitch_dev);
       imu->orientation_covariance[4] = std::pow(2, latest_insstdev_->roll_dev);
       imu->orientation_covariance[8] =
@@ -427,12 +418,6 @@ BynavNmea::ParseBinaryMessage(const BinaryMessage &msg,
     position->header.stamp = stamp;
     bynav_positions_.push_back(position);
     bestpos_sync_buffer_.push_back(position);
-    break;
-  }
-  case PtnlPJKParser::MESSAGE_ID: {
-    bynav_gps_msgs::PtnlPJKPtr xyz_position = ptnlpjk_parser_.ParseBinary(msg);
-    xyz_position->header.stamp = stamp;
-    bynav_pjk_positions_.push_back(xyz_position);
     break;
   }
   case BestvelParser::MESSAGE_ID: {
@@ -485,13 +470,6 @@ BynavNmea::ParseBinaryMessage(const BinaryMessage &msg,
     insstdev->header.stamp = stamp;
     insstdev_msgs_.push_back(insstdev);
     latest_insstdev_ = insstdev;
-    break;
-  }
-  case GpdopParser::MESSAGE_ID: {
-    auto gpdop = gpdop_parser_.ParseBinary(msg);
-    gpdop->header.stamp = stamp;
-    gpdop_msgs_.push_back(gpdop);
-    latest_gpdop_ = gpdop;
     break;
   }
   case TimeParser::MESSAGE_ID: {
@@ -550,6 +528,13 @@ BynavNmea::ParseNmeaSentence(const NmeaSentence &sentence,
   } else if (sentence.id == GphdtParser::MESSAGE_NAME) {
     bynav_gps_msgs::GphdtPtr gphdt = gphdt_parser_.ParseAscii(sentence);
     gphdt_msgs_.push_back(gphdt);
+  } else if (sentence.id == PtnlPJKParser::MESSAGE_NAME) {
+    bynav_gps_msgs::PtnlPJKPtr position = ptnlpjk_parser_.ParseAscii(sentence);
+    bynav_pjk_positions_.push_back(position);
+  } else if (sentence.id == GpdopParser::MESSAGE_NAME) {
+    auto gpdop = gpdop_parser_.ParseAscii(sentence);
+    gpdop_msgs_.push_back(gpdop);
+    latest_gpdop_ = gpdop;
   } else {
     ROS_DEBUG_STREAM("Unrecognized NMEA sentence " << sentence.id);
   }
@@ -566,10 +551,6 @@ BynavNmea::ParseBynavSentence(const BynavSentence &sentence,
     position->header.stamp = stamp;
     bynav_positions_.push_back(position);
     bestpos_sync_buffer_.push_back(position);
-  } else if (sentence.id == "PTNLPJK") {
-    bynav_gps_msgs::PtnlPJKPtr position = ptnlpjk_parser_.ParseAscii(sentence);
-    position->header.stamp = stamp;
-    bynav_pjk_positions_.push_back(position);
   } else if (sentence.id == "BESTVELA") {
     bynav_gps_msgs::BynavVelocityPtr velocity =
         bestvel_parser_.ParseAscii(sentence);
@@ -611,11 +592,6 @@ BynavNmea::ParseBynavSentence(const BynavSentence &sentence,
     insstdev->header.stamp = stamp;
     insstdev_msgs_.push_back(insstdev);
     latest_insstdev_ = insstdev;
-  } else if (sentence.id == "GPDOPA") {
-    auto gpdop = gpdop_parser_.ParseAscii(sentence);
-    gpdop->header.stamp = stamp;
-    gpdop_msgs_.push_back(gpdop);
-    latest_gpdop_ = gpdop;
   } else if (sentence.id == "TIMEA") {
     bynav_gps_msgs::TimePtr time = time_parser_.ParseAscii(sentence);
     utc_offset_ = time->utc_offset;
@@ -623,7 +599,7 @@ BynavNmea::ParseBynavSentence(const BynavSentence &sentence,
               time->utc_offset, utc_offset_);
     time->header.stamp = stamp;
     time_msgs_.push_back(time);
-  } 
+  }
   return READ_SUCCESS;
 }
 

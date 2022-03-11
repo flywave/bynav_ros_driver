@@ -46,7 +46,6 @@ add_library(${PROJECT_NAME}
   src/bynav_connection.cpp
   src/bynav_control.cpp
   src/bynav_nmea.cpp
-  src/bynav_raw.cpp
   src/bynav_rtcm.cpp
   src/bynav_message_extractor.cpp
   src/parsers/bestgnsspos.cpp
@@ -74,14 +73,12 @@ add_library(${PROJECT_NAME}
   src/parsers/insspd.cpp
   src/parsers/insstdev.cpp
   src/parsers/insvel.cpp
-  src/parsers/ksxt.cpp
   src/parsers/marktime.cpp
   src/parsers/parsing_utils.cpp
-  src/parsers/pashr.cpp
+  src/parsers/ptnlavr.cpp
   src/parsers/ptnlpjk.cpp
   src/parsers/refstation.cpp
   src/parsers/rtcm.cpp
-  src/parsers/shiftdatum.cpp
   src/parsers/time.cpp
 )
 

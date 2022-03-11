@@ -1,5 +1,6 @@
 #include <boost/make_shared.hpp>
 #include <bynav_gps_driver/parsers/marktime.h>
+#include <bynav_gps_driver/parsers/header.h>
 #include <swri_string_util/string_util.h>
 
 const std::string bynav_gps_driver::MarkTimeParser::MESSAGE_NAME = "MARKTIME";
@@ -23,9 +24,18 @@ bynav_gps_msgs::MarkTimePtr bynav_gps_driver::MarkTimeParser::ParseAscii(
 
   bynav_gps_msgs::MarkTimePtr msg =
       boost::make_shared<bynav_gps_msgs::MarkTime>();
-  msg->message_id = sentence.body[0];
+  HeaderParser h_parser;
+  msg->bynav_msg_header = h_parser.ParseAscii(sentence);
+  msg->bynav_msg_header.message_name = GetMessageName();
 
   bool valid = true;
+  valid &= ParseUInt32(sentence.body[0], msg->week);
+  valid &= ParseDouble(sentence.body[2], msg->seconds);
+  valid &= ParseDouble(sentence.body[3], msg->offset);
+  valid &= ParseDouble(sentence.body[4], msg->offset_std);
+  valid &= ParseDouble(sentence.body[5], msg->utc_offset);
+
+  msg->status = sentence.body[6];
 
   if (!valid) {
     throw ParseException("Error parsing heading as double in MARKTIME");

@@ -1,7 +1,7 @@
 # Message from KSXT String
 Header header
 
-string message_id
+BynavMessageHeader bynav_msg_header
 
 # UTC seconds from midnight
 float64 utc_seconds

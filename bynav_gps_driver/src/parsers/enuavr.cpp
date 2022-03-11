@@ -1,5 +1,6 @@
 #include <boost/make_shared.hpp>
 #include <bynav_gps_driver/parsers/enuavr.h>
+#include <bynav_gps_driver/parsers/header.h>
 #include <swri_string_util/string_util.h>
 
 const std::string bynav_gps_driver::EnuavrParser::MESSAGE_NAME = "ENUAVR";
@@ -24,7 +25,7 @@ bynav_gps_msgs::BynavEnuAvrPtr bynav_gps_driver::EnuavrParser::ParseAscii(
   bynav_gps_msgs::BynavEnuAvrPtr msg =
       boost::make_shared<bynav_gps_msgs::BynavEnuAvr>();
   HeaderParser h_parser;
-  msg->bynav_msg_header = h_parser.ParseBinary(bin_msg);
+  msg->bynav_msg_header = h_parser.ParseAscii(sentence);
   msg->bynav_msg_header.message_name = "ENUAVR";
 
   bool valid = true;

@@ -10,7 +10,9 @@ const std::string BestGNSSposParser::MESSAGE_NAME = "BESTGNSSPOS";
 
 uint32_t BestGNSSposParser::GetMessageId() const { return MESSAGE_ID; }
 
-const std::string BestGNSSposParser::GetMessageName() const { return MESSAGE_NAME; }
+const std::string BestGNSSposParser::GetMessageName() const {
+  return MESSAGE_NAME;
+}
 
 bynav_gps_msgs::BynavPositionPtr
 BestGNSSposParser::ParseBinary(const BinaryMessage &bin_msg) noexcept(false) {

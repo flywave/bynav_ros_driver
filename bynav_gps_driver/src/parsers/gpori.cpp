@@ -11,7 +11,7 @@ const std::string bynav_gps_driver::GporiParser::GetMessageName() const {
 }
 
 bynav_gps_msgs::GporiPtr bynav_gps_driver::GporiParser::ParseAscii(
-    const bynav_gps_driver::BynavSentence &sentence) noexcept(false) {
+    const bynav_gps_driver::NmeaSentence &sentence) noexcept(false) {
   const size_t EXPECTED_LEN = 3;
 
   if (sentence.body.size() != EXPECTED_LEN) {
@@ -24,10 +24,21 @@ bynav_gps_msgs::GporiPtr bynav_gps_driver::GporiParser::ParseAscii(
   bynav_gps_msgs::GporiPtr msg = boost::make_shared<bynav_gps_msgs::Gpori>();
   msg->message_id = sentence.body[0];
 
-  double heading;
-  if (swri_string_util::ToDouble(sentence.body[1], heading)) {
-    msg->heading = heading;
-  } else {
+  bool valid = true;
+
+  valid = valid && ParseDouble(sentence.body[1], msg->utc_seconds);
+  msg->position_status = sentence.body[2];
+
+  valid = valid && ParseFloat(sentence.body[3], msg->baseline_length);
+
+  valid = valid && ParseFloat(sentence.body[4], msg->heading);
+  valid = valid && ParseFloat(sentence.body[5], msg->tilt);
+
+  valid = valid && ParseFloat(sentence.body[6], msg->baseline_x);
+  valid = valid && ParseFloat(sentence.body[7], msg->baseline_y);
+  valid = valid && ParseFloat(sentence.body[8], msg->baseline_z);
+
+  if (!valid) {
     throw ParseException("Error parsing heading as double in GPORI");
   }
 

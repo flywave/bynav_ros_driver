@@ -13,9 +13,10 @@ public:
 
   const std::string GetMessageName() const override;
 
-  bynav_gps_msgs::GpdopPtr ParseAscii(const BynavSentence &sentence) override;
+  bynav_gps_msgs::GpdopPtr ParseAscii(const NmeaSentence &sentence) override;
 
   static constexpr size_t ASCII_BODY_FIELDS = 7;
+    static constexpr uint16_t MESSAGE_ID = 99;
   static const std::string MESSAGE_NAME;
 };
 } // namespace bynav_gps_driver

@@ -8,7 +8,7 @@
 
 #include <boost/asio.hpp>
 #include <boost/circular_buffer.hpp>
- 
+
 #include <swri_serial_util/serial_port.h>
 
 #include <gps_common/GPSFix.h>
@@ -42,8 +42,8 @@
 #include <bynav_gps_driver/parsers/inspvax.h>
 #include <bynav_gps_driver/parsers/insstdev.h>
 #include <bynav_gps_driver/parsers/ptnlpjk.h>
-#include <bynav_gps_driver/parsers/time.h> 
- 
+#include <bynav_gps_driver/parsers/time.h>
+
 #include <sensor_msgs/Imu.h>
 
 namespace bynav_gps_driver {
@@ -56,7 +56,8 @@ public:
   BynavNmea();
   virtual ~BynavNmea() = default;
 
-  bool Connect(const std::string &device, ConnectionType connection);
+  bool Connect(const std::string &device, ConnectionType connection,
+               BynavMessageOpts const &opts);
 
   void GetFixMessages(std::vector<gps_common::GPSFixPtr> &fix_messages);
 
@@ -91,8 +92,7 @@ public:
   void
   GetBynavPositions(std::vector<bynav_gps_msgs::BynavPositionPtr> &positions);
 
-  void
-  GetBynavPJKPositions(std::vector<bynav_gps_msgs::PtnlPJKPtr> &positions);
+  void GetBynavPJKPositions(std::vector<bynav_gps_msgs::PtnlPJKPtr> &positions);
 
   void
   GetBynavVelocities(std::vector<bynav_gps_msgs::BynavVelocityPtr> &velocities);
@@ -162,7 +162,7 @@ private:
   boost::circular_buffer<bynav_gps_msgs::InspvaxPtr> inspvax_msgs_;
   boost::circular_buffer<bynav_gps_msgs::InsstdevPtr> insstdev_msgs_;
   boost::circular_buffer<bynav_gps_msgs::BynavPositionPtr> bynav_positions_;
-  boost::circular_buffer<bynav_gps_msgs::BynavPJKPtr> bynav_pjk_positions_;
+  boost::circular_buffer<bynav_gps_msgs::PtnlPJKPtr> bynav_pjk_positions_;
   boost::circular_buffer<bynav_gps_msgs::BynavVelocityPtr> bynav_velocities_;
   boost::circular_buffer<bynav_gps_msgs::BynavPositionPtr> bestpos_sync_buffer_;
   boost::circular_buffer<bynav_gps_msgs::BynavVelocityPtr> bestvel_sync_buffer_;

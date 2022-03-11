@@ -33,7 +33,7 @@ public:
   ReadResult ProcessData();
 
 private:
-  void ExtractRtcmMessages(const std::string &input,
+  bool ExtractRtcmMessages(const std::string &input,
                            std::vector<RtcmSentence> &rtcm_sentences,
                            std::string &remaining);
 

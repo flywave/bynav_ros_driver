@@ -15,7 +15,7 @@ public:
   const std::string GetMessageName() const override;
 
   bynav_gps_msgs::PtnlPJKPtr
-  ParseAscii(const BynavSentence &sentence) noexcept(false) override;
+  ParseAscii(const NmeaSentence &sentence) noexcept(false) override;
 
   static const std::string MESSAGE_NAME;
 };
