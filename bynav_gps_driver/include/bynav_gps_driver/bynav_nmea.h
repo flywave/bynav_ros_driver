@@ -40,7 +40,6 @@
 #include <bynav_gps_driver/parsers/inspvax.h>
 #include <bynav_gps_driver/parsers/insstdev.h>
 #include <bynav_gps_driver/parsers/ptnlpjk.h>
-#include <bynav_gps_driver/parsers/time.h>
 
 #include <sensor_msgs/Imu.h>
 
