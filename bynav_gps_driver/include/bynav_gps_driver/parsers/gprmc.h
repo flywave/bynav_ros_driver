@@ -1,5 +1,5 @@
-#ifndef BYNAV_GPS_DRIVER_GPRMC_H
-#define BYNAV_GPS_DRIVER_GPRMC_H
+#ifndef BYNAV_GPRMC_H
+#define BYNAV_GPRMC_H
 
 #include <bynav_gps_driver/parsers/message_parser.h>
 #include <bynav_gps_msgs/Gprmc.h>
@@ -28,4 +28,4 @@ private:
 };
 } // namespace bynav_gps_driver
 
-#endif // BYNAV_GPS_DRIVER_GPRMC_H
+#endif // BYNAV_GPRMC_H

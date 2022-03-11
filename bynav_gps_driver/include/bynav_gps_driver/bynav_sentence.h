@@ -1,5 +1,5 @@
-#ifndef BYNAV_GPS_DRIVER_BYNAV_SENTENCE_H
-#define BYNAV_GPS_DRIVER_BYNAV_SENTENCE_H
+#ifndef BYNAV_SENTENCE_H_
+#define BYNAV_SENTENCE_H_
 
 #include <string>
 #include <vector>
@@ -13,4 +13,4 @@ struct BynavSentence {
 };
 } // namespace bynav_gps_driver
 
-#endif // BYNAV_GPS_DRIVER_BYNAV_SENTENCE_H
+#endif // BYNAV_SENTENCE_H_

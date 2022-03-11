@@ -1,0 +1,30 @@
+#ifndef BYNAV_RAWIMU_H
+#define BYNAV_RAWIMU_H
+
+#include <bynav_gps_msgs/RawIMU.h>
+
+#include <bynav_gps_driver/parsers/message_parser.h>
+#include <bynav_gps_driver/parsers/parsing_utils.h>
+
+namespace bynav_gps_driver {
+
+class RawIMUParser : public MessageParser<bynav_gps_msgs::RawIMUPtr> {
+public:
+  uint32_t GetMessageId() const override;
+
+  const std::string GetMessageName() const override;
+
+  bynav_gps_msgs::RawIMUPtr
+  ParseBinary(const BinaryMessage &bin_msg) noexcept(false) override;
+
+  bynav_gps_msgs::RawIMUPtr
+  ParseAscii(const BynavSentence &sentence) noexcept(false) override;
+
+  static constexpr uint16_t MESSAGE_ID = 268;
+  static constexpr size_t BINARY_LENGTH = 60;
+  static constexpr size_t ASCII_FIELDS = 8;
+  static const std::string MESSAGE_NAME;
+};
+} // namespace bynav_gps_driver
+
+#endif // BYNAV_RAWIMU_H

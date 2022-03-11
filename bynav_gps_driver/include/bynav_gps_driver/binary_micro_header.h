@@ -1,5 +1,5 @@
-#ifndef BYNAV_GPS_DRIVER_BINARY_MICRO_HEADER_H
-#define BYNAV_GPS_DRIVER_BINARY_MICRO_HEADER_H
+#ifndef BYNAV_BINARY_MICRO_MESSAGE_HEADER_H_
+#define BYNAV_BINARY_MICRO_MESSAGE_HEADER_H_
 
 #include <cstdint>
 
@@ -46,4 +46,4 @@ struct BinaryMicroHeader {
   }
 };
 } // namespace bynav_gps_driver
-#endif // BYNAV_GPS_DRIVER_BINARY_MICRO_HEADER_H
+#endif // BYNAV_BINARY_MICRO_MESSAGE_HEADER_H_

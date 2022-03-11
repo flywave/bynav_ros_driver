@@ -1,5 +1,5 @@
-#ifndef BYNAV_GPS_DRIVER_GPORI_H
-#define BYNAV_GPS_DRIVER_GPORI_H
+#ifndef BYNAV_GPORI_H
+#define BYNAV_GPORI_H
 
 #include <bynav_gps_msgs/Gpori.h>
 
@@ -19,4 +19,4 @@ public:
 };
 } // namespace bynav_gps_driver
 
-#endif // BYNAV_GPS_DRIVER_GPORI_H
+#endif // BYNAV_GPORI_H

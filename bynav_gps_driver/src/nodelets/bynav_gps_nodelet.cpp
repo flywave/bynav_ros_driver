@@ -15,13 +15,13 @@
 #include <bynav_gps_msgs/BynavFRESET.h>
 #include <bynav_gps_msgs/BynavMessageHeader.h>
 #include <bynav_gps_msgs/BynavPosition.h>
-#include <bynav_gps_msgs/Psrvel.h>
 #include <bynav_gps_msgs/Gpdop.h>
 #include <bynav_gps_msgs/Gpgga.h>
 #include <bynav_gps_msgs/Gprmc.h>
 #include <bynav_gps_msgs/Heading.h>
 #include <bynav_gps_msgs/Inspva.h>
 #include <bynav_gps_msgs/Inspvax.h>
+#include <bynav_gps_msgs/Psrvel.h>
 #include <bynav_gps_msgs/Time.h>
 #include <diagnostic_msgs/DiagnosticStatus.h>
 #include <diagnostic_updater/diagnostic_updater.h>
@@ -44,17 +44,16 @@ class BynavGpsNodelet : public nodelet::Nodelet {
 public:
   BynavGpsNodelet()
       : device_(""), connection_type_("serial"), serial_baud_(115200),
-        polling_period_(0.05),  publish_gpgsv_(false),
-        publish_gphdt_(false), imu_rate_(100.0), imu_sample_rate_(-1),
-        span_frame_to_ros_frame_(false), publish_clock_steering_(false),
-        publish_imu_messages_(false), publish_bynav_positions_(false),
-        publish_bynav_pjk_positions_(false), publish_bynav_velocity_(false),
-        publish_bynav_heading_(false), publish_bynav_gpdop_(false),
-        publish_nmea_messages_(false), publish_time_messages_(false),
-        publish_diagnostics_(true), publish_sync_diagnostic_(true),
-        publish_invalid_gpsfix_(false), reconnect_delay_s_(0.5),
-        use_binary_messages_(false), connection_(BynavNmea::SERIAL),
-        last_sync_(ros::TIME_MIN),
+        polling_period_(0.05), publish_gpgsv_(false), publish_gphdt_(false),
+        imu_rate_(100.0), imu_sample_rate_(-1), span_frame_to_ros_frame_(false),
+        publish_clock_steering_(false), publish_imu_messages_(false),
+        publish_bynav_positions_(false), publish_bynav_pjk_positions_(false),
+        publish_bynav_velocity_(false), publish_bynav_heading_(false),
+        publish_bynav_gpdop_(false), publish_nmea_messages_(false),
+        publish_time_messages_(false), publish_diagnostics_(true),
+        publish_sync_diagnostic_(true), publish_invalid_gpsfix_(false),
+        reconnect_delay_s_(0.5), use_binary_messages_(false),
+        connection_(BynavNmea::SERIAL), last_sync_(ros::TIME_MIN),
         rolling_offset_(stats::tag::rolling_window::window_size = 10),
         expected_rate_(20), device_timeouts_(0), device_interrupts_(0),
         device_errors_(0), gps_parse_failures_(0),
@@ -174,7 +173,7 @@ public:
     }
 
     if (publish_bynav_gpdop_) {
-      bynav_gpdop_pub_ =
+      gpdop_pub_ =
           swri::advertise<bynav_gps_msgs::Gpdop>(node, "gpdop", 100, true);
     }
 
@@ -332,7 +331,7 @@ private:
   ros::Publisher bynav_pjk_position_pub_;
   ros::Publisher bynav_velocity_pub_;
   ros::Publisher bynav_heading_pub_;
-  ros::Publisher bynav_gpdop_pub_;
+  ros::Publisher gpdop_pub_;
   ros::Publisher gpgga_pub_;
   ros::Publisher gpgsv_pub_;
   ros::Publisher gpgsa_pub_;
@@ -525,7 +524,7 @@ private:
       for (const auto &msg : gpdop_msgs) {
         msg->header.stamp += sync_offset;
         msg->header.frame_id = frame_id_;
-        bynav_gpdop_pub_.publish(msg);
+        gpdop_pub_.publish(msg);
       }
     }
 

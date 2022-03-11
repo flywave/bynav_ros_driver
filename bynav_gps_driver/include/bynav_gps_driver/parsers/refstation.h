@@ -1,5 +1,5 @@
-#ifndef BYNAV_GPS_DRIVER_REFSTATION_H
-#define BYNAV_GPS_DRIVER_REFSTATION_H
+#ifndef BYNAV_REFSTATION_H
+#define BYNAV_REFSTATION_H
 
 #include <bynav_gps_msgs/RefStation.h>
 
@@ -20,4 +20,4 @@ public:
 };
 } // namespace bynav_gps_driver
 
-#endif // BYNAV_GPS_DRIVER_REFSTATION_H
+#endif // BYNAV_REFSTATION_H

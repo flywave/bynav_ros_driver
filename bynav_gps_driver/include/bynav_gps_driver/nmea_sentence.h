@@ -1,5 +1,5 @@
-#ifndef BYNAV_GPS_DRIVER_NMEA_SENTENCE_H
-#define BYNAV_GPS_DRIVER_NMEA_SENTENCE_H
+#ifndef BYNAV_NMEA_SENTENCE_H_
+#define BYNAV_NMEA_SENTENCE_H_
 
 #include <string>
 #include <vector>
@@ -12,4 +12,4 @@ struct NmeaSentence {
 };
 } // namespace bynav_gps_driver
 
-#endif // BYNAV_GPS_DRIVER_NMEA_SENTENCE_H
+#endif // BYNAV_NMEA_SENTENCE_H_

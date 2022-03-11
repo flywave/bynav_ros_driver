@@ -1,5 +1,5 @@
-#ifndef BYNAV_GPS_DRIVER_INSATT_H
-#define BYNAV_GPS_DRIVER_INSATT_H
+#ifndef BYNAV_INSATT_H
+#define BYNAV_INSATT_H
 
 #include <bynav_gps_msgs/Insatt.h>
 
@@ -19,4 +19,4 @@ public:
 };
 } // namespace bynav_gps_driver
 
-#endif // BYNAV_GPS_DRIVER_INSATT_H
+#endif // BYNAV_INSATT_H

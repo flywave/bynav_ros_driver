@@ -1,5 +1,5 @@
-#ifndef BYNAV_GPS_DRIVER_BESTGNSSPOS_H
-#define BYNAV_GPS_DRIVER_BESTGNSSPOS_H
+#ifndef BYNAV_BESTGNSSPOS_H
+#define BYNAV_BESTGNSSPOS_H
 
 #include <bynav_gps_msgs/BynavPosition.h>
 
@@ -8,7 +8,8 @@
 
 namespace bynav_gps_driver {
 
-class BestGNSSposParser : public MessageParser<bynav_gps_msgs::BynavPositionPtr> {
+class BestGNSSposParser
+    : public MessageParser<bynav_gps_msgs::BynavPositionPtr> {
 public:
   uint32_t GetMessageId() const override;
 
@@ -27,4 +28,4 @@ public:
 };
 } // namespace bynav_gps_driver
 
-#endif // BYNAV_GPS_DRIVER_BESTGNSSPOS_H
+#endif // BYNAV_BESTGNSSPOS_H

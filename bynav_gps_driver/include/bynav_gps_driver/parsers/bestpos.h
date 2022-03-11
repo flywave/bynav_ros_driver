@@ -1,5 +1,5 @@
-#ifndef BYNAV_GPS_DRIVER_BESTPOS_H
-#define BYNAV_GPS_DRIVER_BESTPOS_H
+#ifndef BYNAV_BESTPOS_H
+#define BYNAV_BESTPOS_H
 
 #include <bynav_gps_msgs/BynavPosition.h>
 
@@ -27,4 +27,4 @@ public:
 };
 } // namespace bynav_gps_driver
 
-#endif // BYNAV_GPS_DRIVER_BESTPOS_H
+#endif // BYNAV_BESTPOS_H

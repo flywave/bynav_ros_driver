@@ -1,5 +1,5 @@
-#ifndef BYNAV_GPS_DRIVER_PARSE_EXCEPTION_H
-#define BYNAV_GPS_DRIVER_PARSE_EXCEPTION_H
+#ifndef BYNAV_PARSE_EXCEPTION_H
+#define BYNAV_PARSE_EXCEPTION_H
 
 #include <exception>
 
@@ -12,4 +12,4 @@ public:
 };
 } // namespace bynav_gps_driver
 
-#endif // BYNAV_GPS_DRIVER_PARSE_EXCEPTION_H
+#endif // BYNAV_PARSE_EXCEPTION_H

@@ -1,5 +1,5 @@
-#ifndef BYNAV_GPS_DRIVER_PSRATR_2_H
-#define BYNAV_GPS_DRIVER_PSRATR_2_H
+#ifndef BYNAV_PSRATR_2_H
+#define BYNAV_PSRATR_2_H
 
 #include <bynav_gps_msgs/Gpatr.h>
 
@@ -19,4 +19,4 @@ public:
 };
 } // namespace bynav_gps_driver
 
-#endif // BYNAV_GPS_DRIVER_PSRATR_2_H
+#endif // BYNAV_PSRATR_2_H

@@ -1,5 +1,5 @@
-#ifndef BYNAV_GPS_DRIVER_GPVTG_H
-#define BYNAV_GPS_DRIVER_GPVTG_H
+#ifndef BYNAV_GPVTG_H
+#define BYNAV_GPVTG_H
 
 #include <bynav_gps_msgs/Gpvtg.h>
 
@@ -13,10 +13,10 @@ public:
 
   const std::string GetMessageName() const override;
 
-  bynav_gps_msgs::GpvtgPtr ParseAscii(const BynavSentence &sentence) override;
+  bynav_gps_msgs::GpvtgPtr ParseAscii(const NmeaSentence &sentence) override;
 
   static const std::string MESSAGE_NAME;
 };
 } // namespace bynav_gps_driver
 
-#endif // BYNAV_GPS_DRIVER_GPVTG_H
+#endif // BYNAV_GPVTG_H

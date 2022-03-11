@@ -1,5 +1,5 @@
-#ifndef BYNAV_GPS_DRIVER_GPNTR_H
-#define BYNAV_GPS_DRIVER_GPNTR_H
+#ifndef BYNAV_GPNTR_H
+#define BYNAV_GPNTR_H
 
 #include <bynav_gps_msgs/Gpntr.h>
 
@@ -20,4 +20,4 @@ public:
 };
 } // namespace bynav_gps_driver
 
-#endif // BYNAV_GPS_DRIVER_GPNTR_H
+#endif // BYNAV_GPNTR_H

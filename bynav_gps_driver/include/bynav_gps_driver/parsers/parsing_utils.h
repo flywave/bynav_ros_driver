@@ -1,5 +1,5 @@
-#ifndef BYNAV_GPS_DRIVER_BASE_PARSER_H
-#define BYNAV_GPS_DRIVER_BASE_PARSER_H
+#ifndef BYNAV_BASE_PARSER_H
+#define BYNAV_BASE_PARSER_H
 
 #include <bynav_gps_msgs/BynavMessageHeader.h>
 
@@ -180,4 +180,4 @@ bool ParseUInt32(const std::string &string, uint32_t &value, int32_t base = 10);
 double UtcFloatToSeconds(double utc_float);
 } // namespace bynav_gps_driver
 
-#endif // BYNAV_GPS_DRIVER_BASE_PARSER_H
+#endif // BYNAV_BASE_PARSER_H

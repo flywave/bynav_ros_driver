@@ -1,5 +1,5 @@
-#ifndef BYNAV_GPS_DRIVER_MARK_TIME_H
-#define BYNAV_GPS_DRIVER_MARK_TIME_H
+#ifndef BYNAV_MARK_TIME_H
+#define BYNAV_MARK_TIME_H
 
 #include <bynav_gps_msgs/MarkTime.h>
 
@@ -20,4 +20,4 @@ public:
 };
 } // namespace bynav_gps_driver
 
-#endif // BYNAV_GPS_DRIVER_MARK_TIME_H
+#endif // BYNAV_MARK_TIME_H

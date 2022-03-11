@@ -1,5 +1,5 @@
-#ifndef BYNAV_BYNAV_CONTROL_H_
-#define BYNAV_BYNAV_CONTROL_H_
+#ifndef BYNAV_CONTROL_H_
+#define BYNAV_CONTROL_H_
 
 #include <map>
 #include <queue>
@@ -153,4 +153,4 @@ private:
 };
 
 } // namespace bynav_gps_driver
-#endif // BYNAV_BYNAV_CONTROL_H_
+#endif // BYNAV_CONTROL_H_

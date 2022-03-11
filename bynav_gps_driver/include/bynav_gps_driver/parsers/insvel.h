@@ -1,5 +1,5 @@
-#ifndef BYNAV_GPS_DRIVER_INSVEL_H
-#define BYNAV_GPS_DRIVER_INSVEL_H
+#ifndef BYNAV_INSVEL_H
+#define BYNAV_INSVEL_H
 
 #include <bynav_gps_msgs/Insvel.h>
 
@@ -19,4 +19,4 @@ public:
 };
 } // namespace bynav_gps_driver
 
-#endif // BYNAV_GPS_DRIVER_INSVEL_H
+#endif // BYNAV_INSVEL_H

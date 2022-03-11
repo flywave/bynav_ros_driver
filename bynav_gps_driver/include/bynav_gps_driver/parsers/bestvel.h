@@ -1,5 +1,5 @@
-#ifndef BYNAV_GPS_DRIVER_BESTVEL_H_H
-#define BYNAV_GPS_DRIVER_BESTVEL_H_H
+#ifndef BYNAV_BESTVEL_H_H
+#define BYNAV_BESTVEL_H_H
 
 #include <bynav_gps_driver/parsers/message_parser.h>
 
@@ -27,4 +27,4 @@ public:
 };
 } // namespace bynav_gps_driver
 
-#endif // BYNAV_GPS_DRIVER_BESTVEL_H_H
+#endif // BYNAV_BESTVEL_H_H

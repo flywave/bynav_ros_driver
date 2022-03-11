@@ -1,5 +1,5 @@
-#ifndef RTCM_H
-#define RTCM_H
+#ifndef BYNAV_RTCM_H
+#define BYNAV_RTCM_H
 
 #include <cstdint>
 #include <cstdio>
@@ -62,4 +62,4 @@ public:
 };
 } // namespace bynav_gps_driver
 
-#endif
+#endif // BYNAV_RTCM_H

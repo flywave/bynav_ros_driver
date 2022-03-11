@@ -78,6 +78,7 @@ add_library(${PROJECT_NAME}
   src/parsers/refstation.cpp
   src/parsers/rtcm.cpp
   src/parsers/time.cpp
+  src/parsers/rawimu.cpp
 )
 
 add_dependencies(${PROJECT_NAME} ${catkin_EXPORTED_TARGETS})

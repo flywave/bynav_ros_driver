@@ -1,5 +1,5 @@
-#ifndef BYNAV_BYNAV_RTCM_H_
-#define BYNAV_BYNAV_RTCM_H_
+#ifndef BYNAV_RTCM_H_
+#define BYNAV_RTCM_H_
 
 #include <map>
 #include <queue>
@@ -43,4 +43,4 @@ private:
 };
 
 } // namespace bynav_gps_driver
-#endif // BYNAV_BYNAV_RTCM_H_
+#endif // BYNAV_RTCM_H_

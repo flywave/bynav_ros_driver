@@ -1,5 +1,5 @@
-#ifndef BYNAV_GPS_DRIVER_TIME_H
-#define BYNAV_GPS_DRIVER_TIME_H
+#ifndef BYNAV_TIME_H
+#define BYNAV_TIME_H
 
 #include <bynav_gps_driver/parsers/message_parser.h>
 #include <bynav_gps_msgs/Time.h>
@@ -25,4 +25,4 @@ public:
 };
 } // namespace bynav_gps_driver
 
-#endif // BYNAV_GPS_DRIVER_TIME_H
+#endif // BYNAV_TIME_H

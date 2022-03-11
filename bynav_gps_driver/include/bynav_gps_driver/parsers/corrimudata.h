@@ -1,5 +1,5 @@
-#ifndef BYNAV_GPS_DRIVER_CORRIMUDATA_H
-#define BYNAV_GPS_DRIVER_CORRIMUDATA_H
+#ifndef BYNAV_CORRIMUDATA_H
+#define BYNAV_CORRIMUDATA_H
 
 #include <bynav_gps_driver/parsers/message_parser.h>
 #include <bynav_gps_msgs/BynavCorrectedImuData.h>
@@ -26,4 +26,4 @@ public:
 };
 } // namespace bynav_gps_driver
 
-#endif // BYNAV_GPS_DRIVER_CORRIMUDATA_H
+#endif // BYNAV_CORRIMUDATA_H

@@ -1,5 +1,5 @@
-#ifndef BYNAV_GPS_DRIVER_HEADING_H
-#define BYNAV_GPS_DRIVER_HEADING_H
+#ifndef BYNAV_HEADING_H
+#define BYNAV_HEADING_H
 
 #include <bynav_gps_msgs/Heading.h>
 
@@ -30,4 +30,4 @@ private:
 };
 } // namespace bynav_gps_driver
 
-#endif // BYNAV_GPS_DRIVER_HEADING_H
+#endif // BYNAV_HEADING_H

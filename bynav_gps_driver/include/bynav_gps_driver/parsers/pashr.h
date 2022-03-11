@@ -1,5 +1,5 @@
-#ifndef BYNAV_GPS_DRIVER_GPPASHR_H
-#define BYNAV_GPS_DRIVER_GPPASHR_H
+#ifndef BYNAV_GPPASHR_H
+#define BYNAV_GPPASHR_H
 
 #include <bynav_gps_msgs/Pashr.h>
 
@@ -19,4 +19,4 @@ public:
 };
 } // namespace bynav_gps_driver
 
-#endif // BYNAV_GPS_DRIVER_GPPASHR_H
+#endif // BYNAV_GPPASHR_H

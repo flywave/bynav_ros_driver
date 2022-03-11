@@ -1,5 +1,5 @@
-#ifndef BYNAV_GPS_DRIVER_HEADER_H
-#define BYNAV_GPS_DRIVER_HEADER_H
+#ifndef BYNAV_HEADER_H
+#define BYNAV_HEADER_H
 
 #include <bynav_gps_driver/parsers/message_parser.h>
 #include <bynav_gps_driver/parsers/parsing_utils.h>
@@ -27,4 +27,4 @@ public:
 };
 } // namespace bynav_gps_driver
 
-#endif // BYNAV_GPS_DRIVER_HEADER_H
+#endif // BYNAV_HEADER_H

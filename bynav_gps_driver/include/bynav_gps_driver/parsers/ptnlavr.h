@@ -1,5 +1,5 @@
-#ifndef BYNAV_GPS_DRIVER_PTNLAVR_H
-#define BYNAV_GPS_DRIVER_PTNLAVR_H
+#ifndef BYNAV_PTNLAVR_H
+#define BYNAV_PTNLAVR_H
 
 #include <bynav_gps_msgs/PtnlAvr.h>
 
@@ -21,4 +21,4 @@ public:
 };
 } // namespace bynav_gps_driver
 
-#endif // BYNAV_GPS_DRIVER_PTNLAVR_H
+#endif // BYNAV_PTNLAVR_H

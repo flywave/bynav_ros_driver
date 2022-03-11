@@ -58,6 +58,7 @@ add_message_files(DIRECTORY msg FILES
   FrequencyOut.msg
   RefStation.msg
   BynavVelocity.msg
+  RawIMU.msg
 )
 generate_messages(DEPENDENCIES ${MSG_DEPS})
 catkin_package(

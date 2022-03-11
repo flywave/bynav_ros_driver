@@ -1,5 +1,5 @@
-#ifndef BYNAV_GPS_DRIVER_BESTXYZ_H
-#define BYNAV_GPS_DRIVER_BESTXYZ_H
+#ifndef BYNAV_BESTXYZ_H
+#define BYNAV_BESTXYZ_H
 
 #include <bynav_gps_msgs/PtnlPJK.h>
 
@@ -21,4 +21,4 @@ public:
 };
 } // namespace bynav_gps_driver
 
-#endif // BYNAV_GPS_DRIVER_BESTXYZ_H
+#endif // BYNAV_BESTXYZ_H

@@ -1,5 +1,5 @@
-#ifndef BYNAV_GPS_DRIVER_MESSAGE_PARSER_H
-#define BYNAV_GPS_DRIVER_MESSAGE_PARSER_H
+#ifndef BYNAV_MESSAGE_PARSER_H
+#define BYNAV_MESSAGE_PARSER_H
 
 #include <bynav_gps_driver/binary_message.h>
 #include <bynav_gps_driver/binary_micro_message.h>
@@ -39,4 +39,4 @@ public:
 };
 } // namespace bynav_gps_driver
 
-#endif // BYNAV_GPS_DRIVER_MESSAGE_PARSER_H
+#endif // BYNAV_MESSAGE_PARSER_H

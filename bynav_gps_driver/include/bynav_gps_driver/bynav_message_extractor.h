@@ -1,5 +1,5 @@
-#ifndef NOVTEL_BYNAV_MESSAGE_PARSER_H_
-#define NOVTEL_BYNAV_MESSAGE_PARSER_H_
+#ifndef BYNAV_MESSAGE_EXTRACTOR_H_
+#define BYNAV_MESSAGE_EXTRACTOR_H_
 
 #include <limits>
 #include <sstream>
@@ -89,4 +89,4 @@ private:
 };
 } // namespace bynav_gps_driver
 
-#endif // BYNAV_BYNAV_MESSAGE_PARSER_H_
+#endif // BYNAV_MESSAGE_EXTRACTOR_H_

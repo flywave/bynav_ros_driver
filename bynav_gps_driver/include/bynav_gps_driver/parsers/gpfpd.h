@@ -1,5 +1,5 @@
-#ifndef BYNAV_GPS_DRIVER_GPFPD_H
-#define BYNAV_GPS_DRIVER_GPFPD_H
+#ifndef BYNAV_GPFPD_H
+#define BYNAV_GPFPD_H
 
 #include <bynav_gps_msgs/Gpfpd.h>
 
@@ -20,4 +20,4 @@ public:
 };
 } // namespace bynav_gps_driver
 
-#endif // BYNAV_GPS_DRIVER_GPFPD_H
+#endif // BYNAV_GPFPD_H
