@@ -35,7 +35,6 @@ add_message_files(DIRECTORY msg FILES
   Raw.msg
   Rtcm.msg
   InterfaceMode.msg
-  BynavKsxt.msg
   MarkTime.msg
   NtripPort.msg
   BynavConfig.msg
@@ -43,7 +42,6 @@ add_message_files(DIRECTORY msg FILES
   PtnlAvr.msg
   BynavConfigQuery.msg
   BynavCorrectedImuData.msg
-  BynavEnuAvr.msg
   BynavExtendedSolutionStatus.msg
   Heading.msg
   BynavMessageHeader.msg
