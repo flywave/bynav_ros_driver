@@ -11,7 +11,7 @@ const std::string bynav_gps_driver::GpzdaParser::GetMessageName() const {
 }
 
 bynav_gps_msgs::GpzdaPtr bynav_gps_driver::GpzdaParser::ParseAscii(
-    const bynav_gps_driver::NmeaSentence &sentence) noexcept(false) {
+    const bynav_gps_driver::NmeaSentence &sentence) {
   const size_t EXPECTED_LEN = 3;
 
   if (sentence.body.size() != EXPECTED_LEN) {

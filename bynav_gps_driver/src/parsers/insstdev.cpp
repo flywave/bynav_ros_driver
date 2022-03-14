@@ -13,7 +13,7 @@ const std::string bynav_gps_driver::InsstdevParser::GetMessageName() const {
 }
 
 bynav_gps_msgs::InsstdevPtr bynav_gps_driver::InsstdevParser::ParseBinary(
-    const bynav_gps_driver::BinaryMessage &bin_msg) noexcept(false) {
+    const bynav_gps_driver::BinaryMessage &bin_msg) {
   if (bin_msg.data_.size() != BINARY_LENGTH) {
     std::stringstream error;
     error << "Unexpected INSSTDEV message size: " << bin_msg.data_.size();
@@ -41,7 +41,7 @@ bynav_gps_msgs::InsstdevPtr bynav_gps_driver::InsstdevParser::ParseBinary(
 }
 
 bynav_gps_msgs::InsstdevPtr bynav_gps_driver::InsstdevParser::ParseAscii(
-    const bynav_gps_driver::BynavSentence &sentence) noexcept(false) {
+    const bynav_gps_driver::BynavSentence &sentence) {
   if (sentence.body.size() != ASCII_FIELDS) {
     std::stringstream error;
     error << "Unexpected number of fields in INSSTDEV log: "

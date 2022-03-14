@@ -12,7 +12,7 @@ const std::string bynav_gps_driver::GpggaParser::GetMessageName() const {
 }
 
 bynav_gps_msgs::GpggaPtr bynav_gps_driver::GpggaParser::ParseAscii(
-    const bynav_gps_driver::NmeaSentence &sentence) noexcept(false) {
+    const bynav_gps_driver::NmeaSentence &sentence) {
   const size_t MAX_LEN = 15;
   const size_t MIN_LEN = 14;
   if (sentence.body.size() > MAX_LEN || sentence.body.size() < MIN_LEN) {

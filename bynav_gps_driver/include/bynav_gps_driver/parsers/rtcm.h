@@ -4,8 +4,8 @@
 #include <cstdint>
 #include <cstdio>
 #include <ctime>
-#include <vector>
 #include <functional>
+#include <vector>
 
 namespace bynav_gps_driver {
 

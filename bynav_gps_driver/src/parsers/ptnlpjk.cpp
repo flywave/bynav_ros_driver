@@ -13,7 +13,7 @@ uint32_t PtnlPJKParser::GetMessageId() const { return 0; }
 const std::string PtnlPJKParser::GetMessageName() const { return MESSAGE_NAME; }
 
 bynav_gps_msgs::PtnlPJKPtr
-PtnlPJKParser::ParseAscii(const NmeaSentence &sentence) noexcept(false) {
+PtnlPJKParser::ParseAscii(const NmeaSentence &sentence) {
   const size_t EXPECTED_LEN = 3;
 
   if (sentence.body.size() != EXPECTED_LEN) {
@@ -33,7 +33,7 @@ PtnlPJKParser::ParseAscii(const NmeaSentence &sentence) noexcept(false) {
 
   char parse[3][20] = {{0}, {0}};
   int len = sscanf(sentence.body[3].data(), "%2s%2s%2s", parse[0], parse[1],
-               parse[2]);
+                   parse[2]);
   if (len == 3) {
     msg->utc_month = atoi(parse[0]);
     msg->utc_day = atoi(parse[1]);

@@ -14,8 +14,7 @@ public:
 
   const std::string GetMessageName() const override;
 
-  bynav_gps_msgs::GpggaPtr
-  ParseAscii(const NmeaSentence &sentence) noexcept(false) override;
+  bynav_gps_msgs::GpggaPtr ParseAscii(const NmeaSentence &sentence) override;
 
   bool WasLastGpsValid() const;
 

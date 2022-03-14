@@ -2,18 +2,21 @@
 #include <bynav_gps_driver/parsers/bestvel.h>
 #include <bynav_gps_driver/parsers/header.h>
 
-const std::string bynav_gps_driver::BynavVelocityParser::MESSAGE_NAME = "BESTGNSSVEL";
+const std::string bynav_gps_driver::BynavVelocityParser::MESSAGE_NAME =
+    "BESTGNSSVEL";
 
 uint32_t bynav_gps_driver::BynavVelocityParser::GetMessageId() const {
   return MESSAGE_ID;
 }
 
-const std::string bynav_gps_driver::BynavVelocityParser::GetMessageName() const {
+const std::string
+bynav_gps_driver::BynavVelocityParser::GetMessageName() const {
   return MESSAGE_NAME;
 }
 
-bynav_gps_msgs::BynavVelocityPtr bynav_gps_driver::BynavVelocityParser::ParseBinary(
-    const BinaryMessage &bin_msg) noexcept(false) {
+bynav_gps_msgs::BynavVelocityPtr
+bynav_gps_driver::BynavVelocityParser::ParseBinary(
+    const BinaryMessage &bin_msg) {
   if (bin_msg.data_.size() != BINARY_LENGTH) {
     std::stringstream error;
     error << "Unexpected velocity message size: " << bin_msg.data_.size();
@@ -48,8 +51,9 @@ bynav_gps_msgs::BynavVelocityPtr bynav_gps_driver::BynavVelocityParser::ParseBin
   return ros_msg;
 }
 
-bynav_gps_msgs::BynavVelocityPtr bynav_gps_driver::BynavVelocityParser::ParseAscii(
-    const BynavSentence &sentence) noexcept(false) {
+bynav_gps_msgs::BynavVelocityPtr
+bynav_gps_driver::BynavVelocityParser::ParseAscii(
+    const BynavSentence &sentence) {
   bynav_gps_msgs::BynavVelocityPtr msg =
       boost::make_shared<bynav_gps_msgs::BynavVelocity>();
   HeaderParser h_parser;

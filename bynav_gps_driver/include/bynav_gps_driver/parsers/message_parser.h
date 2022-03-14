@@ -21,19 +21,19 @@ public:
 
   virtual const std::string GetMessageName() const = 0;
 
-  virtual T ParseBinary(const BinaryMessage &bin_msg) noexcept(false) {
+  virtual T ParseBinary(const BinaryMessage &bin_msg) {
     throw ParseException("ParseBinary not implemented.");
   };
 
-  virtual T ParseBinary(const BinaryMicroMessage &bin_msg) noexcept(false) {
+  virtual T ParseBinary(const BinaryMicroMessage &bin_msg) {
     throw ParseException("ParseBinary not implemented.");
   };
 
-  virtual T ParseAscii(const BynavSentence &sentence) noexcept(false) {
+  virtual T ParseAscii(const BynavSentence &sentence) {
     throw ParseException("ParseAscii not implemented.");
   };
 
-  virtual T ParseAscii(const NmeaSentence &sentence) noexcept(false) {
+  virtual T ParseAscii(const NmeaSentence &sentence) {
     throw ParseException("ParseAscii not implemented.");
   };
 };

@@ -1,6 +1,6 @@
 #include <boost/make_shared.hpp>
-#include <bynav_gps_driver/parsers/psrvel.h>
 #include <bynav_gps_driver/parsers/header.h>
+#include <bynav_gps_driver/parsers/psrvel.h>
 
 const std::string bynav_gps_driver::PsrvelParser::MESSAGE_NAME = "PSRVEL";
 
@@ -12,8 +12,8 @@ const std::string bynav_gps_driver::PsrvelParser::GetMessageName() const {
   return MESSAGE_NAME;
 }
 
-bynav_gps_msgs::PsrvelPtr bynav_gps_driver::PsrvelParser::ParseBinary(
-    const BinaryMessage &bin_msg) noexcept(false) {
+bynav_gps_msgs::PsrvelPtr
+bynav_gps_driver::PsrvelParser::ParseBinary(const BinaryMessage &bin_msg) {
   if (bin_msg.data_.size() != BINARY_LENGTH) {
     std::stringstream error;
     error << "Unexpected velocity message size: " << bin_msg.data_.size();
@@ -48,10 +48,9 @@ bynav_gps_msgs::PsrvelPtr bynav_gps_driver::PsrvelParser::ParseBinary(
   return ros_msg;
 }
 
-bynav_gps_msgs::PsrvelPtr bynav_gps_driver::PsrvelParser::ParseAscii(
-    const BynavSentence &sentence) noexcept(false) {
-  bynav_gps_msgs::PsrvelPtr msg =
-      boost::make_shared<bynav_gps_msgs::Psrvel>();
+bynav_gps_msgs::PsrvelPtr
+bynav_gps_driver::PsrvelParser::ParseAscii(const BynavSentence &sentence) {
+  bynav_gps_msgs::PsrvelPtr msg = boost::make_shared<bynav_gps_msgs::Psrvel>();
   HeaderParser h_parser;
   msg->bynav_msg_header = h_parser.ParseAscii(sentence);
 

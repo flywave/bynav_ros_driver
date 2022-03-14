@@ -10,7 +10,7 @@ const std::string bynav_gps_driver::GpgsvParser::GetMessageName() const {
 }
 
 bynav_gps_msgs::GpgsvPtr bynav_gps_driver::GpgsvParser::ParseAscii(
-    const bynav_gps_driver::NmeaSentence &sentence) noexcept(false) {
+    const bynav_gps_driver::NmeaSentence &sentence) {
   const size_t MIN_LENGTH = 4;
   if (sentence.body.size() < MIN_LENGTH) {
     std::stringstream error;

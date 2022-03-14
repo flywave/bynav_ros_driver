@@ -9,7 +9,7 @@ const std::string bynav_gps_driver::HeaderParser::GetMessageName() const {
 }
 
 bynav_gps_msgs::BynavMessageHeader bynav_gps_driver::HeaderParser::ParseBinary(
-    const bynav_gps_driver::BinaryMessage &bin_msg) noexcept(false) {
+    const bynav_gps_driver::BinaryMessage &bin_msg) {
   bynav_gps_msgs::BynavMessageHeader msg;
   msg.port = PORT_IDENTIFIERS[bin_msg.header_.port_address_];
   msg.sequence_num = bin_msg.header_.sequence_;
@@ -63,8 +63,8 @@ bynav_gps_msgs::BynavMessageHeader bynav_gps_driver::HeaderParser::ParseBinary(
   return msg;
 }
 
-bynav_gps_msgs::BynavMessageHeader bynav_gps_driver::HeaderParser::ParseBinary(
-    const BinaryMicroMessage &bin_msg) noexcept(false) {
+bynav_gps_msgs::BynavMessageHeader
+bynav_gps_driver::HeaderParser::ParseBinary(const BinaryMicroMessage &bin_msg) {
 
   bynav_gps_msgs::BynavMessageHeader msg;
 
@@ -72,7 +72,7 @@ bynav_gps_msgs::BynavMessageHeader bynav_gps_driver::HeaderParser::ParseBinary(
 }
 
 bynav_gps_msgs::BynavMessageHeader bynav_gps_driver::HeaderParser::ParseAscii(
-    const bynav_gps_driver::BynavSentence &sentence) noexcept(false) {
+    const bynav_gps_driver::BynavSentence &sentence) {
   if (sentence.header.size() != BYNAV_MESSAGE_HEADER_LENGTH) {
     std::stringstream error;
     error << "Bynav message header size wrong: expected "

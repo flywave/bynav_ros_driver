@@ -13,10 +13,10 @@ public:
   const std::string GetMessageName() const override;
 
   bynav_gps_msgs::InsstdevPtr
-  ParseBinary(const BinaryMessage &bin_msg) noexcept(false) override;
+  ParseBinary(const BinaryMessage &bin_msg) override;
 
   bynav_gps_msgs::InsstdevPtr
-  ParseAscii(const BynavSentence &sentence) noexcept(false) override;
+  ParseAscii(const BynavSentence &sentence) override;
 
   static constexpr uint32_t MESSAGE_ID = 2051;
   static const std::string MESSAGE_NAME;

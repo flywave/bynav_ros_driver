@@ -13,7 +13,7 @@ const std::string bynav_gps_driver::InspvaxParser::GetMessageName() const {
 }
 
 bynav_gps_msgs::InspvaxPtr bynav_gps_driver::InspvaxParser::ParseBinary(
-    const bynav_gps_driver::BinaryMessage &bin_msg) noexcept(false) {
+    const bynav_gps_driver::BinaryMessage &bin_msg) {
   if (bin_msg.data_.size() != BINARY_LENGTH) {
     std::stringstream error;
     error << "Unexpected inspvax message size: " << bin_msg.data_.size();
@@ -70,7 +70,7 @@ bynav_gps_msgs::InspvaxPtr bynav_gps_driver::InspvaxParser::ParseBinary(
 }
 
 bynav_gps_msgs::InspvaxPtr bynav_gps_driver::InspvaxParser::ParseAscii(
-    const bynav_gps_driver::BynavSentence &sentence) noexcept(false) {
+    const bynav_gps_driver::BynavSentence &sentence) {
   if (sentence.body.size() != ASCII_FIELDS) {
     std::stringstream error;
     error << "Unexpected number of fields in INSPVA log: "

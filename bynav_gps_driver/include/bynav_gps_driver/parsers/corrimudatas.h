@@ -14,10 +14,10 @@ public:
   const std::string GetMessageName() const override;
 
   bynav_gps_msgs::BynavCorrectedImuDataPtr
-  ParseBinary(const BinaryMicroMessage &bin_msg) noexcept(false) override;
+  ParseBinary(const BinaryMicroMessage &bin_msg) override;
 
   bynav_gps_msgs::BynavCorrectedImuDataPtr
-  ParseAscii(const BynavSentence &sentence) noexcept(false) override;
+  ParseAscii(const BynavSentence &sentence) override;
 
   static constexpr uint16_t MESSAGE_ID = 813;
   static constexpr size_t BINARY_LENGTH = 60;

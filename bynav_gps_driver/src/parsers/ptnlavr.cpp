@@ -13,7 +13,7 @@ uint32_t PtnlAvrParser::GetMessageId() const { return 0; }
 const std::string PtnlAvrParser::GetMessageName() const { return MESSAGE_NAME; }
 
 bynav_gps_msgs::PtnlAvrPtr
-PtnlAvrParser::ParseAscii(const NmeaSentence &sentence) noexcept(false) {
+PtnlAvrParser::ParseAscii(const NmeaSentence &sentence) {
   const size_t EXPECTED_LEN = 3;
 
   if (sentence.body.size() != EXPECTED_LEN) {

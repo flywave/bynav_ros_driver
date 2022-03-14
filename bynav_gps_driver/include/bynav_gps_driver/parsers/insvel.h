@@ -13,8 +13,7 @@ public:
 
   const std::string GetMessageName() const override;
 
-  bynav_gps_msgs::InsvelPtr
-  ParseBinary(const BinaryMessage &bin_msg) noexcept(false) override;
+  bynav_gps_msgs::InsvelPtr ParseBinary(const BinaryMessage &bin_msg) override;
 
   bynav_gps_msgs::InsvelPtr ParseAscii(const BynavSentence &sentence) override;
 

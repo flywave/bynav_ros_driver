@@ -15,7 +15,7 @@ const std::string BestGNSSposParser::GetMessageName() const {
 }
 
 bynav_gps_msgs::BynavPositionPtr
-BestGNSSposParser::ParseBinary(const BinaryMessage &bin_msg) noexcept(false) {
+BestGNSSposParser::ParseBinary(const BinaryMessage &bin_msg) {
   if (bin_msg.data_.size() != BINARY_LENGTH) {
     std::stringstream error;
     error << "Unexpected BESTGNSSPOS message length: " << bin_msg.data_.size();
@@ -73,7 +73,7 @@ BestGNSSposParser::ParseBinary(const BinaryMessage &bin_msg) noexcept(false) {
 }
 
 bynav_gps_msgs::BynavPositionPtr
-BestGNSSposParser::ParseAscii(const BynavSentence &sentence) noexcept(false) {
+BestGNSSposParser::ParseAscii(const BynavSentence &sentence) {
   bynav_gps_msgs::BynavPositionPtr msg =
       boost::make_shared<bynav_gps_msgs::BynavPosition>();
   HeaderParser h_parser;

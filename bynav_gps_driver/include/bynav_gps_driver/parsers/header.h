@@ -15,13 +15,13 @@ public:
   const std::string GetMessageName() const override;
 
   bynav_gps_msgs::BynavMessageHeader
-  ParseBinary(const BinaryMessage &bin_msg) noexcept(false) override;
+  ParseBinary(const BinaryMessage &bin_msg) override;
 
   bynav_gps_msgs::BynavMessageHeader
-  ParseBinary(const BinaryMicroMessage &bin_msg) noexcept(false) override;
+  ParseBinary(const BinaryMicroMessage &bin_msg) override;
 
   bynav_gps_msgs::BynavMessageHeader
-  ParseAscii(const BynavSentence &sentence) noexcept(false) override;
+  ParseAscii(const BynavSentence &sentence) override;
 
   static constexpr uint32_t BINARY_HEADER_LENGTH = 28;
 };

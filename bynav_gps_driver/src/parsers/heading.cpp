@@ -13,7 +13,7 @@ uint32_t HeadingParser::GetMessageId() const { return MESSAGE_ID; }
 const std::string HeadingParser::GetMessageName() const { return MESSAGE_NAME; }
 
 bynav_gps_msgs::HeadingPtr
-HeadingParser::ParseBinary(const BinaryMessage &bin_msg) noexcept(false) {
+HeadingParser::ParseBinary(const BinaryMessage &bin_msg) {
   if (bin_msg.data_.size() != BINARY_LENGTH) {
     std::stringstream error;
     error << "Unexpected HEADING message length: " << bin_msg.data_.size();
@@ -73,7 +73,7 @@ HeadingParser::ParseBinary(const BinaryMessage &bin_msg) noexcept(false) {
 }
 
 bynav_gps_msgs::HeadingPtr
-HeadingParser::ParseAscii(const BynavSentence &sentence) noexcept(false) {
+HeadingParser::ParseAscii(const BynavSentence &sentence) {
   bynav_gps_msgs::HeadingPtr ros_msg =
       boost::make_shared<bynav_gps_msgs::Heading>();
   HeaderParser h_parser;
@@ -134,8 +134,7 @@ HeadingParser::ParseAscii(const BynavSentence &sentence) noexcept(false) {
   return ros_msg;
 }
 
-uint8_t
-HeadingParser::SolutionSourceToMsgEnum(uint8_t source_mask) noexcept(false) {
+uint8_t HeadingParser::SolutionSourceToMsgEnum(uint8_t source_mask) {
   uint8_t source_bits = (source_mask & 0x0Cu) >> 2u;
   switch (source_bits) {
   case 0:

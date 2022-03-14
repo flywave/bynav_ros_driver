@@ -13,7 +13,7 @@ uint32_t RawIMUParser::GetMessageId() const { return 0; }
 const std::string RawIMUParser::GetMessageName() const { return MESSAGE_NAME; }
 
 bynav_gps_msgs::RawIMUPtr bynav_gps_driver::RawIMUParser::ParseBinary(
-    const bynav_gps_driver::BinaryMessage &bin_msg) noexcept(false) {
+    const bynav_gps_driver::BinaryMessage &bin_msg) {
   if (bin_msg.data_.size() != BINARY_LENGTH) {
     std::stringstream error;
     error << "Unexpected corrimudata message size: " << bin_msg.data_.size();
@@ -41,7 +41,7 @@ bynav_gps_msgs::RawIMUPtr bynav_gps_driver::RawIMUParser::ParseBinary(
 }
 
 bynav_gps_msgs::RawIMUPtr bynav_gps_driver::RawIMUParser::ParseAscii(
-    const bynav_gps_driver::BynavSentence &sentence) noexcept(false) {
+    const bynav_gps_driver::BynavSentence &sentence) {
   if (sentence.body.size() != ASCII_FIELDS) {
     std::stringstream error;
     error << "Unexpected number of fields in RAWIMUA log: "

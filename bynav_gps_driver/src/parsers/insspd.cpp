@@ -12,7 +12,7 @@ const std::string bynav_gps_driver::InsspdParser::GetMessageName() const {
 }
 
 bynav_gps_msgs::InsspdPtr bynav_gps_driver::InsspdParser::ParseBinary(
-    const bynav_gps_driver::BinaryMessage &bin_msg) noexcept(false) {
+    const bynav_gps_driver::BinaryMessage &bin_msg) {
   if (bin_msg.data_.size() != BINARY_LENGTH) {
     std::stringstream error;
     error << "Unexpected inspva message size: " << bin_msg.data_.size();
@@ -77,7 +77,7 @@ bynav_gps_msgs::InsspdPtr bynav_gps_driver::InsspdParser::ParseBinary(
 }
 
 bynav_gps_msgs::InsspdPtr bynav_gps_driver::InsspdParser::ParseAscii(
-    const bynav_gps_driver::BynavSentence &sentence) noexcept(false) {
+    const bynav_gps_driver::BynavSentence &sentence) {
   const size_t EXPECTED_LEN = 3;
 
   if (sentence.body.size() != EXPECTED_LEN) {

@@ -14,7 +14,7 @@ public:
   const std::string GetMessageName() const override;
 
   bynav_gps_msgs::MarkTimePtr
-  ParseBinary(const BinaryMessage &bin_msg) noexcept(false) override;
+  ParseBinary(const BinaryMessage &bin_msg) override;
 
   bynav_gps_msgs::MarkTimePtr
   ParseAscii(const BynavSentence &sentence) override;

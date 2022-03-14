@@ -71,6 +71,8 @@ BynavRtcm::ReadResult BynavRtcm::ProcessData() {
     ros_msg->data.insert(ros_msg->data.end(), msg.data.begin(), msg.data.end());
     rtcm_msgs_.push_back(std::move(ros_msg));
   }
+
+  return READ_SUCCESS;
 }
 
 bool BynavRtcm::ExtractRtcmMessages(const std::string &input,
