@@ -60,6 +60,11 @@ add_message_files(DIRECTORY msg FILES
   RefStation.msg
   BynavVelocity.msg
   RawIMU.msg
+  GnssEphemMsg.msg
+  GnssGloEphemMsg.msg
+  GnssMeasMsg.msg
+  GnssObsMsg.msg
+  GnssTimeMsg.msg
 )
 generate_messages(DEPENDENCIES ${MSG_DEPS})
 catkin_package(

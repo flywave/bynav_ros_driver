@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<package>
+  <name>bynav_gps_toolkit</name>
+  <version>0.0.0</version>
+  <description>The GNSS toolkit</description>
+
+  <maintainer email="support@flywave.net">aninggo</maintainer>
+
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>roscpp</build_depend>
+  <build_depend>bynav_gps_driver</build_depend>
+
+  <run_depend>roscpp</run_depend>
+  <run_depend>bynav_gps_driver</run_depend>
+
+  <export></export>
+</package>

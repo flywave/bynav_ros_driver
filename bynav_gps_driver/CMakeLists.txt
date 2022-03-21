@@ -27,11 +27,12 @@ set(BUILD_DEPENDS
 find_package(catkin REQUIRED COMPONENTS ${BUILD_DEPENDS})
 
 find_package(Boost REQUIRED COMPONENTS system)
+find_package(Eigen3 REQUIRED)
 
 include_directories(
   include 
   ${catkin_INCLUDE_DIRS}
-  
+  ${EIGEN3_INCLUDE_DIR}
 )
   
 
@@ -48,6 +49,10 @@ add_library(${PROJECT_NAME}
   src/bynav_nmea.cpp
   src/bynav_rtcm.cpp
   src/bynav_message_extractor.cpp
+  src/gnss_ros.cpp
+  src/gnss_spp.cpp
+  src/gnss_utility.cpp
+  src/rinex_helper.cpp
   src/parsers/bestgnsspos.cpp
   src/parsers/bestpos.cpp
   src/parsers/bestvel.cpp
