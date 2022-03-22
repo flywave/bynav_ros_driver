@@ -257,4 +257,84 @@ gtime_t sec2time(const double sec) {
   return time;
 }
 
+std::string sat2str(uint32_t sat_no) {
+  std::stringstream ss;
+  uint32_t prn = 0;
+  uint32_t sys = satsys(sat_no, &prn);
+  switch (sys) {
+  case SYS_GPS:
+    ss << "G" << std::setw(2) << std::setfill('0') << prn;
+    break;
+  case SYS_GLO:
+    ss << "R" << std::setw(2) << std::setfill('0') << prn;
+    break;
+  case SYS_BDS:
+    ss << "C" << std::setw(2) << std::setfill('0') << prn;
+    break;
+  case SYS_GAL:
+    ss << "E" << std::setw(2) << std::setfill('0') << prn;
+    break;
+  case SYS_SBS:
+    ss << "S" << std::setw(2) << std::setfill('0') << prn;
+    break;
+  case SYS_QZS:
+    ss << "J" << std::setw(2) << std::setfill('0') << prn;
+    break;
+  default: // current not support other system
+    //LOG(WARNING) << "currently not support satelite system id " << sys;
+    break;
+  }
+  return ss.str();
+}
+
+double L1_freq(const ObsPtr &obs, int *l1_idx) {
+  const uint32_t sys = satsys(obs->sat, NULL);
+  double freq_min = -1.0;
+  double freq_max = -1.0;
+  if (sys == SYS_GPS || sys == SYS_GAL)
+    freq_min = freq_max = FREQ1;
+  else if (sys == SYS_BDS)
+    freq_min = freq_max = FREQ1_BDS;
+  else if (sys == SYS_GLO) {
+    freq_min = FREQ1_GLO - 7 * DFRQ1_GLO;
+    freq_max = FREQ1_GLO + 6 * DFRQ1_GLO;
+  }
+
+  if (l1_idx != NULL)
+    *l1_idx = -1;
+
+  for (uint32_t i = 0; i < obs->freqs.size(); ++i) {
+    if (obs->freqs[i] >= freq_min && obs->freqs[i] <= freq_max) {
+      if (l1_idx != NULL)
+        *l1_idx = static_cast<int>(i);
+      return obs->freqs[i];
+    }
+  }
+
+  return -1.0;
+}
+
+uint32_t str2sat(const std::string &sat_str) {
+  if (sat_str.size() < 3) {
+    //LOG(ERROR) << "Invalid RINEX satellite identifier " << sat_str;
+    return 0;
+  }
+  const uint32_t prn = std::stoul(sat_str.substr(1, 2));
+  switch (sat_str.at(0)) {
+  case 'G':
+    return sat_no(SYS_GPS, prn);
+  case 'R':
+    return sat_no(SYS_GLO, prn);
+  case 'C':
+    return sat_no(SYS_BDS, prn);
+  case 'E':
+    return sat_no(SYS_GAL, prn);
+  case 'S':
+    return sat_no(SYS_SBS, prn);
+  case 'J':
+    return sat_no(SYS_QZS, prn);
+  }
+  return 0;
+}
+
 } // namespace bynav_gps_driver

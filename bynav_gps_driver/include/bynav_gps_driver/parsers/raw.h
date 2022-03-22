@@ -111,6 +111,24 @@
 #define CODE_L9X 55 /* obs code: SB+C       (IRN) */
 #define MAXCODE 55  /* max number of obs code */
 
+#define U1(p) (*((unsigned char *)(p)))
+
+#define FREQ1 1.57542E9      /* L1/E1  frequency (Hz) */
+#define FREQ2 1.22760E9      /* L2     frequency (Hz) */
+#define FREQ5 1.17645E9      /* L5/E5a frequency (Hz) */
+#define FREQ6 1.27875E9      /* E6/LEX frequency (Hz) */
+#define FREQ7 1.20714E9      /* E5b    frequency (Hz) */
+#define FREQ8 1.191795E9     /* E5a+b  frequency (Hz) */
+#define FREQ9 2.492028E9     /* S      frequency (Hz) */
+#define FREQ1_GLO 1.60200E9  /* GLONASS G1 base frequency (Hz) */
+#define DFRQ1_GLO 0.56250E6  /* GLONASS G1 bias frequency (Hz/n) */
+#define FREQ2_GLO 1.24600E9  /* GLONASS G2 base frequency (Hz) */
+#define DFRQ2_GLO 0.43750E6  /* GLONASS G2 bias frequency (Hz/n) */
+#define FREQ3_GLO 1.202025E9 /* GLONASS G3 frequency (Hz) */
+#define FREQ1_BDS 1.561098E9 /* BeiDou B1 frequency (Hz) */
+#define FREQ2_BDS 1.20714E9  /* BeiDou B2 frequency (Hz) */
+#define FREQ3_BDS 1.26852E9  /* BeiDou B3 frequency (Hz) */
+
 namespace bynav_gps_driver {
 
 const int SYS_NONE = 0x00; //!<   navigation system: none
@@ -123,12 +141,9 @@ const int SYS_BDS = 0x20;  //!<   navigation system: BeiDou
 const int SYS_IRN = 0x40;  //!<   navigation system: IRNS
 const int SYS_LEO = 0x80;  //!<   navigation system: LEO
 const int SYS_ALL = 0xFF;  //!<   navigation system: all
-const int SYS_CMP = 0x20   /* navigation system: BeiDou */
+const int SYS_CMP = 0x20;  /* navigation system: BeiDou */
 
-#define U1(p) (*((unsigned char *)(p)))
-
-    static inline unsigned short
-    U2(unsigned char *p) {
+static inline unsigned short U2(unsigned char *p) {
   unsigned short u;
   memcpy(&u, p, 2);
   return u;
@@ -196,6 +211,10 @@ gtime_t time_add(gtime_t t, double sec);
 double time2sec(gtime_t time);
 
 gtime_t sec2time(const double sec);
+
+std::string sat2str(uint32_t sat_no);
+
+uint32_t str2sat(const std::string &sat_str);
 
 static inline int exsign(unsigned int v, int bits) {
   return (int)(v & (1 << (bits - 1)) ? v | (~0u << bits) : v);
