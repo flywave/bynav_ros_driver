@@ -12,7 +12,7 @@
 
 namespace bynav_gps_driver {
 
-class GLOEPHEMERISBParser
+class GloephemerisbParser
     : public MessageParser<bynav_gps_msgs::GnssGloEphemMsgPtr> {
 public:
   uint32_t GetMessageId() const override;

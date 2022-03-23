@@ -12,7 +12,7 @@
 
 namespace bynav_gps_driver {
 
-class RANGECMPBParser : public MessageParser<bynav_gps_msgs::GnssMeasMsgPtr> {
+class RangrcmpbParser : public MessageParser<bynav_gps_msgs::GnssMeasMsgPtr> {
 public:
   uint32_t GetMessageId() const override;
 

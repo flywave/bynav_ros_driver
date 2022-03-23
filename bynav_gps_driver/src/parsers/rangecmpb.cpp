@@ -24,11 +24,11 @@
 
 namespace bynav_gps_driver {
 
-uint32_t RANGECMPBParser::GetMessageId() const { return MESSAGE_ID; }
+uint32_t RangrcmpbParser::GetMessageId() const { return MESSAGE_ID; }
 
-const std::string RANGECMPBParser::MESSAGE_NAME = "RANGECMPB";
+const std::string RangrcmpbParser::MESSAGE_NAME = "RANGECMPB";
 
-const std::string RANGECMPBParser::GetMessageName() const {
+const std::string RangrcmpbParser::GetMessageName() const {
   return MESSAGE_NAME;
 }
 
@@ -574,7 +574,7 @@ static int decode_rangecmpb(const unsigned char *raw, size_t len,
 }
 
 bynav_gps_msgs::GnssMeasMsgPtr
-RANGECMPBParser::ParseBinary(const BinaryMessage &bin_msg) {
+RangrcmpbParser::ParseBinary(const BinaryMessage &bin_msg) {
   bynav_gps_msgs::GnssMeasMsgPtr ros_msg =
       boost::make_shared<bynav_gps_msgs::GnssMeasMsg>();
 

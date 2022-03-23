@@ -9,11 +9,11 @@
 
 namespace bynav_gps_driver {
 
-uint32_t QZSSEPHEMERISBParser::GetMessageId() const { return MESSAGE_ID; }
+uint32_t QzssephemerisbParser::GetMessageId() const { return MESSAGE_ID; }
 
-const std::string QZSSEPHEMERISBParser::MESSAGE_NAME = "QZSSEPHEMERISB";
+const std::string QzssephemerisbParser::MESSAGE_NAME = "QZSSEPHEMERISB";
 
-const std::string QZSSEPHEMERISBParser::GetMessageName() const {
+const std::string QzssephemerisbParser::GetMessageName() const {
   return MESSAGE_NAME;
 }
 
@@ -115,7 +115,7 @@ static int decode_qzssephemerisb(const unsigned char *buff, size_t len,
 }
 
 bynav_gps_msgs::GnssEphemMsgPtr
-QZSSEPHEMERISBParser::ParseBinary(const BinaryMessage &bin_msg) {
+QzssephemerisbParser::ParseBinary(const BinaryMessage &bin_msg) {
   if (bin_msg.data_.size() != BINARY_LENGTH) {
     std::stringstream error;
     error << "Unexpected QZSSEPHEMERISB message length: "

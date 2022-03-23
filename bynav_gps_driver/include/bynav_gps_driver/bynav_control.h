@@ -143,8 +143,6 @@ private:
   bool QualityCheckDisable();
 
   bool LogRTCM3(BYNAV_PORT port);
-  bool LogRAW(BYNAV_PORT port, int interval, int raw_eph);
-  bool LogRAWEPH(BYNAV_PORT port, int interval, int raw_eph);
   bool LogDiffData(BYNAV_PORT port, double lat, double lon, float height);
   bool LogRecord(BYNAV_PORT port, int interval);
   bool StopRecord(BYNAV_PORT port);

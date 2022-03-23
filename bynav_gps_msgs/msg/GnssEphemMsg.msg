@@ -1,5 +1,7 @@
 # This message contains GPS, Galileo and BeiDou ephemeris data
 
+Header header
+
 BynavMessageHeader bynav_msg_header
 
 uint32 sat

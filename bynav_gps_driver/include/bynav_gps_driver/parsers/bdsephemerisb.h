@@ -12,7 +12,7 @@
 
 namespace bynav_gps_driver {
 
-class BDSEPHEMERISBParser
+class BdsephemerisbParser
     : public MessageParser<bynav_gps_msgs::GnssEphemMsgPtr> {
 public:
   uint32_t GetMessageId() const override;

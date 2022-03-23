@@ -11,11 +11,11 @@
 
 namespace bynav_gps_driver {
 
-uint32_t GLOEPHEMERISBParser::GetMessageId() const { return MESSAGE_ID; }
+uint32_t GloephemerisbParser::GetMessageId() const { return MESSAGE_ID; }
 
-const std::string GLOEPHEMERISBParser::MESSAGE_NAME = "GLOEPHEMERISB";
+const std::string GloephemerisbParser::MESSAGE_NAME = "GLOEPHEMERISB";
 
-const std::string GLOEPHEMERISBParser::GetMessageName() const {
+const std::string GloephemerisbParser::GetMessageName() const {
   return MESSAGE_NAME;
 }
 
@@ -67,7 +67,7 @@ static int decode_gloephemerisb(const unsigned char *raw, size_t len,
 }
 
 bynav_gps_msgs::GnssGloEphemMsgPtr
-GLOEPHEMERISBParser::ParseBinary(const BinaryMessage &bin_msg) {
+GloephemerisbParser::ParseBinary(const BinaryMessage &bin_msg) {
   if (bin_msg.data_.size() != BINARY_LENGTH) {
     std::stringstream error;
     error << "Unexpected GLOEPHEMERISB message length: "

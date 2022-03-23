@@ -11,11 +11,11 @@
 
 namespace bynav_gps_driver {
 
-uint32_t BDSEPHEMERISBParser::GetMessageId() const { return MESSAGE_ID; }
+uint32_t BdsephemerisbParser::GetMessageId() const { return MESSAGE_ID; }
 
-const std::string BDSEPHEMERISBParser::MESSAGE_NAME = "BDSEPHEMERISB";
+const std::string BdsephemerisbParser::MESSAGE_NAME = "BDSEPHEMERISB";
 
-const std::string BDSEPHEMERISBParser::GetMessageName() const {
+const std::string BdsephemerisbParser::GetMessageName() const {
   return MESSAGE_NAME;
 }
 
@@ -99,7 +99,7 @@ static int decode_bdsephemerisb(const unsigned char *raw, size_t len,
 }
 
 bynav_gps_msgs::GnssEphemMsgPtr
-BDSEPHEMERISBParser::ParseBinary(const BinaryMessage &bin_msg) {
+BdsephemerisbParser::ParseBinary(const BinaryMessage &bin_msg) {
   if (bin_msg.data_.size() != BINARY_LENGTH) {
     std::stringstream error;
     error << "Unexpected BDSEPHEMERISB message length: "

@@ -9,11 +9,11 @@
 
 namespace bynav_gps_driver {
 
-uint32_t GALEEPHEMERISBParser::GetMessageId() const { return MESSAGE_ID; }
+uint32_t GaleephemerisbParser::GetMessageId() const { return MESSAGE_ID; }
 
-const std::string GALEEPHEMERISBParser::MESSAGE_NAME = "GALEEPHEMERISB";
+const std::string GaleephemerisbParser::MESSAGE_NAME = "GALEEPHEMERISB";
 
-const std::string GALEEPHEMERISBParser::GetMessageName() const {
+const std::string GaleephemerisbParser::GetMessageName() const {
   return MESSAGE_NAME;
 }
 
@@ -131,7 +131,7 @@ static int decode_galephemerisb(const unsigned char *raw, size_t len,
 }
 
 bynav_gps_msgs::GnssEphemMsgPtr
-GALEEPHEMERISBParser::ParseBinary(const BinaryMessage &bin_msg) {
+GaleephemerisbParser::ParseBinary(const BinaryMessage &bin_msg) {
   if (bin_msg.data_.size() != BINARY_LENGTH) {
     std::stringstream error;
     error << "Unexpected GALEEPHEMERISB message length: "

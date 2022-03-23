@@ -25,6 +25,10 @@ BynavNmea::BynavNmea()
       bestpos_sync_buffer_(SYNC_BUFFER_SIZE),
       bestvel_sync_buffer_(SYNC_BUFFER_SIZE), heading_msgs_(MAX_BUFFER_SIZE),
       gpdop_msgs_(MAX_BUFFER_SIZE), time_msgs_(MAX_BUFFER_SIZE),
+      bdsephemerisb_msgs_(MAX_BUFFER_SIZE),
+      galephemerisb_msgs_(MAX_BUFFER_SIZE),
+      gloephemerisb_msgs_(MAX_BUFFER_SIZE), gpsephemb_msgs_(MAX_BUFFER_SIZE),
+      qzssephemerisb_msgs_(MAX_BUFFER_SIZE), rangecmpb_msgs_(MAX_BUFFER_SIZE),
       imu_rate_(-1.0), enable_imu_(false) {}
 
 bool BynavNmea::Connect(const std::string &device, ConnectionType connection,
@@ -35,6 +39,12 @@ bool BynavNmea::Connect(const std::string &device, ConnectionType connection,
   opts["bestposa"] = 0.05;
   opts["gpzda"] = 1.0;
   opts["gpgsv"] = 1;
+  opts["galephemerisb"] = -1;
+  opts["gpsephemb"] = -1;
+  opts["gloephemerisb"] = -1;
+  opts["bdsephemerisb"] = -1;
+  opts["qzssephemerisb"] = -1;
+  opts["rangecmpb"] = 1;
   return BynavControl::Connect(device, connection, opts);
 }
 
@@ -313,6 +323,52 @@ void BynavNmea::GetTimeMessages(
   time_msgs_.clear();
 }
 
+void BynavNmea::GetBdsephemerisbMessages(
+    std::vector<bynav_gps_msgs::GnssEphemMsgPtr> &messages) {
+  messages.resize(bdsephemerisb_msgs_.size());
+  std::copy(bdsephemerisb_msgs_.begin(), bdsephemerisb_msgs_.end(),
+            messages.begin());
+  bdsephemerisb_msgs_.clear();
+}
+
+void BynavNmea::GetGaleephemerisbMessages(
+    std::vector<bynav_gps_msgs::GnssEphemMsgPtr> &messages) {
+  messages.resize(galephemerisb_msgs_.size());
+  std::copy(galephemerisb_msgs_.begin(), galephemerisb_msgs_.end(),
+            messages.begin());
+  galephemerisb_msgs_.clear();
+}
+
+void BynavNmea::GetGloephemerisbMessages(
+    std::vector<bynav_gps_msgs::GnssGloEphemMsgPtr> &messages) {
+  messages.resize(gloephemerisb_msgs_.size());
+  std::copy(gloephemerisb_msgs_.begin(), gloephemerisb_msgs_.end(),
+            messages.begin());
+  gloephemerisb_msgs_.clear();
+}
+
+void BynavNmea::GetGpsephembMessages(
+    std::vector<bynav_gps_msgs::GnssEphemMsgPtr> &messages) {
+  messages.resize(gpsephemb_msgs_.size());
+  std::copy(gpsephemb_msgs_.begin(), gpsephemb_msgs_.end(), messages.begin());
+  gpsephemb_msgs_.clear();
+}
+
+void BynavNmea::GetQzssephemerisbMessages(
+    std::vector<bynav_gps_msgs::GnssEphemMsgPtr> &messages) {
+  messages.resize(qzssephemerisb_msgs_.size());
+  std::copy(qzssephemerisb_msgs_.begin(), qzssephemerisb_msgs_.end(),
+            messages.begin());
+  qzssephemerisb_msgs_.clear();
+}
+
+void BynavNmea::GetRangecmpbMessages(
+    std::vector<bynav_gps_msgs::GnssMeasMsgPtr> &messages) {
+  messages.resize(rangecmpb_msgs_.size());
+  std::copy(rangecmpb_msgs_.begin(), rangecmpb_msgs_.end(), messages.begin());
+  rangecmpb_msgs_.clear();
+}
+
 void BynavNmea::GetImuMessages(std::vector<sensor_msgs::ImuPtr> &imu_messages) {
   imu_messages.clear();
   imu_messages.insert(imu_messages.end(), imu_msgs_.begin(), imu_msgs_.end());
@@ -463,6 +519,46 @@ BynavNmea::ParseBinaryMessage(const BinaryMessage &msg,
     insstdev->header.stamp = stamp;
     insstdev_msgs_.push_back(insstdev);
     latest_insstdev_ = insstdev;
+    break;
+  }
+  case BdsephemerisbParser::MESSAGE_ID: {
+    bynav_gps_msgs::GnssEphemMsgPtr eph =
+        bdsephemerisb_parser_.ParseBinary(msg);
+    eph->header.stamp = stamp;
+    bdsephemerisb_msgs_.push_back(eph);
+    break;
+  }
+  case GaleephemerisbParser::MESSAGE_ID: {
+    bynav_gps_msgs::GnssEphemMsgPtr eph =
+        galephemerisb_parser_.ParseBinary(msg);
+    eph->header.stamp = stamp;
+    galephemerisb_msgs_.push_back(eph);
+    break;
+  }
+  case GloephemerisbParser::MESSAGE_ID: {
+    bynav_gps_msgs::GnssGloEphemMsgPtr geph =
+        gloephemerisb_parser_.ParseBinary(msg);
+    geph->header.stamp = stamp;
+    gloephemerisb_msgs_.push_back(geph);
+    break;
+  }
+  case GpsephembParser::MESSAGE_ID: {
+    bynav_gps_msgs::GnssEphemMsgPtr eph = gpsephemb_parser_.ParseBinary(msg);
+    eph->header.stamp = stamp;
+    gpsephemb_msgs_.push_back(eph);
+    break;
+  }
+  case QzssephemerisbParser::MESSAGE_ID: {
+    bynav_gps_msgs::GnssEphemMsgPtr eph =
+        qzssephemerisb_parser_.ParseBinary(msg);
+    eph->header.stamp = stamp;
+    qzssephemerisb_msgs_.push_back(eph);
+    break;
+  }
+  case RangrcmpbParser::MESSAGE_ID: {
+    bynav_gps_msgs::GnssMeasMsgPtr meas = rangecmpb_parser_.ParseBinary(msg);
+    meas->header.stamp = stamp;
+    rangecmpb_msgs_.push_back(meas);
     break;
   }
   default:

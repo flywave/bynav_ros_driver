@@ -505,106 +505,6 @@ bool BynavControl::LogRTCM3(BYNAV_PORT port) {
   return true;
 }
 
-bool BynavControl::LogRAWEPH(BYNAV_PORT port, int interval, int raw_eph) {
-  std::string str;
-  char tempStr[128], intertemp[128];
-
-  char portStr[32];
-  if (port >= ICOM1) {
-    sprintf(portStr, "ICOM%d", (port - 10));
-  } else {
-    sprintf(portStr, "COM%d", port);
-  }
-
-  if (raw_eph > 0)
-    sprintf(intertemp, "ONTIME %g", (float)raw_eph);
-  else if (raw_eph < 0)
-    strcpy(intertemp, "ONCHANGED");
-
-  if (raw_eph != 0) {
-    sprintf(tempStr, "LOG %s RAWEPHEMB %s", portStr, intertemp);
-    str.assign(tempStr);
-    if (!Write(str))
-      return false;
-
-    sprintf(tempStr, "LOG %s IONUTCB %s", portStr, intertemp);
-    str.assign(tempStr);
-    if (!Write(str))
-      return false;
-
-    sprintf(tempStr, "LOG %s GLOEPHEMERISB %s", portStr, intertemp);
-    str.assign(tempStr);
-    if (!Write(str))
-      return false;
-
-    sprintf(tempStr, "LOG %s BDSEPHEMERISB %s", portStr, intertemp);
-    str.assign(tempStr);
-    if (!Write(str))
-      return false;
-
-    sprintf(tempStr, "LOG %s BDSIONOB %s", portStr, intertemp);
-    str.assign(tempStr);
-    if (!Write(str))
-      return false;
-
-    sprintf(tempStr, "LOG %s BDSALMANACB %s", portStr, intertemp);
-    str.assign(tempStr);
-    if (!Write(str))
-      return false;
-
-    sprintf(tempStr, "LOG %s VERSION ONCE", portStr);
-    str.assign(tempStr);
-    if (!Write(str))
-      return false;
-  }
-
-  return true;
-}
-
-bool BynavControl::LogRAW(BYNAV_PORT port, int interval, int raw_eph) {
-  std::string str;
-  char tempStr[128], intertemp[128];
-
-  char portStr[32];
-  if (port >= ICOM1) {
-    sprintf(portStr, "ICOM%d", (port - 10));
-  } else {
-    sprintf(portStr, "COM%d", port);
-  }
-  UnlogAll(port);
-  sprintf(tempStr, "INTERFACEMODE %s BYNAV BYNAV on", portStr);
-  str.assign(tempStr);
-  if (!Write(str))
-    return false;
-  if (interval != 0) {
-    sprintf(tempStr, "LOG %s RANGECMPB ONTIME %d", portStr, interval);
-    str.assign(tempStr);
-    if (!Write(str))
-      return false;
-
-    sprintf(tempStr, "LOG %s TIMEB ONTIME %d", portStr, interval);
-    str.assign(tempStr);
-    if (!Write(str))
-      return false;
-
-    sprintf(tempStr, "LOG %s BESTPOSB ONTIME %d", portStr, interval);
-    str.assign(tempStr);
-    if (!Write(str))
-      return false;
-
-    sprintf(tempStr, "LOG %s BESTGNSSVELB ONTIME %d", portStr, interval);
-    str.assign(tempStr);
-    if (!Write(str))
-      return false;
-  }
-
-  LogRAWEPH(port, interval, raw_eph);
-
-  Write("SAVECONFIG");
-
-  return true;
-}
-
 bool BynavControl::LogRecord(BYNAV_PORT port, int interval) {
   std::string str;
   char tempStr[128];
@@ -637,15 +537,15 @@ bool BynavControl::LogRecord(BYNAV_PORT port, int interval) {
   if (!Write(str))
     return false;
 
-  sprintf(tempStr, "LOG %s IONUTCB %s", portStr, interval);
+  sprintf(tempStr, "LOG %s GALEPHEMERISB ONCHANGED", portStr);
   str.assign(tempStr);
   if (!Write(str))
-    false;
+    return false;
 
-  sprintf(tempStr, "LOG %s BDSALMANACB %s", portStr, interval);
+  sprintf(tempStr, "LOG %s QZSSEPHEMERISB ONCHANGED", portStr);
   str.assign(tempStr);
   if (!Write(str))
-    false;
+    return false;
 
   Write("SAVECONFIG");
 
@@ -663,7 +563,7 @@ bool BynavControl::StopRecord(BYNAV_PORT port) {
     sprintf(portStr, "COM%d", port);
   }
 
-  sprintf(tempStr, "LOG %s RAWEPHEMB ONCHANGED", portStr);
+  sprintf(tempStr, "LOG %s GPSEPHEMB ONCHANGED", portStr);
   str.assign(tempStr);
   if (!Write(str))
     return false;
@@ -674,6 +574,16 @@ bool BynavControl::StopRecord(BYNAV_PORT port) {
     return false;
 
   sprintf(tempStr, "LOG %s GLOEPHEMERISB ONCHANGED", portStr);
+  str.assign(tempStr);
+  if (!Write(str))
+    return false;
+
+  sprintf(tempStr, "LOG %s GALEPHEMERISB ONCHANGED", portStr);
+  str.assign(tempStr);
+  if (!Write(str))
+    return false;
+
+  sprintf(tempStr, "LOG %s QZSSEPHEMERISB ONCHANGED", portStr);
   str.assign(tempStr);
   if (!Write(str))
     return false;
@@ -839,10 +749,6 @@ bool BynavControl::Init() {
   Write("UNLOGALL");
   if (!Write("LOG BESTPOSB ONTIME 1"))
     return false;
-  if (!Write("LOG RTKDOPB ONCHANGED"))
-    return false;
-  if (!Write("LOG TIMEB ONTIME 1"))
-    return false;
 
   if (!Write("IPCONFIG DHCP"))
     ;
@@ -863,13 +769,6 @@ bool BynavControl::Init() {
   Write("INTERFACEMODE ICOM2 BYNAV BYNAV ON");
   Write("INTERFACEMODE ICOM3 BYNAV BYNAV ON");
   Write("INTERFACEMODE ICOM4 BYNAV BYNAV ON");
-
-  if (!Write("LOG RANGEB ONTIME 1"))
-    ;
-  if (!Write("LOG SATVIS2B ONTIME 1"))
-    ;
-  if (!Write("LOG RTKDOPB ONTIME 1"))
-    ;
 
   Write("FIX NONE");
 

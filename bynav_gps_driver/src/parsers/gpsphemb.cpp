@@ -9,11 +9,11 @@
 
 namespace bynav_gps_driver {
 
-uint32_t GPSEPHEMBParser::GetMessageId() const { return MESSAGE_ID; }
+uint32_t GpsephembParser::GetMessageId() const { return MESSAGE_ID; }
 
-const std::string GPSEPHEMBParser::MESSAGE_NAME = "GPSEPHEMB";
+const std::string GpsephembParser::MESSAGE_NAME = "GPSEPHEMB";
 
-const std::string GPSEPHEMBParser::GetMessageName() const {
+const std::string GpsephembParser::GetMessageName() const {
   return MESSAGE_NAME;
 }
 
@@ -115,7 +115,7 @@ static int decode_gpsephemb(const unsigned char *raw, size_t len, EphemPtr eph,
 }
 
 bynav_gps_msgs::GnssEphemMsgPtr
-GPSEPHEMBParser::ParseBinary(const BinaryMessage &bin_msg) {
+GpsephembParser::ParseBinary(const BinaryMessage &bin_msg) {
   if (bin_msg.data_.size() != BINARY_LENGTH) {
     std::stringstream error;
     error << "Unexpected GPSEPHEMB message length: " << bin_msg.data_.size();

@@ -1,5 +1,7 @@
 # This message contains GLONASS ephemeris data
 
+Header header
+
 BynavMessageHeader bynav_msg_header
 
 uint32 sat

@@ -27,19 +27,25 @@
 #include <bynav_gps_driver/bynav_control.h>
 #include <bynav_gps_driver/bynav_message_extractor.h>
 
+#include <bynav_gps_driver/parsers/bdsephemerisb.h>
 #include <bynav_gps_driver/parsers/bestpos.h>
 #include <bynav_gps_driver/parsers/bestvel.h>
 #include <bynav_gps_driver/parsers/corrimudata.h>
+#include <bynav_gps_driver/parsers/galephemerisb.h>
+#include <bynav_gps_driver/parsers/gloephemerisb.h>
 #include <bynav_gps_driver/parsers/gpdop.h>
 #include <bynav_gps_driver/parsers/gpgga.h>
 #include <bynav_gps_driver/parsers/gpgsv.h>
 #include <bynav_gps_driver/parsers/gphdt.h>
 #include <bynav_gps_driver/parsers/gprmc.h>
+#include <bynav_gps_driver/parsers/gpsphemb.h>
 #include <bynav_gps_driver/parsers/heading.h>
 #include <bynav_gps_driver/parsers/inspva.h>
 #include <bynav_gps_driver/parsers/inspvax.h>
 #include <bynav_gps_driver/parsers/insstdev.h>
 #include <bynav_gps_driver/parsers/ptnlpjk.h>
+#include <bynav_gps_driver/parsers/qzssephemerisb.h>
+#include <bynav_gps_driver/parsers/rangecmpb.h>
 
 #include <sensor_msgs/Imu.h>
 
@@ -94,6 +100,24 @@ public:
 
   void GetTimeMessages(std::vector<bynav_gps_msgs::TimePtr> &time_messages);
 
+  void GetBdsephemerisbMessages(
+      std::vector<bynav_gps_msgs::GnssEphemMsgPtr> &messages);
+
+  void GetGaleephemerisbMessages(
+      std::vector<bynav_gps_msgs::GnssEphemMsgPtr> &messages);
+
+  void GetGloephemerisbMessages(
+      std::vector<bynav_gps_msgs::GnssGloEphemMsgPtr> &messages);
+
+  void
+  GetGpsephembMessages(std::vector<bynav_gps_msgs::GnssEphemMsgPtr> &messages);
+
+  void GetQzssephemerisbMessages(
+      std::vector<bynav_gps_msgs::GnssEphemMsgPtr> &messages);
+
+  void
+  GetRangecmpbMessages(std::vector<bynav_gps_msgs::GnssMeasMsgPtr> &messages);
+
   ReadResult ProcessData();
 
   void SetImuRate(double imu_rate, bool force = true);
@@ -143,6 +167,13 @@ private:
   InsstdevParser insstdev_parser_;
   GpdopParser gpdop_parser_;
 
+  BdsephemerisbParser bdsephemerisb_parser_;
+  GaleephemerisbParser galephemerisb_parser_;
+  GloephemerisbParser gloephemerisb_parser_;
+  GpsephembParser gpsephemb_parser_;
+  QzssephemerisbParser qzssephemerisb_parser_;
+  RangrcmpbParser rangecmpb_parser_;
+
   boost::circular_buffer<bynav_gps_msgs::BynavCorrectedImuDataPtr>
       corrimudata_msgs_;
   boost::circular_buffer<bynav_gps_msgs::GpggaPtr> gpgga_msgs_;
@@ -161,6 +192,14 @@ private:
   boost::circular_buffer<bynav_gps_msgs::HeadingPtr> heading_msgs_;
   boost::circular_buffer<bynav_gps_msgs::GpdopPtr> gpdop_msgs_;
   boost::circular_buffer<bynav_gps_msgs::TimePtr> time_msgs_;
+
+  boost::circular_buffer<bynav_gps_msgs::GnssEphemMsgPtr> bdsephemerisb_msgs_;
+  boost::circular_buffer<bynav_gps_msgs::GnssEphemMsgPtr> galephemerisb_msgs_;
+  boost::circular_buffer<bynav_gps_msgs::GnssGloEphemMsgPtr>
+      gloephemerisb_msgs_;
+  boost::circular_buffer<bynav_gps_msgs::GnssEphemMsgPtr> gpsephemb_msgs_;
+  boost::circular_buffer<bynav_gps_msgs::GnssEphemMsgPtr> qzssephemerisb_msgs_;
+  boost::circular_buffer<bynav_gps_msgs::GnssMeasMsgPtr> rangecmpb_msgs_;
 
   bynav_gps_msgs::GpdopPtr latest_gpdop_;
 
