@@ -2,14 +2,13 @@
 #include <bynav_gps_driver/parsers/rindex.h>
 
 #include <boost/make_shared.hpp>
+#include <sstream>
 
 namespace bynav_gps_driver {
 
-/* System identifier to system code */
 const std::map<uint8_t, uint32_t> char2sys = {
     {'G', SYS_GPS}, {'C', SYS_BDS}, {'R', SYS_GLO}, {'E', SYS_GAL}};
 
-/* RINEX frequency encoding to frequency value */
 const std::map<std::string, double> type2freq = {
     {"G1", FREQ1},      {"G2", FREQ2},      {"G5", FREQ5},
     {"R1", FREQ1_GLO},  {"R2", FREQ2_GLO},  {"R3", 1.202025E9},
@@ -19,13 +18,7 @@ const std::map<std::string, double> type2freq = {
     {"C5", FREQ5},      {"C6", FREQ3_BDS},  {"C7", FREQ2_BDS},
     {"C8", FREQ8}};
 
-/* convert string to double
- *---------------------------------------------------------- args   :
- *std::string    num_str        I   input string return : double value inside
- *the string
- *-------------------------------------------------------------------------------------*/
 static double str2double(const std::string &num_str) {
-  // replace character 'D' with 'e'
   size_t D_pos = num_str.find("D");
   std::string tmp_str = num_str;
   if (D_pos != std::string::npos)
@@ -84,8 +77,6 @@ static EphemPtr rinex_line2ephem(const std::vector<std::string> &ephem_lines) {
     sat_sys = SYS_BDS;
   else if (ephem_lines[0].at(0) == 'E')
     sat_sys = SYS_GAL;
-  // LOG_IF(FATAL, sat_sys == SYS_NONE)
-  //     << "Satellite system is not supported: " << ephem_lines[0].at(0);
 
   EphemPtr ephem(new Ephem());
   uint32_t prn = static_cast<uint32_t>(std::stoi(ephem_lines[0].substr(1, 2)));
@@ -99,57 +90,48 @@ static EphemPtr rinex_line2ephem(const std::vector<std::string> &ephem_lines) {
   epoch[5] = static_cast<double>(std::stoi(ephem_lines[0].substr(21, 2)));
   ephem->toc = epoch2time(epoch);
   if (sat_sys == SYS_BDS)
-    ephem->toc.time += 14; // BDS-GPS time correction
+    ephem->toc.time += 14;
   ephem->af0 = str2double(ephem_lines[0].substr(23, 19));
   ephem->af1 = str2double(ephem_lines[0].substr(42, 19));
   ephem->af2 = str2double(ephem_lines[0].substr(61, 19));
 
-  // the second line
   if (sat_sys == SYS_GPS)
     ephem->iode = str2double(ephem_lines[1].substr(4, 19));
   ephem->crs = str2double(ephem_lines[1].substr(23, 19));
   ephem->delta_n = str2double(ephem_lines[1].substr(42, 19));
   ephem->M0 = str2double(ephem_lines[1].substr(61, 19));
 
-  // the third line
   ephem->cuc = str2double(ephem_lines[2].substr(4, 19));
   ephem->e = str2double(ephem_lines[2].substr(23, 19));
   ephem->cus = str2double(ephem_lines[2].substr(42, 19));
   double sqrt_A = str2double(ephem_lines[2].substr(61, 19));
   ephem->A = sqrt_A * sqrt_A;
 
-  // the forth line
-  ephem->toe_tow = str2double(ephem_lines[3].substr(4, 19));
+  ephem->toes = str2double(ephem_lines[3].substr(4, 19));
   ephem->cic = str2double(ephem_lines[3].substr(23, 19));
   ephem->OMG0 = str2double(ephem_lines[3].substr(42, 19));
   ephem->cis = str2double(ephem_lines[3].substr(61, 19));
 
-  // the fifth line
   ephem->i0 = str2double(ephem_lines[4].substr(4, 19));
   ephem->crc = str2double(ephem_lines[4].substr(23, 19));
   ephem->omg = str2double(ephem_lines[4].substr(42, 19));
   ephem->OMG_dot = str2double(ephem_lines[4].substr(61, 19));
 
-  // the sixth line
   ephem->i_dot = str2double(ephem_lines[5].substr(4, 19));
   if (sat_sys == SYS_GAL) {
     uint32_t ephe_source =
         static_cast<uint32_t>(str2double(ephem_lines[5].substr(23, 19)));
     if (!(ephe_source & 0x01)) {
-      // LOG(ERROR) << "not contain I/NAV E1-b info, skip this ephemeris";
       return ephem; // only parse I/NAV E1-b ephemeris
     }
   }
   ephem->week =
       static_cast<uint32_t>(str2double(ephem_lines[5].substr(42, 19)));
   if (sat_sys == SYS_GPS || sat_sys == SYS_GAL)
-    ephem->toe = gpst2time(ephem->week, ephem->toe_tow);
+    ephem->toe = gpst2time(ephem->week, ephem->toes);
   else if (sat_sys == SYS_BDS)
-    ephem->toe = bdt2time(ephem->week, ephem->toe_tow + 14);
-  // if (sat_sys == SYS_GAL)     ephem->toe = gst2time(ephem->week,
-  // ephem->toe_tow);
+    ephem->toe = bdt2time(ephem->week, ephem->toes + 14);
 
-  // the seventh line
   ephem->ura = str2double(ephem_lines[6].substr(4, 19));
   ephem->health =
       static_cast<uint32_t>(str2double(ephem_lines[6].substr(23, 19)));
@@ -159,18 +141,15 @@ static EphemPtr rinex_line2ephem(const std::vector<std::string> &ephem_lines) {
   if (sat_sys == SYS_GPS)
     ephem->iodc = str2double(ephem_lines[6].substr(61, 19));
 
-  // the eighth line
   double ttr_tow = str2double(ephem_lines[7].substr(4, 19));
-  // GAL week = GST week + 1024 + rollover, already align with GPS week!!!
   if (sat_sys == SYS_GPS || sat_sys == SYS_GAL)
     ephem->ttr = gpst2time(ephem->week, ttr_tow);
   else if (sat_sys == SYS_BDS)
     ephem->ttr = bdt2time(ephem->week, ttr_tow);
 
-  // convert time system to parameter GPST
   if (sat_sys == SYS_BDS) {
     uint32_t week = 0;
-    ephem->toe_tow = time2gpst(ephem->toe, &week);
+    ephem->toes = time2gpst(ephem->toe, &week);
     ephem->week = week;
   }
 
@@ -185,7 +164,6 @@ void rinex2ephems(const std::string &rinex_filepath,
   while (std::getline(ephem_file, line)) {
     if (line.find("RINEX VERSION / TYPE") != std::string::npos &&
         line.find("3.04") == std::string::npos) {
-      // LOG(ERROR) << "Only RINEX 3.04 is supported for observation file";
       return;
     } else if (line.find("LEAP SECONDS") != std::string::npos &&
                line.find("BDS") == std::string::npos)
@@ -193,8 +171,6 @@ void rinex2ephems(const std::string &rinex_filepath,
     else if (line.find("END OF HEADER") != std::string::npos)
       break;
   }
-  // LOG_IF(FATAL, gpst_leap_seconds == static_cast<uint32_t>(-1))
-  //   << "No leap second record found";
 
   while (std::getline(ephem_file, line)) {
     if (line.at(0) == 'G' || line.at(0) == 'C' || line.at(0) == 'E') {
@@ -259,7 +235,7 @@ rinex_line2obs(const std::string rinex_str,
     }
 
     if (type.at(0) == 'L')
-      obs->cp[freq_idx] = field_value;
+      obs->adr[freq_idx] = field_value;
     else if (type.at(0) == 'C')
       obs->psr[freq_idx] = field_value;
     else if (type.at(0) == 'D')
@@ -270,40 +246,20 @@ rinex_line2obs(const std::string rinex_str,
       // LOG(FATAL) << "Unrecognized measurement type " << type.at(0);
     }
   }
-  // fill in other fields
+
   uint32_t num_freqs = obs->freqs.size();
-  // LOG_IF(FATAL, num_freqs < obs->CN0.size())
-  //    << "Suspicious observation field.\n";
   std::fill_n(std::back_inserter(obs->CN0), num_freqs - obs->CN0.size(), 0);
-  // LOG_IF(FATAL, num_freqs < obs->LLI.size())
-  //    << "Suspicious observation field.\n";
   std::fill_n(std::back_inserter(obs->LLI), num_freqs - obs->LLI.size(), 0);
-  // LOG_IF(FATAL, num_freqs < obs->code.size())
-  //    << "Suspicious observation field.\n";
   std::fill_n(std::back_inserter(obs->code), num_freqs - obs->code.size(), 0);
-  // LOG_IF(FATAL, num_freqs < obs->psr.size())
-  //    << "Suspicious observation field.\n";
   std::fill_n(std::back_inserter(obs->psr), num_freqs - obs->psr.size(), 0);
-  // LOG_IF(FATAL, num_freqs < obs->psr_std.size())
-  //    << "Suspicious observation field.\n";
   std::fill_n(std::back_inserter(obs->psr_std), num_freqs - obs->psr_std.size(),
               0);
-  // LOG_IF(FATAL, num_freqs < obs->cp.size())
-  //    << "Suspicious observation field.\n";
-  std::fill_n(std::back_inserter(obs->cp), num_freqs - obs->cp.size(), 0);
-  // LOG_IF(FATAL, num_freqs < obs->cp_std.size())
-  //    << "Suspicious observation field.\n";
-  std::fill_n(std::back_inserter(obs->cp_std), num_freqs - obs->cp_std.size(),
+  std::fill_n(std::back_inserter(obs->adr), num_freqs - obs->adr.size(), 0);
+  std::fill_n(std::back_inserter(obs->adr_std), num_freqs - obs->adr_std.size(),
               0);
-  // LOG_IF(FATAL, num_freqs < obs->dopp.size())
-  //    << "Suspicious observation field.\n";
   std::fill_n(std::back_inserter(obs->dopp), num_freqs - obs->dopp.size(), 0);
-  // LOG_IF(FATAL, num_freqs < obs->dopp_std.size())
-  //    << "Suspicious observation field.\n";
   std::fill_n(std::back_inserter(obs->dopp_std),
               num_freqs - obs->dopp_std.size(), 0);
-  //(FATAL, num_freqs < obs->status.size())
-  //   << "Suspicious observation field.\n";
   std::fill_n(std::back_inserter(obs->status), num_freqs - obs->status.size(),
               0x0F);
 
@@ -600,7 +556,7 @@ void obs2rinex(const std::string &rinex_filepath,
           fprintf(fp, "%16s%16s%16s%16s", "", "", "", "");
         } else {
           fprintf(fp, "%14.3f%2s", obs->psr[freq_idx], "");
-          fprintf(fp, "%14.3f%2s", obs->cp[freq_idx], "");
+          fprintf(fp, "%14.3f%2s", obs->adr[freq_idx], "");
           fprintf(fp, "%14.3f%2s", obs->dopp[freq_idx], "");
           fprintf(fp, "%14.3f%2s", obs->CN0[freq_idx], "");
         }

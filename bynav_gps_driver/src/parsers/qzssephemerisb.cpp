@@ -1,4 +1,4 @@
-#include <bynav_gps_driver/parsers/gpsphemb.h>
+#include <bynav_gps_driver/parsers/qzssephemerisb.h>
 #include <bynav_gps_driver/parsers/raw.h>
 
 #include <cmath>
@@ -8,9 +8,9 @@
 
 namespace bynav_gps_driver {
 
-static int decode_gpsephemb(unsigned char *raw, size_t len, EphemPtr eph,
-                            gtime_t time) {
-  unsigned char *p = raw + HLEN;
+static int decode_qzssephemerisb(unsigned char *buff, size_t len, EphemPtr eph,
+                                 gtime_t time) {
+  unsigned char *p = buff + HLEN;
   char *msg;
   double tow, toc, n, ura, tt;
   uint32_t prn, week, zweek, iode2, as;
@@ -102,6 +102,6 @@ static int decode_gpsephemb(unsigned char *raw, size_t len, EphemPtr eph,
   eph->ttr = adjweek(eph->toe, tow);
   eph->sindex = uraindex(ura);
 
-  return 2;
+  return 1;
 }
 } // namespace bynav_gps_driver

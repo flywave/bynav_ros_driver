@@ -55,53 +55,54 @@
 
 #define CODE_NONE 0 /* obs code: none or unknown */
 #define CODE_L1C 1  /* obs code: L1C/A,G1C/A,E1C (GPS,GLO,GAL,QZS,SBS) */
-#define CODE_L1P 2  /* obs code: L1P,G1P    (GPS,GLO) */
+#define CODE_L1P 2  /* obs code: L1P,G1P,B1P (GPS,GLO,BDS) */
 #define CODE_L1W 3  /* obs code: L1 Z-track (GPS) */
 #define CODE_L1Y 4  /* obs code: L1Y        (GPS) */
 #define CODE_L1M 5  /* obs code: L1M        (GPS) */
-#define CODE_L1N 6  /* obs code: L1codeless (GPS) */
+#define CODE_L1N 6  /* obs code: L1codeless,B1codeless (GPS,BDS) */
 #define CODE_L1S 7  /* obs code: L1C(D)     (GPS,QZS) */
 #define CODE_L1L 8  /* obs code: L1C(P)     (GPS,QZS) */
 #define CODE_L1E 9  /* (not used) */
-#define CODE_L1A 10 /* obs code: E1A        (GAL) */
+#define CODE_L1A 10 /* obs code: E1A,B1A    (GAL,BDS) */
 #define CODE_L1B 11 /* obs code: E1B        (GAL) */
-#define CODE_L1X 12 /* obs code: E1B+C,L1C(D+P) (GAL,QZS) */
-#define CODE_L1Z 13 /* obs code: E1A+B+C,L1SAIF (GAL,QZS) */
+#define CODE_L1X 12 /* obs code: E1B+C,L1C(D+P),B1D+P (GAL,QZS,BDS) */
+#define CODE_L1Z 13 /* obs code: E1A+B+C,L1S (GAL,QZS) */
 #define CODE_L2C 14 /* obs code: L2C/A,G1C/A (GPS,GLO) */
 #define CODE_L2D 15 /* obs code: L2 L1C/A-(P2-P1) (GPS) */
 #define CODE_L2S 16 /* obs code: L2C(M)     (GPS,QZS) */
 #define CODE_L2L 17 /* obs code: L2C(L)     (GPS,QZS) */
-#define CODE_L2X 18 /* obs code: L2C(M+L),B1I+Q (GPS,QZS,CMP) */
+#define CODE_L2X 18 /* obs code: L2C(M+L),B1_2I+Q (GPS,QZS,BDS) */
 #define CODE_L2P 19 /* obs code: L2P,G2P    (GPS,GLO) */
 #define CODE_L2W 20 /* obs code: L2 Z-track (GPS) */
 #define CODE_L2Y 21 /* obs code: L2Y        (GPS) */
 #define CODE_L2M 22 /* obs code: L2M        (GPS) */
 #define CODE_L2N 23 /* obs code: L2codeless (GPS) */
-#define CODE_L5I 24 /* obs code: L5/E5aI    (GPS,GAL,QZS,SBS) */
-#define CODE_L5Q 25 /* obs code: L5/E5aQ    (GPS,GAL,QZS,SBS) */
-#define CODE_L5X 26 /* obs code: L5/E5aI+Q/L5B+C (GPS,GAL,QZS,IRN,SBS) */
-#define CODE_L7I 27 /* obs code: E5bI,B2I   (GAL,CMP) */
-#define CODE_L7Q 28 /* obs code: E5bQ,B2Q   (GAL,CMP) */
-#define CODE_L7X 29 /* obs code: E5bI+Q,B2I+Q (GAL,CMP) */
-#define CODE_L6A 30 /* obs code: E6A        (GAL) */
+#define CODE_L5I 24 /* obs code: L5I,E5aI   (GPS,GAL,QZS,SBS) */
+#define CODE_L5Q 25 /* obs code: L5Q,E5aQ   (GPS,GAL,QZS,SBS) */
+#define CODE_L5X                                                               \
+  26 /* obs code: L5I+Q,E5aI+Q,L5B+C,B2aD+P (GPS,GAL,QZS,IRN,SBS,BDS) */
+#define CODE_L7I 27 /* obs code: E5bI,B2bI  (GAL,BDS) */
+#define CODE_L7Q 28 /* obs code: E5bQ,B2bQ  (GAL,BDS) */
+#define CODE_L7X 29 /* obs code: E5bI+Q,B2bI+Q (GAL,BDS) */
+#define CODE_L6A 30 /* obs code: E6A,B3A    (GAL,BDS) */
 #define CODE_L6B 31 /* obs code: E6B        (GAL) */
 #define CODE_L6C 32 /* obs code: E6C        (GAL) */
-#define CODE_L6X 33 /* obs code: E6B+C,LEXS+L,B3I+Q (GAL,QZS,CMP) */
-#define CODE_L6Z 34 /* obs code: E6A+B+C    (GAL) */
-#define CODE_L6S 35 /* obs code: LEXS       (QZS) */
-#define CODE_L6L 36 /* obs code: LEXL       (QZS) */
-#define CODE_L8I 37 /* obs code: E5(a+b)I   (GAL) */
-#define CODE_L8Q 38 /* obs code: E5(a+b)Q   (GAL) */
-#define CODE_L8X 39 /* obs code: E5(a+b)I+Q (GAL) */
-#define CODE_L2I 40 /* obs code: B1I        (BDS) */
-#define CODE_L2Q 41 /* obs code: B1Q        (BDS) */
+#define CODE_L6X 33 /* obs code: E6B+C,LEXS+L,B3I+Q (GAL,QZS,BDS) */
+#define CODE_L6Z 34 /* obs code: E6A+B+C,L6D+E (GAL,QZS) */
+#define CODE_L6S 35 /* obs code: L6S        (QZS) */
+#define CODE_L6L 36 /* obs code: L6L        (QZS) */
+#define CODE_L8I 37 /* obs code: E5abI      (GAL) */
+#define CODE_L8Q 38 /* obs code: E5abQ      (GAL) */
+#define CODE_L8X 39 /* obs code: E5abI+Q,B2abD+P (GAL,BDS) */
+#define CODE_L2I 40 /* obs code: B1_2I      (BDS) */
+#define CODE_L2Q 41 /* obs code: B1_2Q      (BDS) */
 #define CODE_L6I 42 /* obs code: B3I        (BDS) */
 #define CODE_L6Q 43 /* obs code: B3Q        (BDS) */
 #define CODE_L3I 44 /* obs code: G3I        (GLO) */
 #define CODE_L3Q 45 /* obs code: G3Q        (GLO) */
 #define CODE_L3X 46 /* obs code: G3I+Q      (GLO) */
-#define CODE_L1I 47 /* obs code: B1I        (BDS) */
-#define CODE_L1Q 48 /* obs code: B1Q        (BDS) */
+#define CODE_L1I 47 /* obs code: B1I        (BDS) (obsolute) */
+#define CODE_L1Q 48 /* obs code: B1Q        (BDS) (obsolute) */
 #define CODE_L5A 49 /* obs code: L5A SPS    (IRN) */
 #define CODE_L5B 50 /* obs code: L5B RS(D)  (IRN) */
 #define CODE_L5C 51 /* obs code: L5C RS(P)  (IRN) */
@@ -109,25 +110,45 @@
 #define CODE_L9B 53 /* obs code: SB RS(D)   (IRN) */
 #define CODE_L9C 54 /* obs code: SC RS(P)   (IRN) */
 #define CODE_L9X 55 /* obs code: SB+C       (IRN) */
-#define MAXCODE 55  /* max number of obs code */
+#define CODE_L1D 56 /* obs code: B1D        (BDS) */
+#define CODE_L5D 57 /* obs code: L5D(L5S),B2aD (QZS,BDS) */
+#define CODE_L5P 58 /* obs code: L5P(L5S),B2aP (QZS,BDS) */
+#define CODE_L5Z 59 /* obs code: L5D+P(L5S) (QZS) */
+#define CODE_L6E 60 /* obs code: L6E        (QZS) */
+#define CODE_L7D 61 /* obs code: B2bD       (BDS) */
+#define CODE_L7P 62 /* obs code: B2bP       (BDS) */
+#define CODE_L7Z 63 /* obs code: B2bD+P     (BDS) */
+#define CODE_L8D 64 /* obs code: B2abD      (BDS) */
+#define CODE_L8P 65 /* obs code: B2abP      (BDS) */
+#define CODE_L4A 66 /* obs code: G1aL1OCd   (GLO) */
+#define CODE_L4B 67 /* obs code: G1aL1OCd   (GLO) */
+#define CODE_L4X 68 /* obs code: G1al1OCd+p (GLO) */
+#define MAXCODE 68  /* max number of obs code */
 
 #define U1(p) (*((unsigned char *)(p)))
 
-#define FREQ1 1.57542E9      /* L1/E1  frequency (Hz) */
-#define FREQ2 1.22760E9      /* L2     frequency (Hz) */
-#define FREQ5 1.17645E9      /* L5/E5a frequency (Hz) */
-#define FREQ6 1.27875E9      /* E6/LEX frequency (Hz) */
-#define FREQ7 1.20714E9      /* E5b    frequency (Hz) */
-#define FREQ8 1.191795E9     /* E5a+b  frequency (Hz) */
-#define FREQ9 2.492028E9     /* S      frequency (Hz) */
-#define FREQ1_GLO 1.60200E9  /* GLONASS G1 base frequency (Hz) */
-#define DFRQ1_GLO 0.56250E6  /* GLONASS G1 bias frequency (Hz/n) */
-#define FREQ2_GLO 1.24600E9  /* GLONASS G2 base frequency (Hz) */
-#define DFRQ2_GLO 0.43750E6  /* GLONASS G2 bias frequency (Hz/n) */
+#define FREQ1 1.57542E9       /* L1/E1/B1C  frequency (Hz) */
+#define FREQ2 1.22760E9       /* L2         frequency (Hz) */
+#define FREQ5 1.17645E9       /* L5/E5a/B2a frequency (Hz) */
+#define FREQ6 1.27875E9       /* E6/L6  frequency (Hz) */
+#define FREQ7 1.20714E9       /* E5b    frequency (Hz) */
+#define FREQ8 1.191795E9      /* E5a+b  frequency (Hz) */
+#define FREQ9 2.492028E9      /* S      frequency (Hz) */
+#define FREQ1_GLO 1.60200E9   /* GLONASS G1 base frequency (Hz) */
+#define DFRQ1_GLO 0.56250E6   /* GLONASS G1 bias frequency (Hz/n) */
+#define FREQ2_GLO 1.24600E9   /* GLONASS G2 base frequency (Hz) */
+#define DFRQ2_GLO 0.43750E6   /* GLONASS G2 bias frequency (Hz/n) */
+#define FREQ3_GLO 1.202025E9  /* GLONASS G3 frequency (Hz) */
+#define FREQ1a_GLO 1.600995E9 /* GLONASS G1a frequency (Hz) */
+#define FREQ2a_GLO 1.248060E9 /* GLONASS G2a frequency (Hz) */
+#define FREQ1_CMP 1.561098E9  /* BDS B1I     frequency (Hz) */
+#define FREQ2_CMP 1.20714E9   /* BDS B2I/B2b frequency (Hz) */
+#define FREQ3_CMP 1.26852E9   /* BDS B3      frequency (Hz) */
 #define FREQ3_GLO 1.202025E9 /* GLONASS G3 frequency (Hz) */
 #define FREQ1_BDS 1.561098E9 /* BeiDou B1 frequency (Hz) */
 #define FREQ2_BDS 1.20714E9  /* BeiDou B2 frequency (Hz) */
 #define FREQ3_BDS 1.26852E9  /* BeiDou B3 frequency (Hz) */
+
 
 namespace bynav_gps_driver {
 
@@ -198,6 +219,10 @@ gtime_t gpst2utc(gtime_t t);
 
 gtime_t utc2gpst(gtime_t t);
 
+gtime_t gpst2bdt(gtime_t t);
+
+gtime_t bdt2gpst(gtime_t t);
+
 double julian_day(std::vector<double> datetime);
 
 uint32_t leap_seconds_from_GPS_epoch(std::vector<double> datetime);
@@ -215,6 +240,8 @@ gtime_t sec2time(const double sec);
 std::string sat2str(uint32_t sat_no);
 
 uint32_t str2sat(const std::string &sat_str);
+
+uint32_t adjgpsweek(int week, bool pre_2009_file);
 
 static inline int exsign(unsigned int v, int bits) {
   return (int)(v & (1 << (bits - 1)) ? v | (~0u << bits) : v);
@@ -255,14 +282,16 @@ struct EphemBase {
   uint32_t sat;    /* satellite number */
   gtime_t ttr;     /* transmission time in GPST */
   gtime_t toe;     /* ephemeris reference time in GPST */
-  uint32_t health; /* satellite health */
-  double ura;      /* satellite signal accuracy */
+  uint32_t health; /* satellite health (svh)*/
+  uint32_t sindex; /* satellite index (sva)*/
+  double ura;      /* satellite signal accuracy (sva)*/
   uint32_t iode;
 };
 typedef std::shared_ptr<EphemBase> EphemBasePtr;
 
 struct GloEphem : EphemBase {
-  int freqo;           /* satellite frequency number */
+  gtime_t tof;         /* message frame time (gpst) */
+  int freqo;           /* satellite frequency number (frq) */
   uint32_t age;        /* satellite age */
   double pos[3];       /* satellite position (ecef) (m) */
   double vel[3];       /* satellite velocity (ecef) (m/s) */
@@ -273,13 +302,15 @@ struct GloEphem : EphemBase {
 typedef std::shared_ptr<GloEphem> GloEphemPtr;
 
 struct Ephem : EphemBase {
-  gtime_t toc;    /* clock correction reference time in GPST */
-  double toe_tow; /* toe seconds within the week */
+  gtime_t toc; /* clock correction reference time in GPST */
+  double toes; /* toe seconds within the week  (toes)*/
   uint32_t week;
   uint32_t iodc;
   uint32_t code;
+  uint32_t flag;
   double A, e, i0, omg, OMG0, M0, delta_n, OMG_dot,
-      i_dot; /* SV orbit parameters */
+      i_dot;  /* SV orbit parameters */
+  double fit; /* fit interval (h) */
   double cuc, cus, crc, crs, cic, cis;
   double af0, af1, af2; /* SV clock parameters */
   double tgd[2];        /* group delay parameters */
@@ -300,8 +331,8 @@ struct Obs /* observation data record */
   std::vector<uint8_t> code;    /* code indicator (CODE_???) */
   std::vector<double> psr;      /* observation data pseudorange (m) */
   std::vector<double> psr_std;  /* pseudorange std (m) */
-  std::vector<double> cp;       /* observation data carrier-phase (cycle) */
-  std::vector<double> cp_std;   /* carrier-phase std (cycle) */
+  std::vector<double> adr;       /* observation data carrier-phase (cycle) */
+  std::vector<double> adr_std;   /* carrier-phase std (cycle) */
   std::vector<double> dopp;     /* observation data doppler frequency (Hz) */
   std::vector<double> dopp_std; /* doppler std (Hz) */
   std::vector<uint8_t> status;  /* cycle slip valid flag. bit_0 (psr valid),

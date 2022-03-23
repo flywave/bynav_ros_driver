@@ -1,6 +1,12 @@
 #include <bynav_gps_driver/parsers/raw.h>
 
 #include <cmath>
+#include <sstream>
+#include <sys/stat.h>
+#include <sys/time.h>
+#include <sys/types.h>
+
+#define MAXLEAPS    64                  /* max number of leap seconds table */
 
 namespace bynav_gps_driver {
 
@@ -200,11 +206,11 @@ gtime_t utc2gpst(gtime_t t) {
   return t;
 }
 
-double julian_day(std::vector<double> datetime) {
-  // LOG_IF(FATAL, datetime.size() != 6) << "datetime should contain 6 fields";
-  // LOG_IF(FATAL, datetime[0] < 1901 || datetime[0] > 2099)
-  //    << datetime[0] << " should within range 1900 ~ 2100";
+gtime_t gpst2bdt(gtime_t t) { return time_add(t, -14.0); }
 
+gtime_t bdt2gpst(gtime_t t) { return time_add(t, 14.0); }
+
+double julian_day(std::vector<double> datetime) {
   if (datetime[1] <= 2) {
     datetime[1] += 12;
     datetime[0] -= 1;
@@ -281,7 +287,7 @@ std::string sat2str(uint32_t sat_no) {
     ss << "J" << std::setw(2) << std::setfill('0') << prn;
     break;
   default: // current not support other system
-    //LOG(WARNING) << "currently not support satelite system id " << sys;
+    // LOG(WARNING) << "currently not support satelite system id " << sys;
     break;
   }
   return ss.str();
@@ -316,7 +322,7 @@ double L1_freq(const ObsPtr &obs, int *l1_idx) {
 
 uint32_t str2sat(const std::string &sat_str) {
   if (sat_str.size() < 3) {
-    //LOG(ERROR) << "Invalid RINEX satellite identifier " << sat_str;
+    // LOG(ERROR) << "Invalid RINEX satellite identifier " << sat_str;
     return 0;
   }
   const uint32_t prn = std::stoul(sat_str.substr(1, 2));
@@ -335,6 +341,47 @@ uint32_t str2sat(const std::string &sat_str) {
     return sat_no(SYS_QZS, prn);
   }
   return 0;
+}
+
+gtime_t timeget() {
+  gtime_t time;
+  double ep[6] = {};
+  struct timeval tv {};
+  struct tm *tt;
+
+  if (!gettimeofday(&tv, nullptr) && (tt = gmtime(&tv.tv_sec))) {
+    ep[0] = tt->tm_year + 1900;
+    ep[1] = tt->tm_mon + 1;
+    ep[2] = tt->tm_mday;
+    ep[3] = tt->tm_hour;
+    ep[4] = tt->tm_min;
+    ep[5] = tt->tm_sec + tv.tv_usec * 1e-6;
+  }
+  time = epoch2time(ep);
+
+#ifdef CPUTIME_IN_GPST /* cputime operated in gpst */
+  time = gpst2utc(time);
+#endif
+  return time;
+}
+
+uint32_t adjgpsweek(int week, bool pre_2009_file) {
+  uint32_t w;
+  if (week > 1023) {
+    return week;
+  }
+
+  if (pre_2009_file == false) {
+    (void)time2gpst(utc2gpst(timeget()), &w);
+    if (w < 1560) {
+      w = 1560; /* use 2009/12/1 if time is earlier than 2009/12/1 */
+    }
+    return week + (w - week + 512) / 1024 * 1024;
+  } else {
+    w = week + 1024; // add weeks from 6-january-1980 to week rollover in 21
+                     // august 1999
+    return w;
+  }
 }
 
 } // namespace bynav_gps_driver

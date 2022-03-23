@@ -49,10 +49,6 @@ add_library(${PROJECT_NAME}
   src/bynav_nmea.cpp
   src/bynav_rtcm.cpp
   src/bynav_message_extractor.cpp
-  src/gnss_ros.cpp
-  src/gnss_spp.cpp
-  src/gnss_utility.cpp
-  src/rinex_helper.cpp
   src/parsers/bestgnsspos.cpp
   src/parsers/bestpos.cpp
   src/parsers/bestvel.cpp
@@ -85,6 +81,15 @@ add_library(${PROJECT_NAME}
   src/parsers/rtcm.cpp
   src/parsers/rawimu.cpp
   src/parsers/rawimus.cpp
+  src/parsers/bdsephemerisb.cpp
+  src/parsers/galephemerisb.cpp
+  src/parsers/gloephemerisb.cpp
+  src/parsers/gpsphemb.cpp
+  src/parsers/qzssephemerisb.cpp
+  src/parsers/rangecmpb.cpp
+  src/parsers/raw_ros.cpp
+  src/parsers/raw.cpp
+  src/parsers/rindex.cpp
 )
 
 add_dependencies(${PROJECT_NAME} ${catkin_EXPORTED_TARGETS})

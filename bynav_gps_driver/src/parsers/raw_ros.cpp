@@ -18,7 +18,7 @@ GnssEphemMsg ephem2msg(const EphemPtr &ephem_ptr) {
   tow = time2gpst(ephem_ptr->toc, &week);
   ephem_msg.toc.week = week;
   ephem_msg.toc.tow = tow;
-  ephem_msg.toe_tow = ephem_ptr->toe_tow;
+  ephem_msg.toe_tow = ephem_ptr->toes;
   ephem_msg.week = ephem_ptr->week;
   ephem_msg.iode = ephem_ptr->iode;
   ephem_msg.iodc = ephem_ptr->iodc;
@@ -56,7 +56,7 @@ EphemPtr msg2ephem(const GnssEphemMsgConstPtr &gnss_ephem_msg) {
   ephem->ttr = gpst2time(gnss_ephem_msg->ttr.week, gnss_ephem_msg->ttr.tow);
   ephem->toe = gpst2time(gnss_ephem_msg->toe.week, gnss_ephem_msg->toe.tow);
   ephem->toc = gpst2time(gnss_ephem_msg->toc.week, gnss_ephem_msg->toc.tow);
-  ephem->toe_tow = gnss_ephem_msg->toe_tow;
+  ephem->toes = gnss_ephem_msg->toe_tow;
   ephem->week = gnss_ephem_msg->week;
   ephem->iode = gnss_ephem_msg->iode;
   ephem->iodc = gnss_ephem_msg->iodc;
@@ -161,8 +161,8 @@ GnssMeasMsg meas2msg(const std::vector<ObsPtr> &meas) {
     obs_msg.code = obs->code;
     obs_msg.psr = obs->psr;
     obs_msg.psr_std = obs->psr_std;
-    obs_msg.cp = obs->cp;
-    obs_msg.cp_std = obs->cp_std;
+    obs_msg.adr = obs->adr;
+    obs_msg.adr_std = obs->adr_std;
     obs_msg.dopp = obs->dopp;
     obs_msg.dopp_std = obs->dopp_std;
     obs_msg.status = obs->status;
@@ -185,8 +185,8 @@ std::vector<ObsPtr> msg2meas(const GnssMeasMsgConstPtr &gnss_meas_msg) {
     obs->code = obs_msg.code;
     obs->psr = obs_msg.psr;
     obs->psr_std = obs_msg.psr_std;
-    obs->cp = obs_msg.cp;
-    obs->cp_std = obs_msg.cp_std;
+    obs->adr = obs_msg.adr;
+    obs->adr_std = obs_msg.adr_std;
     obs->dopp = obs_msg.dopp;
     obs->dopp_std = obs_msg.dopp_std;
     obs->status = obs_msg.status;

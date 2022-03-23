@@ -1,5 +1,5 @@
-#include <bynav_gps_driver/gnss_ros.h>
-#include <bynav_gps_driver/rinex_helper.h>
+#include <bynav_gps_driver/parsers/raw_ros.h>
+#include <bynav_gps_driver/parsers/rindex.h>
 #include <rosbag/bag.h>
 #include <rosbag/view.h>
 

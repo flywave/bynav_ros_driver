@@ -11,7 +11,7 @@ bool BynavRaw::Connect(const std::string &device, ConnectionType connection) {
   opts["GLOEPHEMERISB"] = -1;
   opts["BDSEPHEMERISB"] = -1;
   opts["QZSSEPHEMERISB"] = -1;
-  opts["RANGECMPB"] = -1;
+  opts["RANGECMPB"] = 1;
   return BynavConnection::Connect(device, connection, opts);
 }
 
