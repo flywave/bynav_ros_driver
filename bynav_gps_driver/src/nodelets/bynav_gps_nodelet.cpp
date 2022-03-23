@@ -40,6 +40,7 @@
 namespace stats = boost::accumulators;
 
 namespace bynav_gps_driver {
+
 class BynavGpsNodelet : public nodelet::Nodelet {
 public:
   BynavGpsNodelet()
@@ -47,6 +48,7 @@ public:
         polling_period_(0.05), publish_gpgsv_(false), publish_gphdt_(false),
         imu_rate_(100.0), imu_sample_rate_(-1), span_frame_to_ros_frame_(false),
         publish_clock_steering_(false), publish_imu_messages_(false),
+        publish_obs_messages_(false), publish_nav_messages_(false),
         publish_bynav_positions_(false), publish_bynav_pjk_positions_(false),
         publish_bynav_velocity_(false), publish_bynav_heading_(false),
         publish_bynav_gpdop_(false), publish_nmea_messages_(false),
@@ -74,6 +76,10 @@ public:
     swri::param(priv, "publish_gphdt", publish_gphdt_, publish_gphdt_);
     swri::param(priv, "publish_imu_messages", publish_imu_messages_,
                 publish_imu_messages_);
+    swri::param(priv, "publish_obs_messages", publish_obs_messages_,
+                publish_obs_messages_);
+    swri::param(priv, "publish_nav_messages", publish_nav_messages_,
+                publish_nav_messages_);
     swri::param(priv, "publish_bynav_positions", publish_bynav_positions_,
                 publish_bynav_positions_);
     swri::param(priv, "publish_bynav_pjk_positions",
@@ -140,6 +146,12 @@ public:
           swri::advertise<bynav_gps_msgs::Inspva>(node, "inspva", 100);
       inspvax_pub_ =
           swri::advertise<bynav_gps_msgs::Inspvax>(node, "inspvax", 100);
+    }
+
+    if (publish_obs_messages_) {
+    }
+
+    if (publish_nav_messages_) {
     }
 
     if (publish_gpgsv_) {
@@ -305,6 +317,8 @@ private:
   double imu_sample_rate_;
   bool span_frame_to_ros_frame_;
   bool publish_clock_steering_;
+  bool publish_nav_messages_;
+  bool publish_obs_messages_;
   bool publish_imu_messages_;
   bool publish_bynav_positions_;
   bool publish_bynav_pjk_positions_;
@@ -337,8 +351,13 @@ private:
   ros::Publisher gpgsa_pub_;
   ros::Publisher gphdt_pub_;
   ros::Publisher gprmc_pub_;
-  ros::Publisher range_pub_;
-  ros::Publisher time_pub_;
+  
+  ros::Publisher meas_pub_;
+  ros::Publisher bdsephemerisb_pub_;
+  ros::Publisher galephemerisb_pub_;
+  ros::Publisher gpsephemb_pub_;
+  ros::Publisher gloephemerisb_pub_;
+  ros::Publisher qzssephemerisb_pub_;
 
   ros::ServiceServer reset_service_;
 
