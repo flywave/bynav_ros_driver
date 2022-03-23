@@ -144,11 +144,10 @@
 #define FREQ1_CMP 1.561098E9  /* BDS B1I     frequency (Hz) */
 #define FREQ2_CMP 1.20714E9   /* BDS B2I/B2b frequency (Hz) */
 #define FREQ3_CMP 1.26852E9   /* BDS B3      frequency (Hz) */
-#define FREQ3_GLO 1.202025E9 /* GLONASS G3 frequency (Hz) */
-#define FREQ1_BDS 1.561098E9 /* BeiDou B1 frequency (Hz) */
-#define FREQ2_BDS 1.20714E9  /* BeiDou B2 frequency (Hz) */
-#define FREQ3_BDS 1.26852E9  /* BeiDou B3 frequency (Hz) */
-
+#define FREQ3_GLO 1.202025E9  /* GLONASS G3 frequency (Hz) */
+#define FREQ1_BDS 1.561098E9  /* BeiDou B1 frequency (Hz) */
+#define FREQ2_BDS 1.20714E9   /* BeiDou B2 frequency (Hz) */
+#define FREQ3_BDS 1.26852E9   /* BeiDou B3 frequency (Hz) */
 
 namespace bynav_gps_driver {
 
@@ -331,8 +330,8 @@ struct Obs /* observation data record */
   std::vector<uint8_t> code;    /* code indicator (CODE_???) */
   std::vector<double> psr;      /* observation data pseudorange (m) */
   std::vector<double> psr_std;  /* pseudorange std (m) */
-  std::vector<double> adr;       /* observation data carrier-phase (cycle) */
-  std::vector<double> adr_std;   /* carrier-phase std (cycle) */
+  std::vector<double> adr;      /* observation data carrier-phase (cycle) */
+  std::vector<double> adr_std;  /* carrier-phase std (cycle) */
   std::vector<double> dopp;     /* observation data doppler frequency (Hz) */
   std::vector<double> dopp_std; /* doppler std (Hz) */
   std::vector<uint8_t> status;  /* cycle slip valid flag. bit_0 (psr valid),
