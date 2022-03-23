@@ -1,21 +1,31 @@
 #include <bynav_gps_driver/parsers/gloephemerisb.h>
 #include <bynav_gps_driver/parsers/raw.h>
+#include <bynav_gps_driver/parsers/raw_ros.h>
+
+#include <bynav_gps_driver/parsers/header.h>
 
 #include <cmath>
 #include <cstring>
 
-#define HLEN 28
 #define OFF_FRQNO -7
 
 namespace bynav_gps_driver {
 
-static int decode_gloephemerisb(unsigned char *raw, size_t len,
+uint32_t GLOEPHEMERISBParser::GetMessageId() const { return MESSAGE_ID; }
+
+const std::string GLOEPHEMERISBParser::MESSAGE_NAME = "GLOEPHEMERISB";
+
+const std::string GLOEPHEMERISBParser::GetMessageName() const {
+  return MESSAGE_NAME;
+}
+
+static int decode_gloephemerisb(const unsigned char *raw, size_t len,
                                 GloEphemPtr geph) {
-  unsigned char *p = raw + HLEN;
+  unsigned char *p = const_cast<unsigned char *>(raw);
   double tow, tof, toff;
   int prn, sat, week;
 
-  if (len < HLEN + 144) {
+  if (len < 144) {
     return -1;
   }
   prn = U2(p) - 37;
@@ -55,4 +65,36 @@ static int decode_gloephemerisb(unsigned char *raw, size_t len,
   geph->sat = sat;
   return 2;
 }
+
+bynav_gps_msgs::GnssGloEphemMsgPtr
+GLOEPHEMERISBParser::ParseBinary(const BinaryMessage &bin_msg) {
+  if (bin_msg.data_.size() != BINARY_LENGTH) {
+    std::stringstream error;
+    error << "Unexpected GLOEPHEMERISB message length: "
+          << bin_msg.data_.size();
+    throw ParseException(error.str());
+  }
+  bynav_gps_msgs::GnssGloEphemMsgPtr ros_msg =
+      boost::make_shared<bynav_gps_msgs::GnssGloEphemMsg>();
+
+  bynav_gps_msgs::BynavMessageHeader bynav_msg_header;
+  HeaderParser header_parser;
+  bynav_msg_header = header_parser.ParseBinary(bin_msg);
+  bynav_msg_header.message_name = MESSAGE_NAME;
+
+  GloEphemPtr geph = std::make_shared<GloEphem>();
+
+  int ret =
+      decode_gloephemerisb(bin_msg.data_.data(), bin_msg.data_.size(), geph);
+  if (ret < 0) {
+    std::stringstream error;
+    error << "Unexpected BDSEPHEMERISB message length: "
+          << bin_msg.data_.size();
+    throw ParseException(error.str());
+  }
+  *ros_msg = glo_ephem2msg(geph);
+  ros_msg->bynav_msg_header = bynav_msg_header;
+  return ros_msg;
+}
+
 } // namespace bynav_gps_driver

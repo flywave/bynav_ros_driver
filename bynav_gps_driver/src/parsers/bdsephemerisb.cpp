@@ -1,21 +1,31 @@
 #include <bynav_gps_driver/parsers/bdsephemerisb.h>
 #include <bynav_gps_driver/parsers/raw.h>
+#include <bynav_gps_driver/parsers/raw_ros.h>
+
+#include <bynav_gps_driver/parsers/header.h>
 
 #include <cmath>
 #include <cstring>
 
-#define HLEN 28
 #define SQR(x) ((x) * (x))
 
 namespace bynav_gps_driver {
 
-static int decode_bdsephemerisb(unsigned char *raw, size_t len, EphemPtr eph,
-                                gtime_t time) {
-  unsigned char *p = raw + HLEN;
+uint32_t BDSEPHEMERISBParser::GetMessageId() const { return MESSAGE_ID; }
+
+const std::string BDSEPHEMERISBParser::MESSAGE_NAME = "BDSEPHEMERISB";
+
+const std::string BDSEPHEMERISBParser::GetMessageName() const {
+  return MESSAGE_NAME;
+}
+
+static int decode_bdsephemerisb(const unsigned char *raw, size_t len,
+                                EphemPtr eph, gtime_t time) {
+  unsigned char *p = const_cast<unsigned char *>(raw);
   double ura, sqrtA;
   int prn, sat, toc;
 
-  if (len < HLEN + 196) {
+  if (len < 196) {
     return -1;
   }
   prn = U4(p);
@@ -87,4 +97,39 @@ static int decode_bdsephemerisb(unsigned char *raw, size_t len, EphemPtr eph,
 
   return 2;
 }
+
+bynav_gps_msgs::GnssEphemMsgPtr
+BDSEPHEMERISBParser::ParseBinary(const BinaryMessage &bin_msg) {
+  if (bin_msg.data_.size() != BINARY_LENGTH) {
+    std::stringstream error;
+    error << "Unexpected BDSEPHEMERISB message length: "
+          << bin_msg.data_.size();
+    throw ParseException(error.str());
+  }
+  bynav_gps_msgs::GnssEphemMsgPtr ros_msg =
+      boost::make_shared<bynav_gps_msgs::GnssEphemMsg>();
+
+  bynav_gps_msgs::BynavMessageHeader bynav_msg_header;
+  HeaderParser header_parser;
+  bynav_msg_header = header_parser.ParseBinary(bin_msg);
+  bynav_msg_header.message_name = MESSAGE_NAME;
+
+  gtime_t time =
+      gpst2time(bynav_msg_header.gps_week_num, bynav_msg_header.gps_seconds);
+
+  EphemPtr eph = std::make_shared<Ephem>();
+
+  int ret = decode_bdsephemerisb(bin_msg.data_.data(), bin_msg.data_.size(),
+                                 eph, time);
+  if (ret < 0) {
+    std::stringstream error;
+    error << "Unexpected BDSEPHEMERISB message length: "
+          << bin_msg.data_.size();
+    throw ParseException(error.str());
+  }
+  *ros_msg = ephem2msg(eph);
+  ros_msg->bynav_msg_header = bynav_msg_header;
+  return ros_msg;
+}
+
 } // namespace bynav_gps_driver

@@ -45,7 +45,6 @@ add_message_files(DIRECTORY msg FILES
   BynavCorrectedImuData.msg
   BynavExtendedSolutionStatus.msg
   Heading.msg
-  BynavMessageHeader.msg
   BynavPosition.msg
   Gpdop.msg
   BynavReceiverStatus.msg
@@ -65,6 +64,7 @@ add_message_files(DIRECTORY msg FILES
   GnssMeasMsg.msg
   GnssObsMsg.msg
   GnssTimeMsg.msg
+  BynavMessageHeader.msg
 )
 generate_messages(DEPENDENCIES ${MSG_DEPS})
 catkin_package(

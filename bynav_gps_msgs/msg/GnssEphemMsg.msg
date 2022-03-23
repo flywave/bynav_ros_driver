@@ -1,5 +1,7 @@
 # This message contains GPS, Galileo and BeiDou ephemeris data
 
+BynavMessageHeader bynav_msg_header
+
 uint32 sat
 GnssTimeMsg ttr
 GnssTimeMsg toe

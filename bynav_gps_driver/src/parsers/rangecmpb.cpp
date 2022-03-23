@@ -1,10 +1,11 @@
 #include <bynav_gps_driver/parsers/rangecmpb.h>
 #include <bynav_gps_driver/parsers/raw.h>
+#include <bynav_gps_driver/parsers/raw_ros.h>
+
+#include <bynav_gps_driver/parsers/header.h>
 
 #include <cmath>
 #include <cstring>
-
-#define HLEN 28
 
 #define CLIGHT 299792458.0 /* speed of light (m/s) */
 
@@ -22,6 +23,15 @@
 #define SNR_UNIT 0.001 /* SNR unit (dBHz) */
 
 namespace bynav_gps_driver {
+
+uint32_t RANGECMPBParser::GetMessageId() const { return MESSAGE_ID; }
+
+const std::string RANGECMPBParser::MESSAGE_NAME = "RANGECMPB";
+
+const std::string RANGECMPBParser::GetMessageName() const {
+  return MESSAGE_NAME;
+}
+
 static char *obscodes[] = {
     /* observation code strings */
     "",   "1C", "1P", "1W", "1Y", "1M", "1N", "1S", "1L", "1E", /*  0- 9 */
@@ -402,10 +412,11 @@ static int obsindex(std::vector<ObsPtr> &obs, gtime_t time, int sat) {
 
   if (obs.size() >= MAXOBS)
     return -1;
-  for (i = 0; i < obs.size(); i++) {
-    if (obs[i]->sat == sat)
-      return i;
-  }
+
+  i = obs.size();
+
+  obs.emplace_back(std::make_shared<Obs>());
+
   obs[i]->time = time;
   obs[i]->sat = sat;
 
@@ -429,17 +440,17 @@ static int obsindex(std::vector<ObsPtr> &obs, gtime_t time, int sat) {
   return i;
 }
 
-static int decode_rangecmpb(unsigned char *raw, size_t len,
+static int decode_rangecmpb(const unsigned char *raw, size_t len,
                             std::vector<ObsPtr> &obs, gtime_t time,
                             double glo_bias = 0.0) {
-  uint8_t *p = raw + HLEN;
+  unsigned char *p = const_cast<unsigned char *>(raw);
   char *q;
   double psr, adr, adr_rolls, lockt, tt, dop, snr, freq = 0.0;
   int i, index, nobs, prn, sat, sys, code, idx, track, plock, clock, parity,
       halfc, lli;
 
   nobs = U4(p);
-  if (len < HLEN + 4 + nobs * 24) {
+  if (len < 4 + nobs * 24) {
     // trace(2, "oem4 rangecmpb length error: len=%d nobs=%d\n", raw->len,
     // nobs);
     return -1;
@@ -557,9 +568,36 @@ static int decode_rangecmpb(unsigned char *raw, size_t len,
       obs[index]->LLI[idx] = (uint8_t)lli;
       obs[index]->psr_std[idx] = psr_std;
       obs[index]->adr_std[idx] = (float)(stdev_adr + 1) / 512;
-      ;
     }
   }
   return 1;
 }
+
+bynav_gps_msgs::GnssMeasMsgPtr
+RANGECMPBParser::ParseBinary(const BinaryMessage &bin_msg) {
+  bynav_gps_msgs::GnssMeasMsgPtr ros_msg =
+      boost::make_shared<bynav_gps_msgs::GnssMeasMsg>();
+
+  bynav_gps_msgs::BynavMessageHeader bynav_msg_header;
+  HeaderParser header_parser;
+  bynav_msg_header = header_parser.ParseBinary(bin_msg);
+  bynav_msg_header.message_name = MESSAGE_NAME;
+
+  gtime_t time =
+      gpst2time(bynav_msg_header.gps_week_num, bynav_msg_header.gps_seconds);
+
+  std::vector<ObsPtr> meas;
+  int ret =
+      decode_rangecmpb(bin_msg.data_.data(), bin_msg.data_.size(), meas, time);
+  if (ret < 0) {
+    std::stringstream error;
+    error << "Unexpected BDSEPHEMERISB message length: "
+          << bin_msg.data_.size();
+    throw ParseException(error.str());
+  }
+  *ros_msg = meas2msg(meas);
+  ros_msg->bynav_msg_header = bynav_msg_header;
+  return ros_msg;
+}
+
 } // namespace bynav_gps_driver
