@@ -32,6 +32,27 @@ bynav_gps_msgs::MarkTimePtr bynav_gps_driver::Mark2TimeParser::ParseBinary(
   ros_msg->offset_std = ParseDouble(&bin_msg.data_[20]);
   ros_msg->utc_offset = ParseDouble(&bin_msg.data_[28]);
 
+  uint32_t status = ParseUInt32(&bin_msg.data_[36]);
+
+  switch (status) {
+  case 0:
+    ros_msg->status = "VALID";
+    break;
+  case 1:
+    ros_msg->status = "CONVERGING";
+    break;
+  case 2:
+    ros_msg->status = "ITERATING";
+    break;
+  case 3:
+    ros_msg->status = "INVALID";
+    break;
+  default: {
+    std::stringstream error;
+    error << "Unexpected inertial solution status: " << status;
+    throw ParseException(error.str());
+  }
+  }
   return ros_msg;
 }
 
@@ -54,12 +75,12 @@ bynav_gps_msgs::MarkTimePtr bynav_gps_driver::Mark2TimeParser::ParseAscii(
 
   bool valid = true;
   valid &= ParseUInt32(sentence.body[0], msg->week);
-  valid &= ParseDouble(sentence.body[2], msg->seconds);
-  valid &= ParseDouble(sentence.body[3], msg->offset);
-  valid &= ParseDouble(sentence.body[4], msg->offset_std);
-  valid &= ParseDouble(sentence.body[5], msg->utc_offset);
+  valid &= ParseDouble(sentence.body[1], msg->seconds);
+  valid &= ParseDouble(sentence.body[2], msg->offset);
+  valid &= ParseDouble(sentence.body[3], msg->offset_std);
+  valid &= ParseDouble(sentence.body[4], msg->utc_offset);
 
-  msg->status = sentence.body[6];
+  msg->status = sentence.body[5];
 
   if (!valid) {
     throw ParseException("Error parsing heading as double in MARK2TIME");

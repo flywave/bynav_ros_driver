@@ -31,7 +31,7 @@ bynav_gps_msgs::InsspdPtr bynav_gps_driver::InsspdParser::ParseBinary(
   ros_msg->horizontal_speed = ParseDouble(&bin_msg.data_[20]);
   ros_msg->vertical_speed = ParseDouble(&bin_msg.data_[28]);
 
-  uint32_t status = ParseUInt32(&bin_msg.data_[32]);
+  uint32_t status = ParseUInt32(&bin_msg.data_[36]);
 
   switch (status) {
   case 0:
@@ -94,12 +94,12 @@ bynav_gps_msgs::InsspdPtr bynav_gps_driver::InsspdParser::ParseAscii(
 
   bool valid = true;
   valid &= ParseUInt32(sentence.body[0], msg->week);
-  valid &= ParseDouble(sentence.body[2], msg->seconds);
-  valid &= ParseDouble(sentence.body[3], msg->track_gnd);
-  valid &= ParseDouble(sentence.body[4], msg->horizontal_speed);
-  valid &= ParseDouble(sentence.body[5], msg->vertical_speed);
+  valid &= ParseDouble(sentence.body[1], msg->seconds);
+  valid &= ParseDouble(sentence.body[2], msg->track_gnd);
+  valid &= ParseDouble(sentence.body[3], msg->horizontal_speed);
+  valid &= ParseDouble(sentence.body[4], msg->vertical_speed);
 
-  msg->status = sentence.body[6];
+  msg->status = sentence.body[5];
 
   if (!valid) {
     throw ParseException("Error parsing heading as double in INSSPD");

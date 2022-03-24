@@ -26,16 +26,16 @@ bynav_gps_msgs::RawIMUPtr bynav_gps_driver::RawIMUSParser::ParseBinary(
   ros_msg->bynav_msg_header.message_name = "RAWIMU";
 
   ros_msg->gps_week_num = ParseUInt32(&bin_msg.data_[0]);
-  ros_msg->gps_seconds = ParseDouble(&bin_msg.data_[1]);
-  ros_msg->imu_status = ParseUInt32(&bin_msg.data_[2]);
+  ros_msg->gps_seconds = ParseDouble(&bin_msg.data_[4]);
+  ros_msg->imu_status = ParseUInt32(&bin_msg.data_[12]);
 
-  ros_msg->z_accel = ParseInt32(&bin_msg.data_[3]);
-  ros_msg->y_accel = ParseInt32(&bin_msg.data_[4]);
-  ros_msg->x_accel = ParseInt32(&bin_msg.data_[5]);
+  ros_msg->z_accel = ParseInt32(&bin_msg.data_[16]);
+  ros_msg->y_accel = ParseInt32(&bin_msg.data_[20]);
+  ros_msg->x_accel = ParseInt32(&bin_msg.data_[24]);
 
-  ros_msg->z_gyro = ParseInt32(&bin_msg.data_[6]);
-  ros_msg->y_gyro = ParseInt32(&bin_msg.data_[7]);
-  ros_msg->x_gyro = ParseInt32(&bin_msg.data_[8]);
+  ros_msg->z_gyro = ParseInt32(&bin_msg.data_[28]);
+  ros_msg->y_gyro = ParseInt32(&bin_msg.data_[32]);
+  ros_msg->x_gyro = ParseInt32(&bin_msg.data_[36]);
 
   return ros_msg;
 }

@@ -23,7 +23,7 @@ public:
   ParseBinary(const BinaryMessage &bin_msg) override;
 
   static constexpr uint16_t MESSAGE_ID = 1336;
-  static constexpr size_t BINARY_LENGTH = 224;
+  static constexpr size_t BINARY_LENGTH = 228;
   static const std::string MESSAGE_NAME;
 };
 } // namespace bynav_gps_driver

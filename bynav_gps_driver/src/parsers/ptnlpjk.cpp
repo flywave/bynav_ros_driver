@@ -14,9 +14,9 @@ const std::string PtnlPJKParser::GetMessageName() const { return MESSAGE_NAME; }
 
 bynav_gps_msgs::PtnlPJKPtr
 PtnlPJKParser::ParseAscii(const NmeaSentence &sentence) {
-  const size_t EXPECTED_LEN = 3;
+  const size_t EXPECTED_LEN = 13;
 
-  if (sentence.body.size() != EXPECTED_LEN) {
+  if (sentence.body.size() < EXPECTED_LEN) {
     std::stringstream error;
     error << "Expected PTNLPJK length = " << EXPECTED_LEN << ", "
           << "actual length = " << sentence.body.size();
@@ -40,22 +40,23 @@ PtnlPJKParser::ParseAscii(const NmeaSentence &sentence) {
     msg->utc_year = atoi(parse[2]) + 2000;
   }
 
-  valid = valid && ParseDouble(sentence.body[3], msg->x);
-  msg->x_dir = sentence.body[4];
-  valid = valid && ParseDouble(sentence.body[5], msg->y);
-  msg->y_dir = sentence.body[6];
+  valid = valid && ParseDouble(sentence.body[4], msg->x);
+  msg->x_dir = sentence.body[5];
+  valid = valid && ParseDouble(sentence.body[6], msg->y);
+  msg->y_dir = sentence.body[7];
 
-  valid = valid && ParseUInt32(sentence.body[7], msg->solution_status);
+  valid = valid && ParseUInt32(sentence.body[8], msg->solution_status);
   valid = valid &&
-          ParseUInt8(sentence.body[8], msg->num_satellites_used_in_solution);
-  if (sentence.body[9].size() > 3) {
-    msg->datum_id = sentence.body[9].substr(0, 3);
+          ParseUInt8(sentence.body[9], msg->num_satellites_used_in_solution);
+  valid = valid && ParseDouble(sentence.body[10], msg->hdop);
+  if (sentence.body[11].size() > 3) {
+    msg->datum_id = sentence.body[11].substr(0, 3);
     if (msg->datum_id == "EHT" || msg->datum_id == "GHT") {
       valid =
           valid && ParseDouble(sentence.body[9].substr(3), msg->height_offset);
     }
   }
-  msg->height_unit = sentence.body[10];
+  msg->height_unit = sentence.body[12];
   if (!valid) {
     throw ParseException("Invalid field in PTNLPJK message");
   }

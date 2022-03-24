@@ -56,10 +56,13 @@ add_library(${PROJECT_NAME}
   src/parsers/corrimudatas.cpp
   src/parsers/gpatr.cpp
   src/parsers/gpdop.cpp
+  src/parsers/gpfpd.cpp
   src/parsers/gpgga.cpp
   src/parsers/gpgst.cpp
   src/parsers/gpgsv.cpp
   src/parsers/gphdt.cpp
+  src/parsers/gphpd.cpp
+  src/parsers/gpntr.cpp
   src/parsers/gpori.cpp
   src/parsers/gprmc.cpp
   src/parsers/gpvtg.cpp
@@ -73,8 +76,11 @@ add_library(${PROJECT_NAME}
   src/parsers/insspd.cpp
   src/parsers/insstdev.cpp
   src/parsers/insvel.cpp
+  src/parsers/mark2time.cpp
   src/parsers/marktime.cpp
   src/parsers/parsing_utils.cpp
+  src/parsers/psrvel.cpp
+  src/parsers/pashr.cpp
   src/parsers/ptnlavr.cpp
   src/parsers/ptnlpjk.cpp
   src/parsers/refstation.cpp

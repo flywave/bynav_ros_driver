@@ -14,9 +14,9 @@ const std::string PtnlAvrParser::GetMessageName() const { return MESSAGE_NAME; }
 
 bynav_gps_msgs::PtnlAvrPtr
 PtnlAvrParser::ParseAscii(const NmeaSentence &sentence) {
-  const size_t EXPECTED_LEN = 3;
+  const size_t EXPECTED_LEN = 13;
 
-  if (sentence.body.size() != EXPECTED_LEN) {
+  if (sentence.body.size() < EXPECTED_LEN) {
     std::stringstream error;
     error << "Expected PTNLAVR length = " << EXPECTED_LEN << ", "
           << "actual length = " << sentence.body.size();
@@ -34,12 +34,12 @@ PtnlAvrParser::ParseAscii(const NmeaSentence &sentence) {
   valid = valid && ParseDouble(sentence.body[3], msg->yaw);
   valid = valid && ParseDouble(sentence.body[5], msg->tilt);
 
-  valid = valid && ParseFloat(sentence.body[6], msg->baseline_length);
+  valid = valid && ParseFloat(sentence.body[9], msg->baseline_length);
 
-  valid = valid && ParseUInt32(sentence.body[7], msg->solution_status);
-  valid = valid && ParseFloat(sentence.body[8], msg->pdop);
+  valid = valid && ParseUInt32(sentence.body[10], msg->solution_status);
+  valid = valid && ParseFloat(sentence.body[11], msg->pdop);
   valid = valid &&
-          ParseUInt8(sentence.body[9], msg->num_satellites_used_in_solution);
+          ParseUInt8(sentence.body[12], msg->num_satellites_used_in_solution);
 
   if (!valid) {
     throw ParseException("Invalid field in PTNLAVR message");

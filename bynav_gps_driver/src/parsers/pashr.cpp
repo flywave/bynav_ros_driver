@@ -14,7 +14,7 @@ bynav_gps_msgs::PashrPtr bynav_gps_driver::PashrParser::ParseAscii(
     const bynav_gps_driver::NmeaSentence &sentence) {
   const size_t EXPECTED_LEN = 11;
 
-  if (sentence.body.size() != EXPECTED_LEN) {
+  if (sentence.body.size() < EXPECTED_LEN) {
     std::stringstream error;
     error << "Expected PASHR length = " << EXPECTED_LEN << ", "
           << "actual length = " << sentence.body.size();
@@ -31,8 +31,8 @@ bynav_gps_msgs::PashrPtr bynav_gps_driver::PashrParser::ParseAscii(
 
   msg->t = sentence.body[3];
 
-  valid = valid && ParseFloat(sentence.body[4], msg->yaw);
-  valid = valid && ParseFloat(sentence.body[5], msg->pitch);
+  valid = valid && ParseDouble(sentence.body[4], msg->yaw);
+  valid = valid && ParseDouble(sentence.body[5], msg->pitch);
 
   valid = valid && ParseFloat(sentence.body[6], msg->undulation);
 

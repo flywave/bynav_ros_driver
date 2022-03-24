@@ -14,7 +14,7 @@ const std::string bynav_gps_driver::GpatrParser::GetMessageName() const {
 bynav_gps_msgs::GpatrPtr bynav_gps_driver::GpatrParser::ParseAscii(
     const bynav_gps_driver::NmeaSentence &sentence) {
   const size_t LENGTH = 11;
-  if (sentence.body.size() != LENGTH) {
+  if (sentence.body.size() < LENGTH) {
     std::stringstream error;
     error << "Expected GPATR length " << LENGTH << ", actual length "
           << sentence.body.size();

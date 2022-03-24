@@ -31,7 +31,7 @@ bynav_gps_msgs::InsposPtr bynav_gps_driver::InsposParser::ParseBinary(
   ros_msg->longitude = ParseDouble(&bin_msg.data_[20]);
   ros_msg->height = ParseDouble(&bin_msg.data_[28]);
 
-  uint32_t status = ParseUInt32(&bin_msg.data_[32]);
+  uint32_t status = ParseUInt32(&bin_msg.data_[36]);
 
   switch (status) {
   case 0:
@@ -94,13 +94,13 @@ bynav_gps_msgs::InsposPtr bynav_gps_driver::InsposParser::ParseAscii(
 
   bool valid = true;
 
-  valid = valid && ParseUInt32(sentence.body[1], msg->week);
-  valid = valid && ParseDouble(sentence.body[2], msg->seconds);
-  valid = valid && ParseDouble(sentence.body[3], msg->latitude);
-  valid = valid && ParseDouble(sentence.body[4], msg->longitude);
-  valid = valid && ParseDouble(sentence.body[5], msg->height);
+  valid = valid && ParseUInt32(sentence.body[0], msg->week);
+  valid = valid && ParseDouble(sentence.body[1], msg->seconds);
+  valid = valid && ParseDouble(sentence.body[2], msg->latitude);
+  valid = valid && ParseDouble(sentence.body[3], msg->longitude);
+  valid = valid && ParseDouble(sentence.body[4], msg->height);
 
-  msg->status = sentence.body[6];
+  msg->status = sentence.body[5];
 
   if (!valid) {
     throw ParseException("Error parsing heading as double in INSPOS");

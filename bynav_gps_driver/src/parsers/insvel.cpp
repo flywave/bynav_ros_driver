@@ -31,7 +31,7 @@ bynav_gps_msgs::InsvelPtr bynav_gps_driver::InsvelParser::ParseBinary(
   ros_msg->east_velocity = ParseDouble(&bin_msg.data_[20]);
   ros_msg->up_velocity = ParseDouble(&bin_msg.data_[28]);
 
-  uint32_t status = ParseUInt32(&bin_msg.data_[32]);
+  uint32_t status = ParseUInt32(&bin_msg.data_[36]);
 
   switch (status) {
   case 0:
@@ -94,12 +94,12 @@ bynav_gps_msgs::InsvelPtr bynav_gps_driver::InsvelParser::ParseAscii(
 
   bool valid = true;
   valid &= ParseUInt32(sentence.body[0], msg->week);
-  valid &= ParseDouble(sentence.body[2], msg->seconds);
-  valid &= ParseDouble(sentence.body[3], msg->north_velocity);
-  valid &= ParseDouble(sentence.body[4], msg->east_velocity);
-  valid &= ParseDouble(sentence.body[5], msg->up_velocity);
+  valid &= ParseDouble(sentence.body[1], msg->seconds);
+  valid &= ParseDouble(sentence.body[2], msg->north_velocity);
+  valid &= ParseDouble(sentence.body[3], msg->east_velocity);
+  valid &= ParseDouble(sentence.body[4], msg->up_velocity);
 
-  msg->status = sentence.body[6];
+  msg->status = sentence.body[5];
   if (!valid) {
     throw ParseException("Error parsing heading as double in INSVEL");
   }

@@ -15,7 +15,7 @@ public:
 
   bynav_gps_msgs::GphpdPtr ParseAscii(const NmeaSentence &sentence) override;
 
-  static constexpr size_t ASCII_BODY_FIELDS = 21;
+  static constexpr size_t ASCII_BODY_FIELDS = 22;
   static const std::string MESSAGE_NAME;
 };
 } // namespace bynav_gps_driver

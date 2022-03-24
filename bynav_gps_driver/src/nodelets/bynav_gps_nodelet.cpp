@@ -351,6 +351,8 @@ private:
   ros::Publisher gpgsa_pub_;
   ros::Publisher gphdt_pub_;
   ros::Publisher gprmc_pub_;
+
+  ros::Publisher time_pub_;
   
   ros::Publisher meas_pub_;
   ros::Publisher bdsephemerisb_pub_;

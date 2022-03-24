@@ -12,9 +12,9 @@ const std::string bynav_gps_driver::GptraParser::GetMessageName() const {
 
 bynav_gps_msgs::GptraPtr bynav_gps_driver::GptraParser::ParseAscii(
     const bynav_gps_driver::NmeaSentence &sentence) {
-  const size_t EXPECTED_LEN = 3;
+  const size_t EXPECTED_LEN = 9;
 
-  if (sentence.body.size() != EXPECTED_LEN) {
+  if (sentence.body.size() < EXPECTED_LEN) {
     std::stringstream error;
     error << "Expected GPTRA length = " << EXPECTED_LEN << ", "
           << "actual length = " << sentence.body.size();

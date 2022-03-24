@@ -12,15 +12,12 @@ const std::string bynav_gps_driver::GprmcParser::GetMessageName() const {
 
 bynav_gps_msgs::GprmcPtr bynav_gps_driver::GprmcParser::ParseAscii(
     const bynav_gps_driver::NmeaSentence &sentence) {
-  const size_t EXPECTED_LEN_OEM6 = 13;
-  const size_t EXPECTED_LEN_OEM4 = 12;
+  const size_t EXPECTED_LEN = 13;
 
-  if (sentence.body.size() != EXPECTED_LEN_OEM4 &&
-      sentence.body.size() != EXPECTED_LEN_OEM6) {
+  if (sentence.body.size() < EXPECTED_LEN) {
     std::stringstream error;
-    error << "Expected GPRMC lengths = " << EXPECTED_LEN_OEM4 << " (for OEM4), "
-          << EXPECTED_LEN_OEM6 << " (for OEM6), "
-          << "actual length = " << sentence.body.size();
+    error << "Expected GPRMC lengths = " << EXPECTED_LEN
+          << " actual length = " << sentence.body.size();
     throw ParseException(error.str());
   }
 
@@ -70,9 +67,7 @@ bynav_gps_msgs::GprmcPtr bynav_gps_driver::GprmcParser::ParseAscii(
   }
   valid = valid && ParseFloat(sentence.body[10], msg->mag_var);
   msg->mag_var_direction = sentence.body[11];
-  if (sentence.body.size() == EXPECTED_LEN_OEM6) {
-    msg->mode_indicator = sentence.body[12];
-  }
+  msg->mode_indicator = sentence.body[12];
 
   if (!valid) {
     was_last_gps_valid_ = false;

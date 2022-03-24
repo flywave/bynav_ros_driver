@@ -19,7 +19,7 @@ public:
 
   static constexpr uint32_t MESSAGE_ID = 266;
   static const std::string MESSAGE_NAME;
-  static constexpr size_t BINARY_LENGTH = 52;
+  static constexpr size_t BINARY_LENGTH = 40;
 };
 } // namespace bynav_gps_driver
 

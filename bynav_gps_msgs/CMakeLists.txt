@@ -17,13 +17,17 @@ add_service_files(
 add_message_files(DIRECTORY msg FILES
   Gpatr.msg
   Gpdop.msg
+  Gpfpd.msg
   Gpgga.msg
   Gpgst.msg
   Gpgsv.msg
   Gphdt.msg
+  Gphpd.msg
+  Gpntr.msg
   Gpori.msg
   Gprmc.msg
   Gpvtg.msg
+  Gptra.msg
   Gpzda.msg
   ICOMConfig.msg
   Insatt.msg

@@ -68,6 +68,8 @@ bynav_gps_msgs::InsstdevPtr bynav_gps_driver::InsstdevParser::ParseAscii(
   valid &= ParseUInt32(sentence.body[9], status);
   GetExtendedSolutionStatusMessage(status, msg->extended_solution_status);
 
+  valid &= ParseUInt16(sentence.body[10], msg->time_since_update);
+
   if (!valid) {
     throw ParseException("Error parsing INSSTDEV log.");
   }

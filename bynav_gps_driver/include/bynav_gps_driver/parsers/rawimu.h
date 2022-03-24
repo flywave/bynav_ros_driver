@@ -19,8 +19,8 @@ public:
   bynav_gps_msgs::RawIMUPtr ParseAscii(const BynavSentence &sentence) override;
 
   static constexpr uint16_t MESSAGE_ID = 268;
-  static constexpr size_t BINARY_LENGTH = 60;
-  static constexpr size_t ASCII_FIELDS = 8;
+  static constexpr size_t BINARY_LENGTH = 40;
+  static constexpr size_t ASCII_FIELDS = 9;
   static const std::string MESSAGE_NAME;
 };
 } // namespace bynav_gps_driver

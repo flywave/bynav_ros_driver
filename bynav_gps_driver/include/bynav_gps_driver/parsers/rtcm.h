@@ -29,7 +29,7 @@ public:
   void Decode();
   bool CheckCRC();
 
-  size_t message_len_; // length, including header and footer
+  size_t message_len_;
   size_t buffer_head_;
   size_t payload_len_;
   bool start_message_;

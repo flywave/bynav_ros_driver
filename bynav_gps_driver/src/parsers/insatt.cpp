@@ -31,7 +31,7 @@ bynav_gps_msgs::InsattPtr bynav_gps_driver::InsattParser::ParseBinary(
   ros_msg->pitch = ParseDouble(&bin_msg.data_[20]);
   ros_msg->azimuth = ParseDouble(&bin_msg.data_[28]);
 
-  uint32_t status = ParseUInt32(&bin_msg.data_[32]);
+  uint32_t status = ParseUInt32(&bin_msg.data_[36]);
 
   switch (status) {
   case 0:

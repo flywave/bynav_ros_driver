@@ -24,6 +24,7 @@ float64 up_velocity
 
 float32 east_velocity_diff
 float32 north_velocity_diff
+float32 up_velocity_diff
 
 # Baseline length (m)
 float32 baseline_length

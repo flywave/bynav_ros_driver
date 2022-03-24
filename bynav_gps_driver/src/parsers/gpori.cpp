@@ -12,9 +12,9 @@ const std::string bynav_gps_driver::GporiParser::GetMessageName() const {
 
 bynav_gps_msgs::GporiPtr bynav_gps_driver::GporiParser::ParseAscii(
     const bynav_gps_driver::NmeaSentence &sentence) {
-  const size_t EXPECTED_LEN = 3;
+  const size_t EXPECTED_LEN = 9;
 
-  if (sentence.body.size() != EXPECTED_LEN) {
+  if (sentence.body.size() < EXPECTED_LEN) {
     std::stringstream error;
     error << "Expected GPORI length = " << EXPECTED_LEN << ", "
           << "actual length = " << sentence.body.size();

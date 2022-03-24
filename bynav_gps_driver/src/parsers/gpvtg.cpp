@@ -32,9 +32,9 @@ bynav_gps_msgs::GpvtgPtr bynav_gps_driver::GpvtgParser::ParseAscii(
   msg->mt = sentence.body[4];
   valid = valid && ParseDouble(sentence.body[5], msg->horizontal_speedn);
   msg->spn_nt_unit = sentence.body[6];
-  valid = valid && ParseDouble(sentence.body[6], msg->horizontal_speedk);
-  msg->spn_kt_unit = sentence.body[7];
-  msg->status = sentence.body[8];
+  valid = valid && ParseDouble(sentence.body[7], msg->horizontal_speedk);
+  msg->spn_kt_unit = sentence.body[8];
+  msg->status = sentence.body[9];
 
   if (!valid) {
     throw ParseException("Error parsing heading as double in GPVTG");
