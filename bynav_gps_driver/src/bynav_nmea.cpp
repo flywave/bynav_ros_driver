@@ -20,8 +20,8 @@ BynavNmea::BynavNmea()
       gphdt_msgs_(MAX_BUFFER_SIZE), gprmc_msgs_(MAX_BUFFER_SIZE),
       imu_msgs_(MAX_BUFFER_SIZE), inspva_msgs_(MAX_BUFFER_SIZE),
       inspvax_msgs_(MAX_BUFFER_SIZE), insstdev_msgs_(MAX_BUFFER_SIZE),
-      bynav_positions_(MAX_BUFFER_SIZE), bynav_pjk_positions_(MAX_BUFFER_SIZE),
-      bynav_velocities_(MAX_BUFFER_SIZE),
+      bynav_positions_(MAX_BUFFER_SIZE), bynav_gnss_positions_(MAX_BUFFER_SIZE),
+      bynav_pjk_positions_(MAX_BUFFER_SIZE), bynav_velocities_(MAX_BUFFER_SIZE),
       bestpos_sync_buffer_(SYNC_BUFFER_SIZE),
       bestvel_sync_buffer_(SYNC_BUFFER_SIZE), heading_msgs_(MAX_BUFFER_SIZE),
       gpdop_msgs_(MAX_BUFFER_SIZE), time_msgs_(MAX_BUFFER_SIZE),
@@ -138,6 +138,14 @@ void BynavNmea::GetBynavPositions(
   positions.insert(positions.end(), bynav_positions_.begin(),
                    bynav_positions_.end());
   bynav_positions_.clear();
+}
+
+void BynavNmea::GetBynavGnssPositions(
+    std::vector<bynav_gps_msgs::BynavPositionPtr> &positions) {
+  positions.clear();
+  positions.insert(positions.end(), bynav_gnss_positions_.begin(),
+                   bynav_gnss_positions_.end());
+  bynav_gnss_positions_.clear();
 }
 
 void BynavNmea::GetBynavPJKPositions(
@@ -469,6 +477,13 @@ BynavNmea::ParseBinaryMessage(const BinaryMessage &msg,
     bestpos_sync_buffer_.push_back(position);
     break;
   }
+  case BestGNSSposParser::MESSAGE_ID: {
+    bynav_gps_msgs::BynavPositionPtr position =
+        bestgnsspos_parser_.ParseBinary(msg);
+    position->header.stamp = stamp;
+    bynav_gnss_positions_.push_back(position);
+    break;
+  }
   case BynavVelocityParser::MESSAGE_ID: {
     bynav_gps_msgs::BynavVelocityPtr velocity =
         bestvel_parser_.ParseBinary(msg);
@@ -623,6 +638,11 @@ BynavNmea::ReadResult
 BynavNmea::ParseBynavSentence(const BynavSentence &sentence,
                               const ros::Time &stamp) noexcept(false) {
   if (sentence.id == "BESTGNSSPOSA") {
+    bynav_gps_msgs::BynavPositionPtr position =
+        bestgnsspos_parser_.ParseAscii(sentence);
+    position->header.stamp = stamp;
+    bynav_gnss_positions_.push_back(position);
+  } else if (sentence.id == "BESTPOSA") {
     bynav_gps_msgs::BynavPositionPtr position =
         bestpos_parser_.ParseAscii(sentence);
     position->header.stamp = stamp;

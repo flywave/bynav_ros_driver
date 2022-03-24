@@ -28,6 +28,7 @@
 #include <bynav_gps_driver/bynav_message_extractor.h>
 
 #include <bynav_gps_driver/parsers/bdsephemerisb.h>
+#include <bynav_gps_driver/parsers/bestgnsspos.h>
 #include <bynav_gps_driver/parsers/bestpos.h>
 #include <bynav_gps_driver/parsers/bestvel.h>
 #include <bynav_gps_driver/parsers/corrimudata.h>
@@ -93,6 +94,9 @@ public:
   void
   GetBynavPositions(std::vector<bynav_gps_msgs::BynavPositionPtr> &positions);
 
+  void GetBynavGnssPositions(
+      std::vector<bynav_gps_msgs::BynavPositionPtr> &positions);
+
   void GetBynavPJKPositions(std::vector<bynav_gps_msgs::PtnlPJKPtr> &positions);
 
   void
@@ -154,6 +158,7 @@ private:
   BynavMessageExtractor extractor_;
 
   BestposParser bestpos_parser_;
+  BestGNSSposParser bestgnsspos_parser_;
   PtnlPJKParser ptnlpjk_parser_;
   BynavVelocityParser bestvel_parser_;
   HeadingParser heading_parser_;
@@ -185,6 +190,8 @@ private:
   boost::circular_buffer<bynav_gps_msgs::InspvaxPtr> inspvax_msgs_;
   boost::circular_buffer<bynav_gps_msgs::InsstdevPtr> insstdev_msgs_;
   boost::circular_buffer<bynav_gps_msgs::BynavPositionPtr> bynav_positions_;
+  boost::circular_buffer<bynav_gps_msgs::BynavPositionPtr>
+      bynav_gnss_positions_;
   boost::circular_buffer<bynav_gps_msgs::PtnlPJKPtr> bynav_pjk_positions_;
   boost::circular_buffer<bynav_gps_msgs::BynavVelocityPtr> bynav_velocities_;
   boost::circular_buffer<bynav_gps_msgs::BynavPositionPtr> bestpos_sync_buffer_;

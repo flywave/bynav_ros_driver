@@ -49,13 +49,14 @@ public:
         imu_rate_(100.0), imu_sample_rate_(-1), span_frame_to_ros_frame_(false),
         publish_clock_steering_(false), publish_imu_messages_(false),
         publish_obs_messages_(false), publish_nav_messages_(false),
-        publish_bynav_positions_(false), publish_bynav_pjk_positions_(false),
-        publish_bynav_velocity_(false), publish_bynav_heading_(false),
-        publish_bynav_gpdop_(false), publish_nmea_messages_(false),
-        publish_time_messages_(false), publish_diagnostics_(true),
-        publish_sync_diagnostic_(true), publish_invalid_gpsfix_(false),
-        reconnect_delay_s_(0.5), use_binary_messages_(false),
-        connection_(BynavNmea::SERIAL), last_sync_(ros::TIME_MIN),
+        publish_bynav_positions_(false), publish_bynav_gnss_positions_(false),
+        publish_bynav_pjk_positions_(false), publish_bynav_velocity_(false),
+        publish_bynav_heading_(false), publish_bynav_gpdop_(false),
+        publish_nmea_messages_(false), publish_time_messages_(false),
+        publish_diagnostics_(true), publish_sync_diagnostic_(true),
+        publish_invalid_gpsfix_(false), reconnect_delay_s_(0.5),
+        use_binary_messages_(false), connection_(BynavNmea::SERIAL),
+        last_sync_(ros::TIME_MIN),
         rolling_offset_(stats::tag::rolling_window::window_size = 10),
         expected_rate_(20), device_timeouts_(0), device_interrupts_(0),
         device_errors_(0), gps_parse_failures_(0),
@@ -82,6 +83,8 @@ public:
                 publish_nav_messages_);
     swri::param(priv, "publish_bynav_positions", publish_bynav_positions_,
                 publish_bynav_positions_);
+    swri::param(priv, "publish_bynav_gnss_positions",
+                publish_bynav_gnss_positions_, publish_bynav_gnss_positions_);
     swri::param(priv, "publish_bynav_pjk_positions",
                 publish_bynav_pjk_positions_, publish_bynav_pjk_positions_);
     swri::param(priv, "publish_bynav_velocity", publish_bynav_velocity_,
@@ -165,6 +168,11 @@ public:
     if (publish_bynav_positions_) {
       bynav_position_pub_ =
           swri::advertise<bynav_gps_msgs::BynavPosition>(node, "bestpos", 100);
+    }
+
+    if (publish_bynav_gnss_positions_) {
+      bynav_gnss_position_pub_ = swri::advertise<bynav_gps_msgs::BynavPosition>(
+          node, "bestgnsspos", 100);
     }
 
     if (publish_bynav_pjk_positions_) {
@@ -321,6 +329,7 @@ private:
   bool publish_obs_messages_;
   bool publish_imu_messages_;
   bool publish_bynav_positions_;
+  bool publish_bynav_gnss_positions_;
   bool publish_bynav_pjk_positions_;
   bool publish_bynav_velocity_;
   bool publish_bynav_heading_;
@@ -342,6 +351,7 @@ private:
   ros::Publisher insstdev_pub_;
   ros::Publisher bynav_imu_pub_;
   ros::Publisher bynav_position_pub_;
+  ros::Publisher bynav_gnss_position_pub_;
   ros::Publisher bynav_pjk_position_pub_;
   ros::Publisher bynav_velocity_pub_;
   ros::Publisher bynav_heading_pub_;
@@ -353,7 +363,7 @@ private:
   ros::Publisher gprmc_pub_;
 
   ros::Publisher time_pub_;
-  
+
   ros::Publisher meas_pub_;
   ros::Publisher bdsephemerisb_pub_;
   ros::Publisher galephemerisb_pub_;
@@ -516,6 +526,16 @@ private:
         msg->header.stamp += sync_offset;
         msg->header.frame_id = frame_id_;
         bynav_position_pub_.publish(msg);
+      }
+    }
+
+    if (publish_bynav_gnss_positions_) {
+      std::vector<bynav_gps_msgs::BynavPositionPtr> gnss_position_msgs;
+      gps_.GetBynavGnssPositions(gnss_position_msgs);
+      for (const auto &msg : gnss_position_msgs) {
+        msg->header.stamp += sync_offset;
+        msg->header.frame_id = frame_id_;
+        bynav_gnss_position_pub_.publish(msg);
       }
     }
 
