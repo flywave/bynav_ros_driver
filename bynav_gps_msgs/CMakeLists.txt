@@ -69,6 +69,7 @@ add_message_files(DIRECTORY msg FILES
   GnssMeasMsg.msg
   GnssObsMsg.msg
   GnssTimeMsg.msg
+  WorkFREQS.msg
 )
 generate_messages(DEPENDENCIES ${MSG_DEPS})
 catkin_package(

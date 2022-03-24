@@ -11,6 +11,7 @@
 #include <boost/circular_buffer.hpp>
 
 #include <bynav_gps_driver/bynav_nmea.h>
+#include <bynav_gps_msgs/BynavConfig.h>
 #include <bynav_gps_msgs/BynavCorrectedImuData.h>
 #include <bynav_gps_msgs/BynavFRESET.h>
 #include <bynav_gps_msgs/BynavMessageHeader.h>
@@ -52,11 +53,10 @@ public:
         publish_bynav_positions_(false), publish_bynav_gnss_positions_(false),
         publish_bynav_pjk_positions_(false), publish_bynav_velocity_(false),
         publish_bynav_heading_(false), publish_bynav_gpdop_(false),
-        publish_nmea_messages_(false), publish_time_messages_(false),
-        publish_diagnostics_(true), publish_sync_diagnostic_(true),
-        publish_invalid_gpsfix_(false), reconnect_delay_s_(0.5),
-        use_binary_messages_(false), connection_(BynavNmea::SERIAL),
-        last_sync_(ros::TIME_MIN),
+        publish_nmea_messages_(false), publish_diagnostics_(true),
+        publish_sync_diagnostic_(true), publish_invalid_gpsfix_(false),
+        reconnect_delay_s_(0.5), use_binary_messages_(false),
+        connection_(BynavNmea::SERIAL), last_sync_(ros::TIME_MIN),
         rolling_offset_(stats::tag::rolling_window::window_size = 10),
         expected_rate_(20), device_timeouts_(0), device_interrupts_(0),
         device_errors_(0), gps_parse_failures_(0),
@@ -95,8 +95,6 @@ public:
                 publish_bynav_gpdop_);
     swri::param(priv, "publish_nmea_messages", publish_nmea_messages_,
                 publish_nmea_messages_);
-    swri::param(priv, "publish_time_messages", publish_time_messages_,
-                publish_time_messages_);
     swri::param(priv, "publish_diagnostics", publish_diagnostics_,
                 publish_diagnostics_);
     swri::param(priv, "publish_sync_diagnostic", publish_sync_diagnostic_,
@@ -116,14 +114,12 @@ public:
     swri::param(priv, "imu_frame_id", imu_frame_id_, std::string(""));
     swri::param(priv, "frame_id", frame_id_, std::string(""));
 
-    // set BynavGps parameters
     swri::param(priv, "gpsfix_sync_tol", gps_.gpsfix_sync_tol_, 0.01);
     swri::param(priv, "wait_for_sync", gps_.wait_for_sync_, true);
 
     swri::param(priv, "publish_invalid_gpsfix", publish_invalid_gpsfix_,
                 publish_invalid_gpsfix_);
 
-    // Reset Service
     reset_service_ =
         priv.advertiseService("freset", &BynavGpsNodelet::resetService, this);
 
@@ -197,10 +193,6 @@ public:
           swri::advertise<bynav_gps_msgs::Gpdop>(node, "gpdop", 100, true);
     }
 
-    if (publish_time_messages_) {
-      time_pub_ = swri::advertise<bynav_gps_msgs::Time>(node, "time", 100);
-    }
-
     hw_id_ = "Bynav GPS (" + device_ + ")";
     if (publish_diagnostics_) {
       diagnostic_updater_.setHardwareID(hw_id_);
@@ -215,6 +207,9 @@ public:
       }
     }
 
+    bynav_config_sub_ = node.subscribe("bynav/config", 10u,
+                                       &BynavGpsNodelet::ConfigCallback, this);
+
     thread_ = boost::thread(&BynavGpsNodelet::Spin, this);
     NODELET_INFO("%s initialized", hw_id_.c_str());
   }
@@ -222,6 +217,11 @@ public:
   void SyncCallback(const std_msgs::TimeConstPtr &sync) {
     boost::unique_lock<boost::mutex> lock(mutex_);
     sync_times_.push_back(sync->data);
+  }
+
+  void ConfigCallback(const bynav_gps_msgs::BynavConfig &conf) {
+    boost::unique_lock<boost::mutex> lock(config_mutex_);
+    gps_.SetupConfig(conf);
   }
 
   void Spin() {
@@ -335,7 +335,6 @@ private:
   bool publish_bynav_heading_;
   bool publish_bynav_gpdop_;
   bool publish_nmea_messages_;
-  bool publish_time_messages_;
   bool publish_diagnostics_;
   bool publish_sync_diagnostic_;
   bool publish_invalid_gpsfix_;
@@ -362,14 +361,14 @@ private:
   ros::Publisher gphdt_pub_;
   ros::Publisher gprmc_pub_;
 
-  ros::Publisher time_pub_;
-
   ros::Publisher meas_pub_;
   ros::Publisher bdsephemerisb_pub_;
   ros::Publisher galephemerisb_pub_;
   ros::Publisher gpsephemb_pub_;
   ros::Publisher gloephemerisb_pub_;
   ros::Publisher qzssephemerisb_pub_;
+
+  ros::Subscriber bynav_config_sub_;
 
   ros::ServiceServer reset_service_;
 
@@ -378,6 +377,8 @@ private:
 
   boost::thread thread_;
   boost::mutex mutex_;
+
+  boost::mutex config_mutex_;
 
   swri::Subscriber sync_sub_;
   ros::Time last_sync_;
@@ -578,15 +579,7 @@ private:
         bynav_velocity_pub_.publish(msg);
       }
     }
-    if (publish_time_messages_) {
-      std::vector<bynav_gps_msgs::TimePtr> time_msgs;
-      gps_.GetTimeMessages(time_msgs);
-      for (const auto &msg : time_msgs) {
-        msg->header.stamp += sync_offset;
-        msg->header.frame_id = frame_id_;
-        time_pub_.publish(msg);
-      }
-    }
+
     if (publish_imu_messages_) {
       std::vector<bynav_gps_msgs::BynavCorrectedImuDataPtr> bynav_imu_msgs;
       gps_.GetBynavCorrectedImuData(bynav_imu_msgs);

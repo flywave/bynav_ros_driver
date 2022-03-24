@@ -145,7 +145,7 @@ bool BynavControl::SetINSTranslation(BYNAV_INS_STRANSLATION tranm, double x,
                                      double y, double z, double xsd, double ysd,
                                      double zsd, BYNAV_INPUT_FRAME frame) {
   std::string str;
-  char tempStr[128];
+  char tempStr[256];
 
   char tranStr[32];
   if (tranm == ANT1) {
@@ -397,7 +397,7 @@ bool BynavControl::SetFrequencyOut(int plusewidth, int period,
   std::string str;
   char tempStr[128];
 
-  sprintf(tempStr, "FREQUENCYOUT ENABLE %d %d %s %d",
+  sprintf(tempStr, "FREQUENCYOUT ENABLE %d %d %s %d", plusewidth, period,
           (ttl == TTL_POSITIVE) ? "POSITIVE" : "NEGATIVE", instance);
   str.assign(tempStr);
   if (!Write(str))
@@ -696,6 +696,7 @@ bool BynavControl::InrerfaceMode(BYNAV_PORT port, BYNAV_PROTO in,
   str.assign(tempStr);
   if (!Write(str))
     return false;
+  return true;
 }
 
 bool BynavControl::UnlogAll(BYNAV_PORT port) {
@@ -876,5 +877,361 @@ bool BynavControl::DNSConfig(std::string dns) {
 
   Write("SAVECONFIG");
   return true;
+}
+
+bool BynavControl::SetupConfig(const bynav_gps_msgs::BynavConfig &conf) {
+  if (!conf.modes.empty()) {
+    for (auto &mode : conf.modes) {
+      std::string str;
+      char tempStr[128];
+
+      sprintf(tempStr, "INTERFACEMODE %s %s %s ON", mode.port.data(),
+              mode.formatin.data(), mode.formatout.data());
+      str.assign(tempStr);
+      if (!Write(str))
+        return false;
+    }
+  }
+
+  if (!conf.serials.empty()) {
+    for (auto &serial : conf.serials) {
+      std::string str;
+      char tempStr[128];
+
+      sprintf(tempStr, "SERIALCONFIG COM%d %d", serial.port, serial.bps);
+      str.assign(tempStr);
+      if (!Write(str))
+        return false;
+    }
+  }
+
+  if (!conf.icom_configs.empty()) {
+    for (auto &icom : conf.icom_configs) {
+      std::string str;
+      char tempStr[128];
+
+      sprintf(tempStr, "ICOMCONFIG ICOM%d %s %d", icom.port,
+              icom.protocol.data(), icom.endpoint);
+      str.assign(tempStr);
+      if (!Write(str))
+        return false;
+    }
+  }
+
+  if (!conf.freq_outs.empty()) {
+    for (auto &freq_out : conf.freq_outs) {
+      if (freq_out.enable) {
+        std::string str;
+        char tempStr[128];
+
+        sprintf(tempStr, "FREQUENCYOUT ENABLE %d %d %s %d",
+                freq_out.pluse_width, freq_out.period, freq_out.edge.data(),
+                freq_out.instance);
+        str.assign(tempStr);
+        if (!Write(str))
+          return false;
+      } else {
+        std::string str;
+        char tempStr[128];
+
+        sprintf(tempStr, "FREQUENCYOUT DISABLE %d", freq_out.instance);
+        str.assign(tempStr);
+        if (!Write(str))
+          return false;
+      }
+    }
+  }
+
+  if (!conf.ntrip_ports.empty()) {
+    for (auto &ntrip_port : conf.ntrip_ports) {
+      std::string str;
+      char tempStr[128];
+
+      sprintf(tempStr, "NTRIPCONFIG NCOM%d CLIENT %s %s %s %s %s ALL",
+              ntrip_port.port, ntrip_port.protocol.data(),
+              ntrip_port.endpoint.data(), ntrip_port.mountpoint.data(),
+              ntrip_port.username.data(), ntrip_port.password.data());
+      str.assign(tempStr);
+      if (!Write(str))
+        return false;
+    }
+  }
+
+  if (!conf.work_freqs.empty()) {
+    for (auto &work_freq : conf.work_freqs) {
+      if (work_freq.system == "") {
+        std::string str;
+        char tempStr[128];
+
+        sprintf(tempStr, "WORKFREQS %s", work_freq.freq.data());
+        str.assign(tempStr);
+        if (!Write(str))
+          return false;
+      } else {
+        std::string str;
+        char tempStr[128];
+
+        sprintf(tempStr, "WORKFREQS %s %s", work_freq.freq.data(),
+                work_freq.system.data());
+        str.assign(tempStr);
+        if (!Write(str))
+          return false;
+      }
+    }
+  }
+
+  if (conf.set_pjk_flag) {
+    std::string str;
+    char tempStr[128];
+    sprintf(tempStr, "SET PJKPARA %.3f %.3f %.9lf %.9lf %.9lf %.9lf [%.9lf %s]",
+            conf.a, conf.alpha, conf.L0, conf.W0, conf.FN, conf.FE, conf.k0,
+            conf.eht.data());
+    str.assign(tempStr);
+    if (!Write(str))
+      return false;
+  }
+
+  if (conf.set_alignment_vel) {
+    std::string str;
+    char tempStr[128];
+
+    sprintf(tempStr, "SETALIGNMENTVEL %.3f", conf.alignment_vel);
+    str.assign(tempStr);
+    if (!Write(str))
+      return false;
+  }
+
+  if (conf.set_ins_rot_flag) {
+    std::string str;
+    char tempStr[256];
+    sprintf(tempStr, "SETINSROTATION %s %f %f %f %f %f %f", conf.ins_rot.data(),
+            conf.rot_x, conf.rot_y, conf.rot_z, conf.rot_xsd, conf.rot_ysd,
+            conf.rot_zsd);
+    str.assign(tempStr);
+    if (!Write(str))
+      return false;
+  }
+
+  if (conf.set_ins_tran_flag) {
+    std::string str;
+    char tempStr[256];
+    sprintf(tempStr, "SETINSTRANSLATION %s %f %f %f %f %f %f %s",
+            conf.ins_tran.data(), conf.tran_x, conf.tran_y, conf.tran_z,
+            conf.tran_xsd, conf.tran_ysd, conf.tran_zsd,
+            conf.tran_input_frame.data());
+    str.assign(tempStr);
+    if (!Write(str))
+      return false;
+  }
+
+  if (conf.set_ins_calibrate_flag) {
+    std::string str;
+    char tempStr[128];
+
+    sprintf(tempStr, "INSCALIBRATE %s %s %f", conf.offset.data(),
+            conf.trigger.data(), conf.sd_threshold);
+    str.assign(tempStr);
+    if (!Write(str))
+      return false;
+  }
+
+  if (conf.set_dns_config_flag) {
+    std::string str;
+    char tempStr[128];
+
+    sprintf(tempStr, "DNSCONFIG 1 %s", conf.dns.data());
+    str.assign(tempStr);
+    if (!Write(str))
+      return false;
+  }
+
+  if (conf.set_ip_config_flag) {
+    std::string str;
+    char tempStr[128];
+
+    sprintf(tempStr, "IPCONFIG ETHA %s %s %s %s", conf.address_mode.data(),
+            conf.ip_address.data(), conf.netmask.data(), conf.gateway.data());
+    str.assign(tempStr);
+    if (!Write(str))
+      return false;
+  }
+
+  if (conf.set_ins_profile_flag) {
+    std::string str;
+    char tempStr[128];
+
+    sprintf(tempStr, "SETINSPROFILE %s", conf.ins_profile.data());
+    str.assign(tempStr);
+    if (!Write(str))
+      return false;
+  }
+
+  if (conf.set_auth_flag) {
+    std::string str;
+    char tempStr[128];
+
+    sprintf(tempStr, "AUTH ADD %s", conf.auth.data());
+    str.assign(tempStr);
+    if (!Write(str))
+      return false;
+  }
+
+  if (conf.set_dualantenna_power_flag) {
+    std::string str;
+    char tempStr[128];
+
+    sprintf(tempStr, "DUALANTENNAPOWER %s",
+            (conf.dualantenna_power) ? "ON" : "OFF");
+    str.assign(tempStr);
+    if (!Write(str))
+      return false;
+  }
+
+  if (conf.set_gps_ref_week_flag) {
+    std::string str;
+    char tempStr[128];
+
+    sprintf(tempStr, "GPSREFWEEK %d", conf.gps_ref_week);
+    str.assign(tempStr);
+    if (!Write(str))
+      return false;
+  }
+
+  if (conf.set_rtk_type_flag) {
+    std::string str;
+    char tempStr[128];
+
+    sprintf(tempStr, "RTKTYPE %s", conf.rtk_type.data());
+    str.assign(tempStr);
+    if (!Write(str))
+      return false;
+  }
+
+  if (conf.set_ecutoff_flag) {
+    std::string str;
+    char tempStr[128];
+
+    sprintf(tempStr, "ECUTOFF %f", conf.ecutoff);
+    str.assign(tempStr);
+    if (!Write(str))
+      return false;
+  }
+
+  if (conf.set_base_line_flag) {
+    std::string str;
+    char tempStr[128];
+
+    sprintf(tempStr, "SETBASELINE ON %f %f", conf.base_line_length,
+            conf.base_line_offset);
+    str.assign(tempStr);
+    if (!Write(str))
+      return false;
+  }
+
+  if (conf.set_snrcutoff_flag) {
+    std::string str;
+    char tempStr[128];
+
+    sprintf(tempStr, "SNRCUTOFF %f", conf.snrcutoff);
+    str.assign(tempStr);
+    if (!Write(str))
+      return false;
+  }
+
+  if (conf.set_shift_utm_flag) {
+    std::string str;
+    char tempStr[128];
+
+    sprintf(tempStr, "SET SHIFTDATUM %f %f %f", conf.x_offset, conf.y_offset,
+            conf.z_offset);
+    str.assign(tempStr);
+    if (!Write(str))
+      return false;
+  }
+
+  if (conf.set_obs_freq_flag) {
+    std::string str;
+    char tempStr[128];
+
+    sprintf(tempStr, "SET OBSFREQ %d", conf.obs_freq);
+    str.assign(tempStr);
+    if (!Write(str))
+      return false;
+  }
+
+  if (conf.set_fpga_raw_freq_flag) {
+    std::string str;
+    char tempStr[128];
+
+    sprintf(tempStr, "SET FPGARAWFREQ %d", conf.fpga_raw_freq);
+    str.assign(tempStr);
+    if (!Write(str))
+      return false;
+  }
+
+  if (conf.set_output_source_flag) {
+    std::string str;
+    char tempStr[128];
+
+    sprintf(tempStr, "OUTPUTSOURCE %s", conf.output_source.data());
+    str.assign(tempStr);
+    if (!Write(str))
+      return false;
+  }
+
+  if (conf.set_fix_pos_flag) {
+    std::string str;
+    char tempStr[128];
+
+    sprintf(tempStr, "FIX POSITION %f %f %f", conf.fix_pos_lon,
+            conf.fix_pos_lat, conf.fix_pos_alt);
+    str.assign(tempStr);
+    if (!Write(str))
+      return false;
+  }
+
+  if (conf.set_rtktimeout_flag) {
+    std::string str;
+    char tempStr[128];
+
+    sprintf(tempStr, "RTKTIMEOUT %d", conf.rtktimeout);
+    str.assign(tempStr);
+    if (!Write(str))
+      return false;
+  }
+
+  if (conf.set_quality_check) {
+    std::string str;
+    char tempStr[128];
+
+    sprintf(tempStr, "QUALITYCHECK %s %s", conf.quality_check_pos.data(),
+            conf.quality_switch ? "ON" : "OFF");
+    str.assign(tempStr);
+    if (!Write(str))
+      return false;
+  }
+
+  if (conf.set_heading_offset) {
+    std::string str;
+    char tempStr[128];
+
+    sprintf(tempStr, "HEADINGOFFSET %f %f", conf.heading_offsetin_deg,
+            conf.pitch_offsetin_deg);
+    str.assign(tempStr);
+    if (!Write(str))
+      return false;
+  }
+
+  if (conf.set_vel_period) {
+    std::string str;
+    char tempStr[128];
+
+    sprintf(tempStr, "VELSMOOTH %f", conf.vel_period);
+    str.assign(tempStr);
+    if (!Write(str))
+      return false;
+  }
+
+  return Write("SAVECONFIG");
 }
 } // namespace bynav_gps_driver

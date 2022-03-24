@@ -1,7 +1,7 @@
 # This message contains one-epoch measurements from one single satellite
 
 GnssTimeMsg time    # measurement time
-uint32 sat          # satellite ID (define by `sat_no` function in `gnss_utility.hpp`)
+uint32 sat          # satellite ID (define by `sat_no` function in `raw.h`)
 float64[] freqs     # observed frequencies [Hz]
 float64[] CN0       # carrier-to-noise density ratio (signal strength) [dB-Hz]
 uint8[] LLI         # lost-lock indicator (1=lost)

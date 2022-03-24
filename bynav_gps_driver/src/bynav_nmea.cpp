@@ -24,8 +24,7 @@ BynavNmea::BynavNmea()
       bynav_pjk_positions_(MAX_BUFFER_SIZE), bynav_velocities_(MAX_BUFFER_SIZE),
       bestpos_sync_buffer_(SYNC_BUFFER_SIZE),
       bestvel_sync_buffer_(SYNC_BUFFER_SIZE), heading_msgs_(MAX_BUFFER_SIZE),
-      gpdop_msgs_(MAX_BUFFER_SIZE), time_msgs_(MAX_BUFFER_SIZE),
-      bdsephemerisb_msgs_(MAX_BUFFER_SIZE),
+      gpdop_msgs_(MAX_BUFFER_SIZE), bdsephemerisb_msgs_(MAX_BUFFER_SIZE),
       galephemerisb_msgs_(MAX_BUFFER_SIZE),
       gloephemerisb_msgs_(MAX_BUFFER_SIZE), gpsephemb_msgs_(MAX_BUFFER_SIZE),
       qzssephemerisb_msgs_(MAX_BUFFER_SIZE), rangecmpb_msgs_(MAX_BUFFER_SIZE),
@@ -322,13 +321,6 @@ void BynavNmea::GetInsstdevMessages(
   insstdev_messages.insert(insstdev_messages.end(), insstdev_msgs_.begin(),
                            insstdev_msgs_.end());
   insstdev_msgs_.clear();
-}
-
-void BynavNmea::GetTimeMessages(
-    std::vector<bynav_gps_msgs::TimePtr> &time_messages) {
-  time_messages.resize(time_msgs_.size());
-  std::copy(time_msgs_.begin(), time_msgs_.end(), time_messages.begin());
-  time_msgs_.clear();
 }
 
 void BynavNmea::GetBdsephemerisbMessages(

@@ -22,7 +22,6 @@
 #include <bynav_gps_msgs/Inspvax.h>
 #include <bynav_gps_msgs/Insstdev.h>
 #include <bynav_gps_msgs/Psrvel.h>
-#include <bynav_gps_msgs/Time.h>
 
 #include <bynav_gps_driver/bynav_control.h>
 #include <bynav_gps_driver/bynav_message_extractor.h>
@@ -101,8 +100,6 @@ public:
 
   void
   GetBynavVelocities(std::vector<bynav_gps_msgs::BynavVelocityPtr> &velocities);
-
-  void GetTimeMessages(std::vector<bynav_gps_msgs::TimePtr> &time_messages);
 
   void GetBdsephemerisbMessages(
       std::vector<bynav_gps_msgs::GnssEphemMsgPtr> &messages);

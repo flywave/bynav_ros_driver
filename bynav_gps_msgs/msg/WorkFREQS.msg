@@ -1,2 +1,2 @@
-string[] freq
+string freq
 string system

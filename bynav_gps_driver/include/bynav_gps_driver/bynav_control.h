@@ -12,6 +12,7 @@
 #include <swri_serial_util/serial_port.h>
 
 #include <bynav_gps_driver/bynav_connection.h>
+#include <bynav_gps_msgs/BynavConfig.h>
 
 namespace bynav_gps_driver {
 
@@ -76,7 +77,9 @@ public:
   BynavControl();
   virtual ~BynavControl() = default;
 
-private:
+  bool SetupConfig(const bynav_gps_msgs::BynavConfig &conf);
+
+protected:
   bool UnlogAll(BYNAV_PORT port);
   bool UnlogAllPorts();
   bool RTKMode(BYNAV_PORT port);
