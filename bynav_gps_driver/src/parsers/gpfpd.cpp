@@ -21,6 +21,7 @@ bynav_gps_msgs::GpfpdPtr bynav_gps_driver::GpfpdParser::ParseAscii(
   }
 
   bynav_gps_msgs::GpfpdPtr msg = boost::make_shared<bynav_gps_msgs::Gpfpd>();
+
   msg->message_id = sentence.body[0];
 
   bool valid = true;

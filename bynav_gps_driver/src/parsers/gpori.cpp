@@ -22,11 +22,13 @@ bynav_gps_msgs::GporiPtr bynav_gps_driver::GporiParser::ParseAscii(
   }
 
   bynav_gps_msgs::GporiPtr msg = boost::make_shared<bynav_gps_msgs::Gpori>();
+
   msg->message_id = sentence.body[0];
 
   bool valid = true;
 
   valid = valid && ParseDouble(sentence.body[1], msg->utc_seconds);
+  
   msg->position_status = sentence.body[2];
 
   valid = valid && ParseFloat(sentence.body[3], msg->baseline_length);

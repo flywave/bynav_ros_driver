@@ -25,6 +25,7 @@ bynav_gps_msgs::RefStationPtr bynav_gps_driver::RefStationParser::ParseAscii(
 
   bynav_gps_msgs::RefStationPtr msg =
       boost::make_shared<bynav_gps_msgs::RefStation>();
+      
   HeaderParser h_parser;
   msg->bynav_msg_header = h_parser.ParseAscii(sentence);
   msg->bynav_msg_header.message_name = "REFSTATIONA";

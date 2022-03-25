@@ -19,6 +19,7 @@ bynav_gps_msgs::GpgsvPtr bynav_gps_driver::GpgsvParser::ParseAscii(
     throw ParseException(error.str());
   }
   bynav_gps_msgs::GpgsvPtr msg = boost::make_shared<bynav_gps_msgs::Gpgsv>();
+  
   msg->message_id = sentence.body[0];
   if (!ParseUInt8(sentence.body[1], msg->n_msgs)) {
     throw new ParseException("Error parsing n_msgs in GPGSV.");

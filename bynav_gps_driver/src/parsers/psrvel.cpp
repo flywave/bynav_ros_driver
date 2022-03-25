@@ -19,8 +19,10 @@ bynav_gps_driver::PsrvelParser::ParseBinary(const BinaryMessage &bin_msg) {
     error << "Unexpected velocity message size: " << bin_msg.data_.size();
     throw ParseException(error.str());
   }
+
   bynav_gps_msgs::PsrvelPtr ros_msg =
       boost::make_shared<bynav_gps_msgs::Psrvel>();
+
   HeaderParser h_parser;
   ros_msg->bynav_msg_header = h_parser.ParseBinary(bin_msg);
   ros_msg->bynav_msg_header.message_name = MESSAGE_NAME;
@@ -50,7 +52,9 @@ bynav_gps_driver::PsrvelParser::ParseBinary(const BinaryMessage &bin_msg) {
 
 bynav_gps_msgs::PsrvelPtr
 bynav_gps_driver::PsrvelParser::ParseAscii(const BynavSentence &sentence) {
+
   bynav_gps_msgs::PsrvelPtr msg = boost::make_shared<bynav_gps_msgs::Psrvel>();
+
   HeaderParser h_parser;
   msg->bynav_msg_header = h_parser.ParseAscii(sentence);
 

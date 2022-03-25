@@ -24,6 +24,7 @@ public:
   ParseAscii(const BynavSentence &sentence) override;
 
   static constexpr uint32_t BINARY_HEADER_LENGTH = 28;
+  static constexpr uint32_t BINARY_MICRO_HEADER_LENGTH = 12;
 };
 } // namespace bynav_gps_driver
 

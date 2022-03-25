@@ -22,7 +22,9 @@ bynav_gps_msgs::GprmcPtr bynav_gps_driver::GprmcParser::ParseAscii(
   }
 
   bool success = true;
+
   bynav_gps_msgs::GprmcPtr msg = boost::make_shared<bynav_gps_msgs::Gprmc>();
+
   msg->message_id = sentence.body[0];
 
   if (sentence.body[1].empty() || sentence.body[1] == "0") {

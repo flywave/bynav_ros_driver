@@ -49,6 +49,7 @@ bynav_gps_msgs::GpggaPtr bynav_gps_driver::GpggaParser::ParseAscii(
 
   msg->lat_dir = sentence.body[3];
   msg->lon_dir = sentence.body[5];
+
   valid = valid && ParseUInt32(sentence.body[6], msg->gps_qual);
   valid = valid && ParseUInt32(sentence.body[7], msg->num_sats);
 

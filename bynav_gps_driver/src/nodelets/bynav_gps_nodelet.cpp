@@ -236,7 +236,6 @@ public:
     opts["gpgga"] = polling_period_;
     opts["bestpos" + format_suffix] = polling_period_; // Best position
     opts["bestvel" + format_suffix] = polling_period_; // Best velocity
-    opts["time" + format_suffix] = 1.0;                // Time
     if (publish_nmea_messages_) {
       opts["gprmc"] = polling_period_;
     }

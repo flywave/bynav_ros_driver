@@ -19,8 +19,10 @@ bynav_gps_msgs::InsstdevPtr bynav_gps_driver::InsstdevParser::ParseBinary(
     error << "Unexpected INSSTDEV message size: " << bin_msg.data_.size();
     throw ParseException(error.str());
   }
+
   bynav_gps_msgs::InsstdevPtr ros_msg =
       boost::make_shared<bynav_gps_msgs::Insstdev>();
+  
   HeaderParser h_parser;
   ros_msg->bynav_msg_header = h_parser.ParseBinary(bin_msg);
   ros_msg->bynav_msg_header.message_name = GetMessageName();
@@ -48,8 +50,10 @@ bynav_gps_msgs::InsstdevPtr bynav_gps_driver::InsstdevParser::ParseAscii(
           << sentence.body.size();
     throw ParseException(error.str());
   }
+
   bynav_gps_msgs::InsstdevPtr msg =
       boost::make_shared<bynav_gps_msgs::Insstdev>();
+  
   HeaderParser h_parser;
   msg->bynav_msg_header = h_parser.ParseAscii(sentence);
 

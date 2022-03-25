@@ -106,6 +106,7 @@ BdsephemerisbParser::ParseBinary(const BinaryMessage &bin_msg) {
           << bin_msg.data_.size();
     throw ParseException(error.str());
   }
+
   bynav_gps_msgs::GnssEphemMsgPtr ros_msg =
       boost::make_shared<bynav_gps_msgs::GnssEphemMsg>();
 

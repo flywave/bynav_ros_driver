@@ -18,8 +18,10 @@ bynav_gps_msgs::InsvelPtr bynav_gps_driver::InsvelParser::ParseBinary(
     error << "Unexpected inspva message size: " << bin_msg.data_.size();
     throw ParseException(error.str());
   }
+  
   bynav_gps_msgs::InsvelPtr ros_msg =
       boost::make_shared<bynav_gps_msgs::Insvel>();
+
   HeaderParser h_parser;
   ros_msg->bynav_msg_header = h_parser.ParseBinary(bin_msg);
   ros_msg->bynav_msg_header.message_name = GetMessageName();
@@ -88,6 +90,7 @@ bynav_gps_msgs::InsvelPtr bynav_gps_driver::InsvelParser::ParseAscii(
   }
 
   bynav_gps_msgs::InsvelPtr msg = boost::make_shared<bynav_gps_msgs::Insvel>();
+
   HeaderParser h_parser;
   msg->bynav_msg_header = h_parser.ParseAscii(sentence);
   msg->bynav_msg_header.message_name = GetMessageName();

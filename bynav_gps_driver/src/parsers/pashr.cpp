@@ -22,9 +22,10 @@ bynav_gps_msgs::PashrPtr bynav_gps_driver::PashrParser::ParseAscii(
   }
 
   bynav_gps_msgs::PashrPtr msg = boost::make_shared<bynav_gps_msgs::Pashr>();
-  msg->message_id = sentence.body[0];
 
   bool valid = true;
+
+  msg->message_id = sentence.body[0];
 
   valid = valid && ParseDouble(sentence.body[1], msg->utc_seconds);
   valid = valid && ParseDouble(sentence.body[2], msg->heading);

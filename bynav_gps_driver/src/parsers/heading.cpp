@@ -76,6 +76,7 @@ bynav_gps_msgs::HeadingPtr
 HeadingParser::ParseAscii(const BynavSentence &sentence) {
   bynav_gps_msgs::HeadingPtr ros_msg =
       boost::make_shared<bynav_gps_msgs::Heading>();
+
   HeaderParser h_parser;
   ros_msg->bynav_msg_header = h_parser.ParseAscii(sentence);
 

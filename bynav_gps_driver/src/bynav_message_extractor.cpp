@@ -25,6 +25,8 @@ const std::string BynavMessageExtractor::BYNAV_ASCII_FLAGS = "$#%";
 const std::string BynavMessageExtractor::BYNAV_BINARY_SYNC_BYTES =
     "\xAA\x44\x12";
 const std::string BynavMessageExtractor::BYNAV_ENDLINE = "\r\n";
+const std::string BynavMessageExtractor::BYNAV_BINARY_MICRO_SYNC_BYTES =
+    "\xAA\x44\x13";
 
 uint32_t BynavMessageExtractor::CRC32Value(int32_t i) {
   int32_t j;
@@ -88,7 +90,6 @@ bool BynavMessageExtractor::GetBynavMessageParts(
   }
 
   VectorizeString(vectorized_message[0], header, FIELD_SEPARATOR);
-
   VectorizeString(vectorized_message[1], body, FIELD_SEPARATOR);
 
   if (!header.empty()) {
@@ -136,6 +137,65 @@ int32_t BynavMessageExtractor::GetBinaryMessage(const std::string &str,
   }
 
   ROS_DEBUG("Reading binary message data.");
+  msg.data_.resize(data_length);
+  std::copy(&str[data_start], &str[data_start + data_length],
+            reinterpret_cast<char *>(&msg.data_[0]));
+
+  ROS_DEBUG("Calculating CRC.");
+
+  uint32_t crc = CalculateBlockCRC32(
+      static_cast<uint32_t>(msg.header_.header_length_) + data_length,
+      reinterpret_cast<const uint8_t *>(&str[start_idx]));
+
+  ROS_DEBUG("Reading CRC.");
+  msg.crc_ = ParseUInt32(
+      reinterpret_cast<const uint8_t *>(&str[data_start + data_length]));
+
+  if (crc != msg.crc_) {
+    ROS_DEBUG("Invalid CRC;  Calc: %u    In msg: %u", crc, msg.crc_);
+    return -2;
+  }
+
+  ROS_DEBUG("Finishing reading binary message.");
+  return static_cast<int32_t>(msg.header_.header_length_ + data_length + 4);
+}
+
+int32_t BynavMessageExtractor::GetBinaryMicroMessage(const std::string &str,
+                                                     size_t start_idx,
+                                                     BinaryMicroMessage &msg) {
+  if (str.length() < HeaderParser::BINARY_MICRO_HEADER_LENGTH + 4) {
+    ROS_DEBUG("Binary message was too short to parse.");
+    return -1;
+  }
+
+  ROS_DEBUG("Reading binary header.");
+  msg.header_.ParseHeader(reinterpret_cast<const uint8_t *>(&str[start_idx]));
+  auto data_start =
+      static_cast<uint16_t>(msg.header_.header_length_ + start_idx);
+  uint16_t data_length = str.length() - data_start - 4;
+
+  if (msg.header_.sync0_ !=
+          static_cast<uint8_t>(BYNAV_BINARY_MICRO_SYNC_BYTES[0]) ||
+      msg.header_.sync1_ !=
+          static_cast<uint8_t>(BYNAV_BINARY_MICRO_SYNC_BYTES[1]) ||
+      msg.header_.proto_ !=
+          static_cast<uint8_t>(BYNAV_BINARY_MICRO_SYNC_BYTES[2])) {
+    ROS_ERROR("Sync bytes were incorrect; this should never happen and is "
+              "definitely a bug: %x %x %x",
+              msg.header_.sync0_, msg.header_.sync1_, msg.header_.proto_);
+    return -2;
+  }
+
+  if (msg.header_.header_length_ != HeaderParser::BINARY_MICRO_HEADER_LENGTH) {
+    ROS_WARN("Binary header length was unexpected: %u (expected %u)",
+             msg.header_.header_length_,
+             HeaderParser::BINARY_MICRO_HEADER_LENGTH);
+  }
+
+  ROS_DEBUG("Msg ID: %u    Data start / length: %u / %u",
+            msg.header_.message_id_, data_start, data_length);
+
+  ROS_DEBUG("Reading binary micro message data.");
   msg.data_.resize(data_length);
   std::copy(&str[data_start], &str[data_start + data_length],
             reinterpret_cast<char *>(&msg.data_[0]));
@@ -266,8 +326,9 @@ void BynavMessageExtractor::VectorizeNmeaSentence(
 bool BynavMessageExtractor::ExtractCompleteMessages(
     const std::string &input, std::vector<NmeaSentence> &nmea_sentences,
     std::vector<BynavSentence> &bynav_sentences,
-    std::vector<BinaryMessage> &binary_messages, std::string &remaining,
-    bool keep_nmea_container) {
+    std::vector<BinaryMessage> &binary_messages,
+    std::vector<BinaryMicroMessage> &binary_micro_messages,
+    std::string &remaining, bool keep_nmea_container) {
   bool parse_error = false;
 
   size_t sentence_start = 0;
@@ -293,20 +354,39 @@ bool BynavMessageExtractor::ExtractCompleteMessages(
     if (ascii_start_idx == std::string::npos ||
         (binary_start_idx != std::string::npos &&
          binary_start_idx < ascii_start_idx)) {
-      BinaryMessage cur_msg;
-      int32_t result = GetBinaryMessage(input, binary_start_idx, cur_msg);
-      if (result > 0) {
-        binary_messages.push_back(cur_msg);
-        sentence_start += binary_start_idx + result;
-        ROS_DEBUG("Parsed a binary message with %u bytes.", result);
-      } else if (result == -1) {
-        remaining = input.substr(binary_start_idx);
-        ROS_DEBUG("Binary message was incomplete, waiting for more.");
-        break;
-      } else {
-        sentence_start += 1;
-        ROS_WARN("Invalid binary message checksum");
-        parse_error = true;
+      if (input.size() > 3 && input[2] == '\x12') {
+        BinaryMessage cur_msg;
+        int32_t result = GetBinaryMessage(input, binary_start_idx, cur_msg);
+        if (result > 0) {
+          binary_messages.push_back(cur_msg);
+          sentence_start += binary_start_idx + result;
+          ROS_DEBUG("Parsed a binary message with %u bytes.", result);
+        } else if (result == -1) {
+          remaining = input.substr(binary_start_idx);
+          ROS_DEBUG("Binary message was incomplete, waiting for more.");
+          break;
+        } else {
+          sentence_start += 1;
+          ROS_WARN("Invalid binary message checksum");
+          parse_error = true;
+        }
+      } else if (input.size() > 3 && input[2] == '\x13') {
+        BinaryMicroMessage cur_msg;
+        int32_t result =
+            GetBinaryMicroMessage(input, binary_start_idx, cur_msg);
+        if (result > 0) {
+          binary_micro_messages.push_back(cur_msg);
+          sentence_start += binary_start_idx + result;
+          ROS_DEBUG("Parsed a binary message with %u bytes.", result);
+        } else if (result == -1) {
+          remaining = input.substr(binary_start_idx);
+          ROS_DEBUG("Binary message was incomplete, waiting for more.");
+          break;
+        } else {
+          sentence_start += 1;
+          ROS_WARN("Invalid binary message checksum");
+          parse_error = true;
+        }
       }
     } else {
       size_t ascii_len = ascii_end_idx - ascii_start_idx;

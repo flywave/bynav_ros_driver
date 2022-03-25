@@ -22,6 +22,7 @@ bynav_gps_msgs::GphdtPtr bynav_gps_driver::GphdtParser::ParseAscii(
   }
 
   bynav_gps_msgs::GphdtPtr msg = boost::make_shared<bynav_gps_msgs::Gphdt>();
+  
   msg->message_id = sentence.body[0];
 
   double heading;

@@ -77,8 +77,10 @@ bynav_gps_msgs::InspvaxPtr bynav_gps_driver::InspvaxParser::ParseAscii(
           << sentence.body.size();
     throw ParseException(error.str());
   }
+  
   bynav_gps_msgs::InspvaxPtr msg =
       boost::make_shared<bynav_gps_msgs::Inspvax>();
+
   HeaderParser h_parser;
   msg->bynav_msg_header = h_parser.ParseAscii(sentence);
 

@@ -31,6 +31,7 @@
 #include <bynav_gps_driver/parsers/bestpos.h>
 #include <bynav_gps_driver/parsers/bestvel.h>
 #include <bynav_gps_driver/parsers/corrimudata.h>
+#include <bynav_gps_driver/parsers/corrimudatas.h>
 #include <bynav_gps_driver/parsers/galephemerisb.h>
 #include <bynav_gps_driver/parsers/gloephemerisb.h>
 #include <bynav_gps_driver/parsers/gpdop.h>
@@ -46,6 +47,8 @@
 #include <bynav_gps_driver/parsers/ptnlpjk.h>
 #include <bynav_gps_driver/parsers/qzssephemerisb.h>
 #include <bynav_gps_driver/parsers/rangecmpb.h>
+#include <bynav_gps_driver/parsers/rawimu.h>
+#include <bynav_gps_driver/parsers/rawimus.h>
 
 #include <sensor_msgs/Imu.h>
 
@@ -89,6 +92,8 @@ public:
 
   void GetBynavCorrectedImuData(
       std::vector<bynav_gps_msgs::BynavCorrectedImuDataPtr> &imu_messages);
+
+  void GetRawImuData(std::vector<bynav_gps_msgs::RawIMUPtr> &imu_messages);
 
   void
   GetBynavPositions(std::vector<bynav_gps_msgs::BynavPositionPtr> &positions);
@@ -134,6 +139,10 @@ private:
                      const ros::Time &stamp) noexcept(false);
 
   BynavNmea::ReadResult
+  ParseBinaryMicroMessage(const BinaryMicroMessage &msg,
+                          const ros::Time &stamp) noexcept(false);
+
+  BynavNmea::ReadResult
   ParseNmeaSentence(const NmeaSentence &sentence, const ros::Time &stamp,
                     double most_recent_utc_time) noexcept(false);
 
@@ -147,6 +156,7 @@ private:
 
   bool imu_rate_forced_;
   bool enable_imu_;
+  bool use_micro_imu_msg_;
 
   double utc_offset_;
 
@@ -160,6 +170,7 @@ private:
   BynavVelocityParser bestvel_parser_;
   HeadingParser heading_parser_;
   CorrImuDataParser corrimudata_parser_;
+  CorrImuDataSParser corrimudatas_parser_;
   GpggaParser gpgga_parser_;
   GpgsvParser gpgsv_parser_;
   GphdtParser gphdt_parser_;
@@ -169,6 +180,9 @@ private:
   InsstdevParser insstdev_parser_;
   GpdopParser gpdop_parser_;
 
+  RawIMUSParser rawimus_parser_;
+  RawIMUParser rawimu_parser_;
+
   BdsephemerisbParser bdsephemerisb_parser_;
   GaleephemerisbParser galephemerisb_parser_;
   GloephemerisbParser gloephemerisb_parser_;
@@ -176,6 +190,7 @@ private:
   QzssephemerisbParser qzssephemerisb_parser_;
   RangrcmpbParser rangecmpb_parser_;
 
+  boost::circular_buffer<bynav_gps_msgs::RawIMUPtr> rawimu_msgs_;
   boost::circular_buffer<bynav_gps_msgs::BynavCorrectedImuDataPtr>
       corrimudata_msgs_;
   boost::circular_buffer<bynav_gps_msgs::GpggaPtr> gpgga_msgs_;

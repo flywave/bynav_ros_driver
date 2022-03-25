@@ -11,6 +11,7 @@ const std::string bynav_gps_driver::HeaderParser::GetMessageName() const {
 bynav_gps_msgs::BynavMessageHeader bynav_gps_driver::HeaderParser::ParseBinary(
     const bynav_gps_driver::BinaryMessage &bin_msg) {
   bynav_gps_msgs::BynavMessageHeader msg;
+
   msg.port = PORT_IDENTIFIERS[bin_msg.header_.port_address_];
   msg.sequence_num = bin_msg.header_.sequence_;
   msg.percent_idle_time = bin_msg.header_.idle_time_;
@@ -65,8 +66,11 @@ bynav_gps_msgs::BynavMessageHeader bynav_gps_driver::HeaderParser::ParseBinary(
 
 bynav_gps_msgs::BynavMessageHeader
 bynav_gps_driver::HeaderParser::ParseBinary(const BinaryMicroMessage &bin_msg) {
-
   bynav_gps_msgs::BynavMessageHeader msg;
+
+  msg.gps_time_status = "UNKNOWN";
+  msg.gps_week_num = bin_msg.header_.week_;
+  msg.gps_seconds = static_cast<double>(bin_msg.header_.gps_ms_) / 1000.0;
 
   return msg;
 }

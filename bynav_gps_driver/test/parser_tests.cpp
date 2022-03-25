@@ -1,10 +1,10 @@
 #include <bynav_gps_driver/bynav_message_extractor.h>
 #include <bynav_gps_driver/parsers/bestpos.h>
-#include <bynav_gps_driver/parsers/ptnlpjk.h>
 #include <bynav_gps_driver/parsers/gpgga.h>
 #include <bynav_gps_driver/parsers/gpgsv.h>
 #include <bynav_gps_driver/parsers/gphdt.h>
 #include <bynav_gps_driver/parsers/heading.h>
+#include <bynav_gps_driver/parsers/ptnlpjk.h>
 
 #include <bynav_gps_driver/parsers/corrimudata.h>
 #include <bynav_gps_driver/parsers/inscov.h>
@@ -36,10 +36,12 @@ TEST(ParserTestSuite, testBestposAsciiParsing) {
   std::vector<bynav_gps_driver::NmeaSentence> nmea_sentences;
   std::vector<bynav_gps_driver::BynavSentence> bynav_sentences;
   std::vector<bynav_gps_driver::BinaryMessage> binary_messages;
+  std::vector<bynav_gps_driver::BinaryMicroMessage> binary_mirco_messages;
   std::string remaining;
 
-  extractor.ExtractCompleteMessages(
-      bestpos_str, nmea_sentences, bynav_sentences, binary_messages, remaining);
+  extractor.ExtractCompleteMessages(bestpos_str, nmea_sentences,
+                                    bynav_sentences, binary_messages,
+                                    binary_mirco_messages, remaining);
 
   ASSERT_EQ(0, nmea_sentences.size());
   ASSERT_EQ(0, binary_messages.size());
@@ -76,11 +78,12 @@ TEST(ParserTestSuite, testGpggaParsing) {
   std::vector<bynav_gps_driver::NmeaSentence> nmea_sentences;
   std::vector<bynav_gps_driver::BynavSentence> bynav_sentences;
   std::vector<bynav_gps_driver::BinaryMessage> binary_messages;
+  std::vector<bynav_gps_driver::BinaryMicroMessage> binary_mirco_messages;
   std::string remaining;
 
   extractor.ExtractCompleteMessages(sentence_str, nmea_sentences,
                                     bynav_sentences, binary_messages,
-                                    remaining);
+                                    binary_mirco_messages, remaining);
 
   ASSERT_EQ(2, nmea_sentences.size());
   ASSERT_EQ(0, binary_messages.size());
@@ -128,11 +131,12 @@ TEST(ParserTestSuite, testCorrimudataAsciiParsing) {
   std::vector<bynav_gps_driver::NmeaSentence> nmea_sentences;
   std::vector<bynav_gps_driver::BynavSentence> bynav_sentences;
   std::vector<bynav_gps_driver::BinaryMessage> binary_messages;
+  std::vector<bynav_gps_driver::BinaryMicroMessage> binary_mirco_messages;
   std::string remaining;
 
   extractor.ExtractCompleteMessages(sentence_str, nmea_sentences,
                                     bynav_sentences, binary_messages,
-                                    remaining);
+                                    binary_mirco_messages, remaining);
 
   ASSERT_EQ(0, nmea_sentences.size());
   ASSERT_EQ(0, binary_messages.size());
@@ -167,11 +171,12 @@ TEST(ParserTestSuite, testGpgsvParsing) {
   std::vector<bynav_gps_driver::NmeaSentence> nmea_sentences;
   std::vector<bynav_gps_driver::BynavSentence> bynav_sentences;
   std::vector<bynav_gps_driver::BinaryMessage> binary_messages;
+  std::vector<bynav_gps_driver::BinaryMicroMessage> binary_mirco_messages;
   std::string remaining;
 
   extractor.ExtractCompleteMessages(sentence_str, nmea_sentences,
                                     bynav_sentences, binary_messages,
-                                    remaining);
+                                    binary_mirco_messages, remaining);
 
   ASSERT_EQ(2, nmea_sentences.size());
   ASSERT_EQ(0, binary_messages.size());
@@ -219,11 +224,12 @@ TEST(ParserTestSuite, testGphdtParsing) {
   std::vector<bynav_gps_driver::NmeaSentence> nmea_sentences;
   std::vector<bynav_gps_driver::BynavSentence> bynav_sentences;
   std::vector<bynav_gps_driver::BinaryMessage> binary_messages;
+  std::vector<bynav_gps_driver::BinaryMicroMessage> binary_mirco_messages;
   std::string remaining;
 
   extractor.ExtractCompleteMessages(sentence_str, nmea_sentences,
                                     bynav_sentences, binary_messages,
-                                    remaining);
+                                    binary_mirco_messages, remaining);
 
   ASSERT_EQ(1, nmea_sentences.size());
   ASSERT_EQ(0, binary_messages.size());
@@ -257,11 +263,12 @@ TEST(ParserTestSuite, testInspvaAsciiParsing) {
   std::vector<bynav_gps_driver::NmeaSentence> nmea_sentences;
   std::vector<bynav_gps_driver::BynavSentence> bynav_sentences;
   std::vector<bynav_gps_driver::BinaryMessage> binary_messages;
+  std::vector<bynav_gps_driver::BinaryMicroMessage> binary_mirco_messages;
   std::string remaining;
 
   extractor.ExtractCompleteMessages(sentence_str, nmea_sentences,
                                     bynav_sentences, binary_messages,
-                                    remaining);
+                                    binary_mirco_messages, remaining);
 
   ASSERT_EQ(0, nmea_sentences.size());
   ASSERT_EQ(0, binary_messages.size());
@@ -303,11 +310,12 @@ TEST(ParserTestSuite, testInsstdevAsciiParsing) {
   std::vector<bynav_gps_driver::NmeaSentence> nmea_sentences;
   std::vector<bynav_gps_driver::BynavSentence> bynav_sentences;
   std::vector<bynav_gps_driver::BinaryMessage> binary_messages;
+  std::vector<bynav_gps_driver::BinaryMicroMessage> binary_mirco_messages;
   std::string remaining;
 
   extractor.ExtractCompleteMessages(sentence_str, nmea_sentences,
                                     bynav_sentences, binary_messages,
-                                    remaining);
+                                    binary_mirco_messages, remaining);
 
   ASSERT_EQ(0, nmea_sentences.size());
   ASSERT_EQ(0, binary_messages.size());
@@ -349,10 +357,12 @@ TEST(ParserTestSuite, testBestxyzAsciiParsing) {
   std::vector<bynav_gps_driver::NmeaSentence> nmea_sentences;
   std::vector<bynav_gps_driver::BynavSentence> bynav_sentences;
   std::vector<bynav_gps_driver::BinaryMessage> binary_messages;
+  std::vector<bynav_gps_driver::BinaryMicroMessage> binary_mirco_messages;
   std::string remaining;
 
-  extractor.ExtractCompleteMessages(
-      ptnlpjk_str, nmea_sentences, bynav_sentences, binary_messages, remaining);
+  extractor.ExtractCompleteMessages(ptnlpjk_str, nmea_sentences,
+                                    bynav_sentences, binary_messages,
+                                    binary_mirco_messages, remaining);
 
   ASSERT_EQ(0, nmea_sentences.size());
   ASSERT_EQ(0, binary_messages.size());
@@ -412,11 +422,12 @@ TEST(ParserTestSuite, testHeadingAsciiParsing) {
   std::vector<bynav_gps_driver::NmeaSentence> nmea_sentences;
   std::vector<bynav_gps_driver::BynavSentence> bynav_sentences;
   std::vector<bynav_gps_driver::BinaryMessage> binary_messages;
+  std::vector<bynav_gps_driver::BinaryMicroMessage> binary_mirco_messages;
   std::string remaining;
 
   extractor.ExtractCompleteMessages(heading_str, nmea_sentences,
                                     bynav_sentences, binary_messages,
-                                    remaining);
+                                    binary_mirco_messages, remaining);
 
   ASSERT_EQ(0, nmea_sentences.size());
   ASSERT_EQ(0, binary_messages.size());

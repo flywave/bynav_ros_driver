@@ -76,6 +76,7 @@ bynav_gps_msgs::BynavPositionPtr
 BestGNSSposParser::ParseAscii(const BynavSentence &sentence) {
   bynav_gps_msgs::BynavPositionPtr msg =
       boost::make_shared<bynav_gps_msgs::BynavPosition>();
+  
   HeaderParser h_parser;
   msg->bynav_msg_header = h_parser.ParseAscii(sentence);
 

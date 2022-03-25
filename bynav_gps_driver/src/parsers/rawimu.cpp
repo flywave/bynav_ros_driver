@@ -19,8 +19,10 @@ bynav_gps_msgs::RawIMUPtr bynav_gps_driver::RawIMUParser::ParseBinary(
     error << "Unexpected corrimudata message size: " << bin_msg.data_.size();
     throw ParseException(error.str());
   }
+  
   bynav_gps_msgs::RawIMUPtr ros_msg =
       boost::make_shared<bynav_gps_msgs::RawIMU>();
+
   HeaderParser h_parser;
   ros_msg->bynav_msg_header = h_parser.ParseBinary(bin_msg);
   ros_msg->bynav_msg_header.message_name = "RAWIMU";
@@ -48,7 +50,9 @@ bynav_gps_msgs::RawIMUPtr bynav_gps_driver::RawIMUParser::ParseAscii(
           << sentence.body.size();
     throw ParseException(error.str());
   }
+
   bynav_gps_msgs::RawIMUPtr msg = boost::make_shared<bynav_gps_msgs::RawIMU>();
+
   HeaderParser h_parser;
   msg->bynav_msg_header = h_parser.ParseAscii(sentence);
 

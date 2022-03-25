@@ -50,6 +50,7 @@ bynav_gps_driver::CorrImuDataParser::ParseAscii(
   }
   bynav_gps_msgs::BynavCorrectedImuDataPtr msg =
       boost::make_shared<bynav_gps_msgs::BynavCorrectedImuData>();
+ 
   HeaderParser h_parser;
   msg->bynav_msg_header = h_parser.ParseAscii(sentence);
 

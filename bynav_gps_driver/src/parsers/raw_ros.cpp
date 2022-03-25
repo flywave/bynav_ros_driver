@@ -47,6 +47,7 @@ GnssEphemMsg ephem2msg(const EphemPtr &ephem_ptr) {
   ephem_msg.tgd1 = ephem_ptr->tgd[1];
   ephem_msg.A_dot = ephem_ptr->A_dot;
   ephem_msg.n_dot = ephem_ptr->n_dot;
+
   return ephem_msg;
 }
 
@@ -85,6 +86,7 @@ EphemPtr msg2ephem(const GnssEphemMsgConstPtr &gnss_ephem_msg) {
   ephem->tgd[1] = gnss_ephem_msg->tgd1;
   ephem->A_dot = gnss_ephem_msg->A_dot;
   ephem->n_dot = gnss_ephem_msg->n_dot;
+
   return ephem;
 }
 
@@ -116,6 +118,7 @@ GnssGloEphemMsg glo_ephem2msg(const GloEphemPtr &glo_ephem_ptr) {
   glo_ephem_msg.tau_n = glo_ephem_ptr->tau_n;
   glo_ephem_msg.gamma = glo_ephem_ptr->gamma;
   glo_ephem_msg.delta_tau_n = glo_ephem_ptr->delta_tau_n;
+
   return glo_ephem_msg;
 }
 
@@ -143,6 +146,7 @@ GloEphemPtr msg2glo_ephem(const GnssGloEphemMsgConstPtr &gnss_glo_ephem_msg) {
   glo_ephem->tau_n = gnss_glo_ephem_msg->tau_n;
   glo_ephem->gamma = gnss_glo_ephem_msg->gamma;
   glo_ephem->delta_tau_n = gnss_glo_ephem_msg->delta_tau_n;
+  
   return glo_ephem;
 }
 

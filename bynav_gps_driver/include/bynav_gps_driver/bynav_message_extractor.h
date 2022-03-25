@@ -18,6 +18,7 @@
 #include <gps_common/GPSFix.h>
 
 #include <bynav_gps_driver/binary_message.h>
+#include <bynav_gps_driver/binary_micro_message.h>
 #include <bynav_gps_driver/bynav_sentence.h>
 #include <bynav_gps_driver/nmea_sentence.h>
 #include <bynav_gps_driver/rtcm_sentence.h>
@@ -26,12 +27,12 @@ namespace bynav_gps_driver {
 
 class BynavMessageExtractor {
 public:
-  bool ExtractCompleteMessages(const std::string &input,
-                               std::vector<NmeaSentence> &nmea_sentences,
-                               std::vector<BynavSentence> &bynav_sentences,
-                               std::vector<BinaryMessage> &binary_messages,
-                               std::string &remaining,
-                               bool keep_nmea_container = false);
+  bool ExtractCompleteMessages(
+      const std::string &input, std::vector<NmeaSentence> &nmea_sentences,
+      std::vector<BynavSentence> &bynav_sentences,
+      std::vector<BinaryMessage> &binary_messages,
+      std::vector<BinaryMicroMessage> &binary_micro_messages,
+      std::string &remaining, bool keep_nmea_container = false);
 
   double GetMostRecentUtcTime(const std::vector<NmeaSentence> &sentences);
 
@@ -49,6 +50,7 @@ private:
   static const std::string BYNAV_MM_FLAG;
   static const std::string BYNAV_BINARY_SYNC_BYTES;
   static const std::string BYNAV_ENDLINE;
+  static const std::string BYNAV_BINARY_MICRO_SYNC_BYTES;
 
   static constexpr uint32_t BYNAV_CRC32_POLYNOMIAL = 0xEDB88320L;
 
@@ -62,6 +64,9 @@ private:
 
   int32_t GetBinaryMessage(const std::string &str, size_t start_idx,
                            BinaryMessage &msg);
+
+  int32_t GetBinaryMicroMessage(const std::string &str, size_t start_idx,
+                                BinaryMicroMessage &msg);
 
   bool GetBynavMessageParts(const std::string &sentence,
                             std::string &message_id,

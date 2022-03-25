@@ -78,6 +78,7 @@ GloephemerisbParser::ParseBinary(const BinaryMessage &bin_msg) {
       boost::make_shared<bynav_gps_msgs::GnssGloEphemMsg>();
 
   bynav_gps_msgs::BynavMessageHeader bynav_msg_header;
+  
   HeaderParser header_parser;
   bynav_msg_header = header_parser.ParseBinary(bin_msg);
   bynav_msg_header.message_name = MESSAGE_NAME;

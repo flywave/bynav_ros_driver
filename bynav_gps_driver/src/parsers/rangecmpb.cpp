@@ -575,6 +575,7 @@ static int decode_rangecmpb(const unsigned char *raw, size_t len,
 
 bynav_gps_msgs::GnssMeasMsgPtr
 RangrcmpbParser::ParseBinary(const BinaryMessage &bin_msg) {
+  
   bynav_gps_msgs::GnssMeasMsgPtr ros_msg =
       boost::make_shared<bynav_gps_msgs::GnssMeasMsg>();
 

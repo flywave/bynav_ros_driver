@@ -25,6 +25,7 @@ PtnlAvrParser::ParseAscii(const NmeaSentence &sentence) {
 
   bynav_gps_msgs::PtnlAvrPtr msg =
       boost::make_shared<bynav_gps_msgs::PtnlAvr>();
+
   msg->message_id = "PTNLAVR";
 
   bool valid = true;

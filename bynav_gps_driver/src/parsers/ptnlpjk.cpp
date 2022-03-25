@@ -25,6 +25,7 @@ PtnlPJKParser::ParseAscii(const NmeaSentence &sentence) {
 
   bynav_gps_msgs::PtnlPJKPtr msg =
       boost::make_shared<bynav_gps_msgs::PtnlPJK>();
+      
   msg->message_id = "PTNLPJK";
 
   bool valid = true;

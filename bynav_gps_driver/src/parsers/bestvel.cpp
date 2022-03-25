@@ -56,6 +56,7 @@ bynav_gps_driver::BynavVelocityParser::ParseAscii(
     const BynavSentence &sentence) {
   bynav_gps_msgs::BynavVelocityPtr msg =
       boost::make_shared<bynav_gps_msgs::BynavVelocity>();
+      
   HeaderParser h_parser;
   msg->bynav_msg_header = h_parser.ParseAscii(sentence);
 

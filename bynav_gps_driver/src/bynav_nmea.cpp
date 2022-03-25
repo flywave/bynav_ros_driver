@@ -28,7 +28,7 @@ BynavNmea::BynavNmea()
       galephemerisb_msgs_(MAX_BUFFER_SIZE),
       gloephemerisb_msgs_(MAX_BUFFER_SIZE), gpsephemb_msgs_(MAX_BUFFER_SIZE),
       qzssephemerisb_msgs_(MAX_BUFFER_SIZE), rangecmpb_msgs_(MAX_BUFFER_SIZE),
-      imu_rate_(-1.0), enable_imu_(false) {}
+      imu_rate_(-1.0), enable_imu_(false), use_micro_imu_msg_(false) {}
 
 bool BynavNmea::Connect(const std::string &device, ConnectionType connection,
                         BynavMessageOpts const &oopts) {
@@ -58,6 +58,7 @@ BynavNmea::ReadResult BynavNmea::ProcessData() {
   std::vector<NmeaSentence> nmea_sentences;
   std::vector<BynavSentence> bynav_sentences;
   std::vector<BinaryMessage> binary_messages;
+  std::vector<BinaryMicroMessage> binary_mirco_messages;
 
   if (!data_buffer_.empty()) {
     nmea_buffer_.insert(nmea_buffer_.end(), data_buffer_.begin(),
@@ -67,9 +68,9 @@ BynavNmea::ReadResult BynavNmea::ProcessData() {
 
     std::string remaining_buffer;
 
-    if (!extractor_.ExtractCompleteMessages(nmea_buffer_, nmea_sentences,
-                                            bynav_sentences, binary_messages,
-                                            remaining_buffer)) {
+    if (!extractor_.ExtractCompleteMessages(
+            nmea_buffer_, nmea_sentences, bynav_sentences, binary_messages,
+            binary_mirco_messages, remaining_buffer)) {
       read_result = READ_PARSE_FAILED;
       error_msg_ = "Parse failure extracting sentences.";
     }
@@ -105,6 +106,19 @@ BynavNmea::ReadResult BynavNmea::ProcessData() {
   for (const auto &sentence : bynav_sentences) {
     try {
       BynavNmea::ReadResult result = ParseBynavSentence(sentence, stamp);
+      if (result != READ_SUCCESS) {
+        read_result = result;
+      }
+    } catch (const ParseException &p) {
+      error_msg_ = p.what();
+      ROS_WARN("%s", p.what());
+      read_result = READ_PARSE_FAILED;
+    }
+  }
+
+  for (const auto &msg : binary_mirco_messages) {
+    try {
+      BynavNmea::ReadResult result = ParseBinaryMicroMessage(msg, stamp);
       if (result != READ_SUCCESS) {
         read_result = result;
       }
@@ -259,6 +273,14 @@ void BynavNmea::GetBynavCorrectedImuData(
   imu_messages.insert(imu_messages.end(), corrimudata_msgs_.begin(),
                       corrimudata_msgs_.end());
   corrimudata_msgs_.clear();
+}
+
+void BynavNmea::GetRawImuData(
+    std::vector<bynav_gps_msgs::RawIMUPtr> &imu_messages) {
+  imu_messages.clear();
+  imu_messages.insert(imu_messages.end(), rawimu_msgs_.begin(),
+                      rawimu_msgs_.end());
+  rawimu_msgs_.clear();
 }
 
 void BynavNmea::GetGpdopMessages(
@@ -566,6 +588,43 @@ BynavNmea::ParseBinaryMessage(const BinaryMessage &msg,
     bynav_gps_msgs::GnssMeasMsgPtr meas = rangecmpb_parser_.ParseBinary(msg);
     meas->header.stamp = stamp;
     rangecmpb_msgs_.push_back(meas);
+    break;
+  }
+  case RawIMUParser::MESSAGE_ID: {
+    bynav_gps_msgs::RawIMUPtr imu = rawimu_parser_.ParseBinary(msg);
+    imu->header.stamp = stamp;
+    rawimu_msgs_.push_back(imu);
+    break;
+  }
+  default:
+    ROS_WARN("Unexpected binary message id: %u", msg.header_.message_id_);
+    break;
+  }
+
+  return READ_SUCCESS;
+}
+
+BynavNmea::ReadResult
+BynavNmea::ParseBinaryMicroMessage(const BinaryMicroMessage &msg,
+                                   const ros::Time &stamp) noexcept(false) {
+  switch (msg.header_.message_id_) {
+  case CorrImuDataSParser::MESSAGE_ID: {
+    bynav_gps_msgs::BynavCorrectedImuDataPtr imu =
+        corrimudatas_parser_.ParseBinary(msg);
+    imu->header.stamp = stamp;
+    corrimudata_msgs_.push_back(imu);
+    corrimudata_queue_.push(imu);
+    if (corrimudata_queue_.size() > MAX_BUFFER_SIZE) {
+      ROS_WARN_THROTTLE(1.0, "CORRIMUDATA queue overflow.");
+      corrimudata_queue_.pop();
+    }
+    GenerateImuMessages();
+    break;
+  }
+  case RawIMUSParser::MESSAGE_ID: {
+    bynav_gps_msgs::RawIMUPtr imu = rawimus_parser_.ParseBinary(msg);
+    imu->header.stamp = stamp;
+    rawimu_msgs_.push_back(imu);
     break;
   }
   default:

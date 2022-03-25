@@ -20,8 +20,10 @@ bynav_gps_msgs::MarkTimePtr bynav_gps_driver::Mark2TimeParser::ParseBinary(
     error << "Unexpected inspva message size: " << bin_msg.data_.size();
     throw ParseException(error.str());
   }
+  
   bynav_gps_msgs::MarkTimePtr ros_msg =
       boost::make_shared<bynav_gps_msgs::MarkTime>();
+
   HeaderParser h_parser;
   ros_msg->bynav_msg_header = h_parser.ParseBinary(bin_msg);
   ros_msg->bynav_msg_header.message_name = GetMessageName();
@@ -69,6 +71,7 @@ bynav_gps_msgs::MarkTimePtr bynav_gps_driver::Mark2TimeParser::ParseAscii(
 
   bynav_gps_msgs::MarkTimePtr msg =
       boost::make_shared<bynav_gps_msgs::MarkTime>();
+
   HeaderParser h_parser;
   msg->bynav_msg_header = h_parser.ParseAscii(sentence);
   msg->bynav_msg_header.message_name = GetMessageName();

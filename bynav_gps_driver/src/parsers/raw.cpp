@@ -6,7 +6,7 @@
 #include <sys/time.h>
 #include <sys/types.h>
 
-#define MAXLEAPS    64                  /* max number of leap seconds table */
+#define MAXLEAPS 64 /* max number of leap seconds table */
 
 namespace bynav_gps_driver {
 
